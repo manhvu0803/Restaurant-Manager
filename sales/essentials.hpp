@@ -17,6 +17,7 @@ class date
 private:
     bool isValid()
     {
+        date tmp;
         if (y < 1900 || m > 12 || m < 1 || d < 1)
             return false;
         int month[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
@@ -66,6 +67,47 @@ public:
                 cin.ignore(1000, '\n');
             }
         } while (!tmp.isValid());
+        _date = tmp;
+    }
+    bool operator<(const date &_date) const
+    {
+        if (y < _date.y)
+            return true;
+        else if (y > _date.y)
+            return false;
+        else
+        {
+            if (m < _date.m)
+                return true;
+            else if (m > _date.m)
+                return false;
+            else
+            {
+                if (d < _date)
+                    return true;
+                return false;
+            }
+        }
+    }
+    bool operator==(const date &_date) const
+    {
+        if (y == _date.y && m == _date.m && d == _date.d)
+            return true;
+        return false;
+    }
+    bool operator<=(const date &_date)
+    {
+        if (*this == _date || *this < _date)
+            return true;
+        return false;
+    }
+    bool operator>(const date &_date)
+    {
+        return !(*this <= _date);
+    }
+    bool operator>=(const date &_date)
+    {
+        return !(*this < _date);
     }
 };
 
