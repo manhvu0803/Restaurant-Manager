@@ -34,7 +34,7 @@ class discount
 {
 protected:
     double discount_value = 0;
-    date expired_date;
+    date expiration_date;
     vector<string> dish;
 
 public:
@@ -54,8 +54,8 @@ public:
     voucher();
     ~voucher();
     void Discount();
-    void AddDiscount(const int &num_of_voucher);
+    void AddDiscount();
     void RemoveDiscount();
-}
+};
 
 #endif

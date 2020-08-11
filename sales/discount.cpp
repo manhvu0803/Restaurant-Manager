@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <dirent.h>
 
 #define MAX_CODE_LENGTH 10
 
@@ -14,7 +15,34 @@ using namespace std;
 *********************/
 voucher::voucher()
 {
-    ifstream file("voucher.txt");
+
+    dirent *ent;
+    DIR *dir = opendir("voucher");
+    if (dir == NULL)
+        throw "Missing components!\n";
+    string tmp;
+    readdir(dir);
+    readdir(dir);
+    while ((ent = readdir(dir)) != NULL)
+    {
+        tmp = "";
+        string f_name = ent->d_name;
+        int length = f_name.length();
+        if (f_name.length() >= 6)
+        {
+            for (int i = 0; i < 6; ++i)
+                tmp += f_name[length - 1 - i];
+            if (tmp != "1trap.")
+                continue;
+            else
+            {
+                tmp = "";
+                for (int i = 0; i < length - 6; ++i)
+                    tmp.push_back(f_name[i]);
+                break;
+            }
+        }
+    }
     string tmp;
     while (!file.eof())
     {
@@ -65,7 +93,6 @@ void voucher::AddDiscount()
     {
         cin >> expiration_date;
     } while (tmp <= expiration_date);
-
     for (int i = 0; i < num_of_voucher; ++i)
         code.push_back(code_generator());
     quantity += num_of_voucher;
