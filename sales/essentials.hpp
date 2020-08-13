@@ -3,14 +3,43 @@
 
 #include <ctime>
 #include <iostream>
+#include <sstream>
+#include <fstream>
 
 using namespace std;
+
+class ERROR_LOG
+{
+private:
+    ofstream log_file;
+
+public:
+    ERROR_LOG()
+    {
+        time_t t = time(0);
+        tm *now = localtime(&t);
+        stringstream sstr;
+        sstr << "log//" << now->tm_mday << "-" << now->tm_mon + 1 << "-" << now->tm_year + 1900 << ".log";
+        log_file.open(sstr.str().c_str(), ios::app);
+        log_file.seekp(0, ios::end);
+        log_file << "Time: " << now->tm_hour << ":" << now->tm_min << ":" << now->tm_sec << "\n ";
+    }
+    ~ERROR_LOG()
+    {
+        log_file << "\n*************************************************\n";
+        log_file.close();
+    }
+    void crash_log(const string &log)
+    {
+        log_file << "\n"
+                 << log << "\n";
+    }
+};
 
 typedef unsigned int u_int;
 
 /****************************
  * date 
- * 
 ****************************/
 class date
 {
@@ -109,6 +138,22 @@ public:
     {
         return !(*this < _date);
     }
+    void ConvertFromString(const string &_date)
+    {
+        if (_date.size() != 10)
+            throw "Invalid format!";
+        int d, m, y;
+        stringstream sstr;
+        sstr << _date.substr(0, 2);
+        sstr >> d;
+        sstr << "";
+        sstr << _date.substr(3, 2);
+        sstr >> m;
+        sstr << "";
+        sstr << _date.substr(6, 4);
+        sstr >> y;
+    }
+    date
 };
 
 #endif

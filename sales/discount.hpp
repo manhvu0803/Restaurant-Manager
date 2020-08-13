@@ -38,9 +38,9 @@ protected:
     vector<string> dish;
 
 public:
-    void Discount() = 0;
-    void AddDiscount() = 0;
-    void RemoveDiscount() = 0;
+    virtual void Discount() = 0;
+    virtual void AddDiscount() = 0;
+    virtual void RemoveDiscount() = 0;
 };
 
 class voucher : public discount

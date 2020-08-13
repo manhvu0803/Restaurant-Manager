@@ -21,36 +21,11 @@ voucher::voucher()
     if (dir == NULL)
         throw "Missing components!\n";
     string tmp;
-    readdir(dir);
-    readdir(dir);
     while ((ent = readdir(dir)) != NULL)
     {
-        tmp = "";
         string f_name = ent->d_name;
-        int length = f_name.length();
-        if (f_name.length() >= 6)
-        {
-            for (int i = 0; i < 6; ++i)
-                tmp += f_name[length - 1 - i];
-            if (tmp != "1trap.")
-                continue;
-            else
-            {
-                tmp = "";
-                for (int i = 0; i < length - 6; ++i)
-                    tmp.push_back(f_name[i]);
-                break;
-            }
-        }
+        f_name.substr(8, 10);
     }
-    string tmp;
-    while (!file.eof())
-    {
-        ++quantity;
-        getline(file, tmp);
-        code.push_back(tmp);
-    }
-    file.close();
 }
 
 voucher::~voucher()
