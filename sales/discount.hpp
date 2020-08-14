@@ -20,38 +20,33 @@ using namespace std;
  * so luong voucher tuy theo so luong code generate duoc
  * co han su dung cho tung code
  * tao bang random va luu vao file(moi khi chuong trinh chay thi load lai)
-********************** /
-
-/**********************
- * Promo code
- * discount theo phan tram
- * khong gioi han so luong promo
- * 1 code duy nhat de nho de nhap
- * han su dung chung
 **********************/
 
 class discount
 {
-protected:
-    double discount_value = 0;
-    date expiration_date;
-    vector<string> dish;
+private:
+    vector<voucher *> vouchers;
+    discount();
+    static discount *instance;
 
 public:
-    virtual void Discount() = 0;
-    virtual void AddDiscount() = 0;
-    virtual void RemoveDiscount() = 0;
+    ~discount();
+    void add_voucher();
+    discount *Instantiate();
 };
 
-class voucher : public discount
+class voucher
 {
 private:
     vector<string> code;
     u_int quantity = 0;
     string code_generator();
+    date expiration_date;
+    vector<string> dish;
 
 public:
     voucher();
+    voucher(const string &path);
     ~voucher();
     void Discount();
     void AddDiscount();
