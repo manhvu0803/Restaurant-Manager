@@ -29,13 +29,50 @@ using namespace std;
     }
 #endif
 
+
+// Return true if succeed, false otherwise
 template <typename T> 
-void input(std::istream& stream, T& val, const bool clr = true)
+bool input(std::istream& stream, T& val, const bool clr = true)
 {
     stream >> val;
-    if (stream.fail()) throw runtime_error("Input format is invalid");
+    bool successful = !stream.fail();
     if (clr) {
         stream.clear();
         stream.ignore(numeric_limits<streamsize>::max(), '\n');
     }
+    return successful;
+}
+
+component::component(const string& desc): description(desc) {}
+
+void component::add(component& comp)
+{
+    components.push_back(&comp);
+}
+
+void component::show()
+{
+    if (clearOnShow) clearConsole();
+    int choiceCnt = components.size();
+    for (int i = 0; i < choiceCnt; ++i)
+        cout << i + 1  << ": " << components[i]->description << '\n';
+
+    cout << "Your choice: ";
+    int choice;
+    while (!input(cin , choice) && choice > 0 && choice <= choiceCnt) 
+        cout << "Invalid input, please choose again\n";
+    
+    components[choice - 1]->show();
+}
+
+option::option(std::function<void()> func): action(func) {}
+
+option::option(std::function<void()> func, const std::string& desc):
+    action(func),
+    component(desc)
+{}
+
+void option::show()
+{
+    action();
 }
