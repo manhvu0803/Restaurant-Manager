@@ -18,9 +18,14 @@ typedef unsigned int u_int;
 class ERROR_LOG final
 {
 private:
+    static int count;
     ofstream log_file;
+
+public:
     ERROR_LOG()
     {
+        if (count)
+            throw "Illegaly define more than one ERROR_LOG object!";
         time_t t = time(0);
         tm *now = localtime(&t);
         stringstream sstr;
@@ -28,19 +33,13 @@ private:
         log_file.open(sstr.str().c_str(), ios::app);
         log_file.seekp(0, ios::end);
         log_file << "Time: " << now->tm_hour << ":" << now->tm_min << ":" << now->tm_sec << "\n ";
+        ++count;
     }
-    static ERROR_LOG *_ERROR_LOG_;
-
-public:
     ~ERROR_LOG()
     {
         log_file << "\n*************************************************\n";
         log_file.close();
-        if (_ERROR_LOG_)
-        {
-            delete _ERROR_LOG_;
-            _ERROR_LOG_ = nullptr;
-        }
+        cout << "Run";
     }
     ERROR_LOG(ERROR_LOG &other) = delete;
     ERROR_LOG &operator=(const ERROR_LOG &other) = delete;
@@ -51,8 +50,8 @@ public:
     }
 };
 
-ERROR_LOG *ERROR_LOG::_ERROR_LOG_ = new ERROR_LOG;
-ERROR_LOG *Clog;
+int ERROR_LOG::count = 0;
+ERROR_LOG Clog;
 
 /****************************
  * date 
@@ -69,7 +68,6 @@ public:
     friend ostream &operator<<(ostream &os, const date &_date);
     friend istream &operator>>(istream &is, date &_date);
     bool operator<(const date &_date) const;
-    bool operator>=(const date &_date) const;
     bool operator>(const date &_date) const;
     bool operator>=(const date &_date) const;
     bool operator<=(const date &_date) const;
@@ -206,5 +204,6 @@ istream &operator>>(istream &is, date &_date)
         }
     } while (!tmp.isValid());
     _date = tmp;
+    return is;
 }
 #endif

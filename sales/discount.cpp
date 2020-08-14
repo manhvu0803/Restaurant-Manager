@@ -27,7 +27,7 @@ discount::discount()
     DIR *dir = opendir("voucher");
     if (dir == NULL)
     {
-        Clog->crash_log("Folder voucher is missing");
+        Clog.crash_log("Folder voucher is missing");
         exit(-1);
     }
     while ((ent = readdir(dir)) != NULL)
@@ -44,7 +44,7 @@ discount::discount()
             }
             catch (std::out_of_range &e)
             {
-                Clog->crash_log(e.what());
+                Clog.crash_log(e.what());
                 exit(-1);
             };
             if (tmp == ConvertFromString(voucher_name))
@@ -57,7 +57,7 @@ discount::discount()
         }
         catch (const char *msg)
         {
-            Clog->crash_log(msg);
+            Clog.crash_log(msg);
             exit(-1);
         };
     }
