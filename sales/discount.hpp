@@ -26,31 +26,41 @@ class discount
 {
 private:
     vector<voucher *> vouchers;
-    discount();
     static discount *instance;
 
 public:
+    discount();
     ~discount();
     void add_voucher();
-    discount *Instantiate();
 };
 
-class voucher
+class Code
 {
-private:
+protected:
     vector<string> code;
-    u_int quantity = 0;
-    string code_generator();
-    date expiration_date;
-    vector<string> dish;
 
 public:
-    voucher();
+    string code_generator();
+    bool NewCode(const string &code);
+};
+
+class promo
+{
+};
+
+class voucher : public Code
+{
+private:
+    int quantity = 0;
+    date expiration_date;
+    vector<string> dish;
+    string name;
+
+public:
+    voucher(){};
     voucher(const string &path);
+    void NewVoucher();
     ~voucher();
-    void Discount();
-    void AddDiscount();
-    void RemoveDiscount();
 };
 
 #endif

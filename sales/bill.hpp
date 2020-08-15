@@ -22,6 +22,7 @@ using namespace std;
 /*********************
  * 
 *********************/
+
 class bill
 {
 private:

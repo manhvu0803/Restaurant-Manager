@@ -1,6 +1,7 @@
 mon an : dish
 nguyen lieu : ingredient
-
+FDXXXXX : ma do an
+DKXXXXX : ma do uong
 Terminate code
 constructor error -1
 
