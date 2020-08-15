@@ -32,8 +32,10 @@ private:
     vector<int> quantitty;
 
 public:
-    bool AddDish();
-    void calculate();
+    bool AddOrder();
+    double Total();
+    double Income();
+    void GenerateBill();
 
 public:
 };
