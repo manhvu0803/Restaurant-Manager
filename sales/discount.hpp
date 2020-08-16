@@ -34,28 +34,26 @@ public:
     void add_voucher();
     void add_promo();
     bool use_voucher(const string &code);
-    bool use_voucher(const string &code);
+    bool use_promo(const string &code);
 };
 
 class Code
 {
 protected:
     vector<string> code;
+    int quantity = 0;
+    date expiration_date;
+    string name;
+    vector<string> dish;
+    int discount_value;
 
 public:
     string code_generator();
     bool NewCode(const string &code);
 };
 
-class promo
+class promo : public Code
 {
-private:
-    int quantity = 0;
-    string name;
-    string code;
-    vector<string> dish;
-    int discount_value;
-
 public:
     promo() { throw "Cannot instantiate a voucher object withoud data!"; };
     promo(const string &path);
@@ -65,13 +63,6 @@ public:
 
 class voucher : public Code
 {
-private:
-    int quantity = 0;
-    date expiration_date;
-    vector<string> dish;
-    string name;
-    int discount_value;
-
 public:
     voucher() { throw "Cannot instantiate a voucher object withoud data!"; };
     voucher(const string &path);

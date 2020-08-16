@@ -160,7 +160,7 @@ voucher::~voucher()
 void voucher::NewVoucher()
 {
     if (name.size())
-        throw "Cannot use an existed voucher to create new voucher!";
+        throw "Cannot use an existed voucher object to create a new voucher!";
     cout << "Number of vouchers :";
     while (!(cin >> quantity) || quantity <= 0)
     {
@@ -189,4 +189,76 @@ void voucher::ListDish()
     //List name of dishes
     for (auto &i : dish)
         cout << i << endl;
+}
+
+/*********************
+ * PROMO
+*********************/
+promo::promo(const string &path)
+{
+    ifstream file(path);
+    string tmp;
+    getline(file, tmp);
+    if (tmp != "PROMO")
+    {
+        file.close();
+        throw "Invalid file format!";
+    }
+    getline(file, name);
+    getline(file, tmp);
+    getline(file, tmp);
+    while (!tmp.size())
+    {
+        dish.push_back(tmp);
+        getline(file, tmp);
+    }
+    while (!file.eof())
+    {
+        getline(file, tmp);
+        code.push_back(tmp);
+    }
+    file.close();
+}
+
+void promo::NewPromo()
+{
+    if (name.size())
+        throw "Cannot use an existed promo object to create a new promo!";
+    cout << "Number of promos :";
+    while (!(cin >> quantity) || quantity <= 0)
+    {
+        cin.clear();
+        cin.ignore(1000, '\n');
+    }
+    cout << "Expiration date: ";
+    date tmp;
+    do
+    {
+        cin >> expiration_date;
+    } while (tmp <= expiration_date);
+    // List name of dishes
+    cout << "Discount value: ";
+    while (!(cin >> discount_value) || discount_value <= 10000)
+    {
+        cin.clear();
+        cin.ignore(1000, '\n');
+    }
+    for (int i = 0; i < quantity; ++i)
+        code.push_back(code_generator());
+}
+
+promo::~promo()
+{
+    stringstream path;
+    path << "promo/" << expiration_date;
+    ofstream file(path.str().c_str());
+    file << "PROMO\n";
+    file << name << "\n\n";
+    for (auto &i : dish)
+        file << i << "\n";
+    file << "\n";
+    for (int i = 0; i < code.size() - 1; ++i)
+        file << code[i] << "\n";
+    file << code[code.size() - 1];
+    file.close();
 }
