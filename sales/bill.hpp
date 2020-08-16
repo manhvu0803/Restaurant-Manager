@@ -30,7 +30,9 @@ private:
     double Total;
     u_int bill_no;
     vector<string> dishes;
-    vector<int> quantitty;
+    vector<string> dish_names;
+    vector<int> quantity;
+    vector<double> total_per_dish;
 
 public:
     bool AddOrder();

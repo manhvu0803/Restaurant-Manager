@@ -113,8 +113,26 @@ voucher::voucher(const string &path)
     file.close();
 }
 
+voucher::~voucher()
+{
+    stringstream path;
+    path << "voucher/" << expiration_date;
+    ofstream file(path.str().c_str());
+    file << "VOUCHER\n";
+    file << name << "\n\n";
+    for (auto &i : dish)
+        file << i << "\n";
+    file << "\n";
+    for (int i = 0; i < code.size() - 1; ++i)
+        file << code[i] << "\n";
+    file << code[code.size() - 1];
+    file.close();
+}
+
 void voucher::NewVoucher()
 {
+    if (name.size())
+        throw "Cannot use an existed voucher to create new voucher!";
     cout << "Number of vouchers :";
     while (!(cin >> quantity) || quantity <= 0)
     {
@@ -127,6 +145,20 @@ void voucher::NewVoucher()
     {
         cin >> expiration_date;
     } while (tmp <= expiration_date);
+    // List name of dishes
+    cout << "Discount value: ";
+    while (!(cin >> discount_value) || discount_value <= 0 || discount_value > 100)
+    {
+        cin.clear();
+        cin.ignore(1000, '\n');
+    }
     for (int i = 0; i < quantity; ++i)
         code.push_back(code_generator());
+}
+
+void voucher::ListDish()
+{
+    //List name of dishes
+    for (auto &i : dish)
+        cout << i;
 }

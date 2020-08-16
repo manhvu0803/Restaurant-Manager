@@ -55,11 +55,13 @@ private:
     date expiration_date;
     vector<string> dish;
     string name;
+    int discount_value;
 
 public:
-    voucher(){};
+    voucher() { throw "Cannot instantiate a voucher object withoud data!"; };
     voucher(const string &path);
     void NewVoucher();
+    void ListDish();
     ~voucher();
 };
 

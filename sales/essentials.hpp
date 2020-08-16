@@ -39,7 +39,6 @@ public:
     {
         log_file << "\n*************************************************\n";
         log_file.close();
-        cout << "Run";
     }
     ERROR_LOG(ERROR_LOG &other) = delete;
     ERROR_LOG &operator=(const ERROR_LOG &other) = delete;
@@ -175,7 +174,12 @@ date ConvertFromString(const string &_date)
 
 ostream &operator<<(ostream &os, const date &_date)
 {
-    os << _date.d << "/" << _date.m << "/" << _date.y;
+    if (_date.d < 10)
+        os << 0;
+    os << _date.d << "-";
+    if (_date.m < 10)
+        os << 0;
+    os << _date.m << "-" << _date.y;
     return os;
 }
 
