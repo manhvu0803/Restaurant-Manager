@@ -47,8 +47,36 @@ discount::discount()
         };
     }
     closedir(dir);
+    dir = opendir("promo");
+    if (dir == NULL)
+        Clog.crash_log("Folder promo is missing");
+    readdir(dir);
+    readdir(dir);
+    while ((ent = readdir(dir)) != NULL)
+    {
+        string promo_name = ent->d_name;
+        date tmp;
+        voucher *promo_t = nullptr;
+        try
+        {
+            //Remove expired voucher list
+            if (tmp >= ConvertFromString(promo_name))
+            {
+                string path = "promo//";
+                path += promo_name;
+                remove(path.c_str());
+            }
+            promo_t = new voucher(promo_name);
+            vouchers.push_back(promo_t);
+        }
+        catch (const char *msg)
+        {
+            Clog.crash_log(msg);
+            delete promo_t;
+        };
+    }
+    closedir(dir);
 }
-
 discount::~discount()
 {
     for (auto &i : vouchers)
@@ -160,5 +188,5 @@ void voucher::ListDish()
 {
     //List name of dishes
     for (auto &i : dish)
-        cout << i;
+        cout << i << endl;
 }

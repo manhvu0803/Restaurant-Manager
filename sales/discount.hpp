@@ -26,12 +26,15 @@ class discount
 {
 private:
     vector<voucher *> vouchers;
-    static discount *instance;
+    vector<promo *> promos;
 
 public:
     discount();
     ~discount();
     void add_voucher();
+    void add_promo();
+    bool use_voucher(const string &code);
+    bool use_voucher(const string &code);
 };
 
 class Code
@@ -46,6 +49,18 @@ public:
 
 class promo
 {
+private:
+    int quantity = 0;
+    string name;
+    string code;
+    vector<string> dish;
+    int discount_value;
+
+public:
+    promo() { throw "Cannot instantiate a voucher object withoud data!"; };
+    promo(const string &path);
+    void NewPromo();
+    void ListDish();
 };
 
 class voucher : public Code
