@@ -20,7 +20,11 @@ discount::discount()
     dirent *ent;
     DIR *dir = opendir("voucher");
     if (dir == NULL)
+    {
         Clog.crash_log("Folder voucher is missing");
+        closedir(dir);
+        return;
+    }
     readdir(dir);
     readdir(dir);
     while ((ent = readdir(dir)) != NULL)
@@ -49,7 +53,11 @@ discount::discount()
     closedir(dir);
     dir = opendir("promo");
     if (dir == NULL)
+    {
         Clog.crash_log("Folder promo is missing");
+        closedir(dir);
+        return;
+    }
     readdir(dir);
     readdir(dir);
     while ((ent = readdir(dir)) != NULL)
@@ -77,10 +85,25 @@ discount::discount()
     }
     closedir(dir);
 }
+
 discount::~discount()
 {
     for (auto &i : vouchers)
         delete i;
+}
+
+void discount::add_voucher()
+{
+    voucher *tmp = new voucher;
+    tmp->NewVoucher();
+    vouchers.push_back(tmp);
+}
+
+void discount::add_promo()
+{
+    promo *tmp = new promo;
+    tmp->NewPromo();
+    promos.push_back(tmp);
 }
 
 /*********************

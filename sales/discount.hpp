@@ -55,7 +55,7 @@ public:
 class promo : public Code
 {
 public:
-    promo() { throw "Cannot instantiate a voucher object withoud data!"; };
+    promo(){};
     promo(const string &path);
     void NewPromo();
     void ListDish();
@@ -64,7 +64,7 @@ public:
 class voucher : public Code
 {
 public:
-    voucher() { throw "Cannot instantiate a voucher object withoud data!"; };
+    voucher(){};
     voucher(const string &path);
     void NewVoucher();
     void ListDish();
