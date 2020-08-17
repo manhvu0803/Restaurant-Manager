@@ -1,0 +1,20 @@
+mon an : dish
+nguyen lieu : ingredient
+FDXXXXX : ma do an
+DKXXXXX : ma do uong
+Terminate code
+constructor error -1
+
+class list:
+ERROR_LOG : essentials.hpp 
+date : essentials.hpp
+discount : discount.hpp
+voucher : discount.hpp
+bill : bill.hpp
+
+Global:
+Clog : global, ERROR_LOG
+
+Singleton : 
+discount : essentials.hpp 
+ERROR_LOG : discount.hpp
