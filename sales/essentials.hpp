@@ -12,8 +12,6 @@ typedef unsigned int u_int;
 
 /*************************************
  * ERROR_LOG
- * generate log
- * 
 *************************************/
 class ERROR_LOG final
 {

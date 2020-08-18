@@ -27,18 +27,20 @@ class bill
 {
 private:
     date Date;
-    double Total;
-    u_int bill_no;
-    vector<string> dishes;
+    double Total = 0;
+    u_int bill_no = -1;
+    vector<string> dishes_IDs;
     vector<string> dish_names;
     vector<int> quantity;
     vector<double> total_per_dish;
 
 public:
-    bool AddOrder();
+    bill(){};
+    bool AddOrder(const string &ID, const string &name);
     double Total();
     double Income();
     void GenerateBill();
+    ~bill();
 
 public:
 };
