@@ -36,13 +36,11 @@ private:
 
 public:
     bill(){};
-    bool AddOrder(const string &ID, const string &name);
+    ~bill();
+    bool AddData(const string &ID, const string &name);
     double Total();
     double Income();
     void GenerateBill();
-    ~bill();
-
-public:
 };
 
 #endif
