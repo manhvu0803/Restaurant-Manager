@@ -2,6 +2,7 @@
 #define DISCOUNT_HPP
 
 #include <iostream>
+#include <vector>
 #include "essentials.hpp"
 
 using namespace std;
