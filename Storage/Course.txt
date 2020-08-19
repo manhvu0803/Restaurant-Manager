@@ -1,0 +1,22 @@
+CM101
+Communications
+19CLC7
+dnvu
+Duong Nguyen Vu
+GS
+Male
+6/4/2020-1/6/2020
+7
+13:30-17:30
+I23
+CS162
+Introduction to Programming
+19CLC7
+dbtien
+Dinh Ba Tien
+TS
+Male
+6/4/2020-1/6/2020
+5
+7:30-11:30
+I42
