@@ -26,6 +26,7 @@ void order::NewOrder()
     bill *new_bill = new bill;
     if (bills.size() >= 100)
         this->~order();
+    int tmp;
     do
     {
         system("cls");
@@ -34,7 +35,6 @@ void order::NewOrder()
         cout << "0. Finalize order\n";
         cout << "-1. Cancel order\n";
         cout << "Option: ";
-        int tmp;
         while (!(cin >> tmp) || tmp < 1 || tmp > rest_menu->getMenu().size() + 1)
         {
             cout << "Invalid!\n";

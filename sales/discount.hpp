@@ -40,26 +40,21 @@ class promo : public Code
 {
 public:
     promo(){};
-
     promo(const std::string &file_name);
     void NewPromo();
     void ListDish();
     ~promo();
-
 };
 
 class voucher : public Code
 {
 public:
     voucher(){};
-
     voucher(const std::string &file_name);
-
     void NewVoucher();
     void ListDish();
     ~voucher();
 };
-
 
 class discount
 {

@@ -2,10 +2,11 @@
 #include <iostream>
 #include <string>
 #include <dirent.h>
+#include <windows.h>
 #include "discount.hpp"
 #include "essentials.hpp"
-
-// #include "essentials.hpp"
+#include "menu.h"
+#include "essentials.hpp"
 
 #define MAX_CODE_LENGTH 10
 
@@ -161,7 +162,6 @@ voucher::voucher(const string &file_name)
         throw "Invalid file format!";
     }
     getline(file, name);
-
     file >> discount_value;
     getline(file, tmp);
     getline(file, tmp);
@@ -205,13 +205,31 @@ void voucher::NewVoucher()
         cin.clear();
         cin.ignore(1000, '\n');
     }
-    cout << "Expiration date: ";
-    date tmp;
+    cout << "Expiration date: \n";
+    date tmp_d;
     do
     {
         cin >> expiration_date;
-    } while (tmp <= expiration_date);
-    // List name of dishes
+    } while (tmp_d >= expiration_date);
+    int tmp;
+    do
+    {
+        system("cls");
+        Menu *rest_menu = rest_menu->instantiate();
+        cout << "Choose dish:\n";
+        rest_menu->output();
+        cout << "0. Exit\n";
+        cout << "Option: ";
+        while (!(cin >> tmp) || tmp < 0 || tmp > rest_menu->getMenu().size() + 1)
+        {
+            cout << "Invalid!\n";
+            cout << "Try again: ";
+            cin.clear();
+            cin.ignore(1000, '\n');
+        }
+        if (tmp)
+            dish.push_back(rest_menu->getMenu()[tmp - 1]->getID());
+    } while (tmp || !dish.size());
     cout << "Discount value: ";
     while (!(cin >> discount_value) || discount_value <= 0 || discount_value > 100)
     {
@@ -273,13 +291,31 @@ void promo::NewPromo()
         cin.clear();
         cin.ignore(1000, '\n');
     }
-    cout << "Expiration date: ";
-    date tmp;
+    cout << "Expiration date: \n";
+    date tmp_d;
     do
     {
         cin >> expiration_date;
-    } while (tmp <= expiration_date);
-    // List name of dishes
+    } while (tmp_d <= expiration_date);
+    int tmp;
+    do
+    {
+        system("cls");
+        Menu *rest_menu = rest_menu->instantiate();
+        cout << "Choose dish:\n";
+        rest_menu->output();
+        cout << "0. Exit\n";
+        cout << "Option: ";
+        while (!(cin >> tmp) || tmp < 0 || tmp > rest_menu->getMenu().size() + 1)
+        {
+            cout << "Invalid!\n";
+            cout << "Try again: ";
+            cin.clear();
+            cin.ignore(1000, '\n');
+        }
+        if (tmp)
+            dish.push_back(rest_menu->getMenu()[tmp - 1]->getID());
+    } while (tmp || !dish.size());
     cout << "Discount value: ";
     while (!(cin >> discount_value) || discount_value <= 10000)
     {
