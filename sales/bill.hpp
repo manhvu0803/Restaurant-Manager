@@ -41,6 +41,7 @@ public:
     double Total();
     double Income();
     void GenerateBill();
+    void LoadOldBill();
 };
 
 #endif

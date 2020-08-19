@@ -1,6 +1,6 @@
-#include "order.hpp"
 #include <iostream>
 #include <windows.h>
+#include "order.hpp"
 
 using namespace std;
 
@@ -14,6 +14,7 @@ order::~order()
 void order::NewOrder()
 {
     system("cls");
+
     if (bills.size() >= 100)
         this->~order();
 }

@@ -124,7 +124,7 @@ bool date::isValid()
     int month[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     if (y % 400 == 0 || y % 100 != 0 && y % 4 == 0)
         month[1] += 1;
-    if (d > month[m])
+    if (d > month[m - 1])
         return false;
     return true;
 }
@@ -187,19 +187,19 @@ istream &operator>>(istream &is, date &_date)
     do
     {
         cout << "day: ";
-        while (!cin >> tmp.d)
+        while (!(cin >> tmp.d))
         {
             cin.clear();
             cin.ignore(1000, '\n');
         }
         cout << "month: ";
-        while (!cin >> tmp.m)
+        while (!(cin >> tmp.m))
         {
             cin.clear();
             cin.ignore(1000, '\n');
         }
         cout << "year: ";
-        while (!cin >> tmp.y)
+        while (!(cin >> tmp.y))
         {
             cin.clear();
             cin.ignore(1000, '\n');
