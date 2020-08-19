@@ -22,6 +22,8 @@ class Menu
 public:
 	~Menu();
 	Menu *instantiate();
+	Menu &operator=(const Menu *other) = delete;
+	Menu(const Menu &other) = delete;
 	//void input();
 	void output();
 	//void save();
