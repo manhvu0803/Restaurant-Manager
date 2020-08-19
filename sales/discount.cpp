@@ -1,12 +1,11 @@
-#include "discount.hpp"
 #include <vector>
-#include <cstdlib>
-#include <fstream>
 #include <iostream>
 #include <string>
 #include <dirent.h>
-#include <cstdio>
-#include <stdexcept>
+#include "discount.hpp"
+#include "essentials.hpp"
+
+// #include "essentials.hpp"
 
 #define MAX_CODE_LENGTH 10
 
@@ -17,11 +16,12 @@ using namespace std;
 *********************/
 discount::discount()
 {
+    ERROR_LOG *log = log->instantiate();
     dirent *ent;
     DIR *dir = opendir("voucher");
     if (dir == NULL)
     {
-        Clog.crash_log("Folder voucher is missing");
+        log->LOG("Folder voucher is missing");
         closedir(dir);
         return;
     }
@@ -46,7 +46,7 @@ discount::discount()
         }
         catch (const char *msg)
         {
-            Clog.crash_log(msg);
+            log->LOG(msg);
             delete voucher_t;
         };
     }
@@ -54,7 +54,7 @@ discount::discount()
     dir = opendir("promo");
     if (dir == NULL)
     {
-        Clog.crash_log("Folder promo is missing");
+        log->LOG("Folder promo is missing");
         closedir(dir);
         return;
     }
@@ -79,7 +79,7 @@ discount::discount()
         }
         catch (const char *msg)
         {
-            Clog.crash_log(msg);
+            log->LOG(msg);
             delete promo_t;
         };
     }
@@ -105,6 +105,14 @@ void discount::add_promo()
     tmp->NewPromo();
     promos.push_back(tmp);
 }
+discount *discount::instantiate()
+{
+    if (!instance)
+        instance = new discount;
+    return instance;
+}
+
+discount *discount::instance = nullptr;
 
 /*********************
  * CODE
@@ -138,9 +146,11 @@ bool Code::NewCode(const string &_code_)
 /*********************
  * VOUCHER
 *********************/
-voucher::voucher(const string &path)
+voucher::voucher(const string &file_name)
 {
-    ifstream file(path);
+    stringstream path;
+    path << "voucher/" << file_name;
+    ifstream file(path.str().c_str());
     string tmp;
     getline(file, tmp);
     if (tmp != "VOUCHER")
@@ -149,9 +159,11 @@ voucher::voucher(const string &path)
         throw "Invalid file format!";
     }
     getline(file, name);
+    file >> discount_value;
     getline(file, tmp);
     getline(file, tmp);
-    while (!tmp.size())
+    getline(file, tmp);
+    while (tmp.size())
     {
         dish.push_back(tmp);
         getline(file, tmp);
@@ -217,9 +229,11 @@ void voucher::ListDish()
 /*********************
  * PROMO
 *********************/
-promo::promo(const string &path)
+promo::promo(const string &file_name)
 {
-    ifstream file(path);
+    stringstream path;
+    path << "promo/" << file_name;
+    ifstream file(path.str().c_str());
     string tmp;
     getline(file, tmp);
     if (tmp != "PROMO")
@@ -228,9 +242,11 @@ promo::promo(const string &path)
         throw "Invalid file format!";
     }
     getline(file, name);
+    file >> discount_value;
     getline(file, tmp);
     getline(file, tmp);
-    while (!tmp.size())
+    getline(file, tmp);
+    while (tmp.size())
     {
         dish.push_back(tmp);
         getline(file, tmp);

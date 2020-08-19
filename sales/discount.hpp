@@ -1,11 +1,9 @@
 #ifndef DISCOUNT_HPP
 #define DISCOUNT_HPP
 
-#include <iostream>
 #include <vector>
+#include <iostream>
 #include "essentials.hpp"
-
-using namespace std;
 
 /**********************
  * Discount
@@ -22,54 +20,58 @@ using namespace std;
  * co han su dung cho tung code
  * tao bang random va luu vao file(moi khi chuong trinh chay thi load lai)
 **********************/
-
-class discount
-{
-private:
-    vector<voucher *> vouchers;
-    vector<promo *> promos;
-
-public:
-    discount();
-    ~discount();
-    void add_voucher();
-    void add_promo();
-    bool use_voucher(const string &code);
-    bool use_promo(const string &code);
-};
-
 class Code
 {
 protected:
-    vector<string> code;
+    std::vector<std::string> code;
     int quantity = 0;
     date expiration_date;
-    string name;
-    vector<string> dish;
+    std::string name;
+    std::vector<std::string> dish;
     int discount_value;
 
 public:
-    string code_generator();
-    bool NewCode(const string &code);
+    std::string code_generator();
+    bool NewCode(const std::string &code);
 };
 
 class promo : public Code
 {
 public:
     promo(){};
-    promo(const string &path);
+    promo(const std::string &file_name);
     void NewPromo();
     void ListDish();
+    ~promo();
 };
 
 class voucher : public Code
 {
 public:
     voucher(){};
-    voucher(const string &path);
+    voucher(const std::string &file_name);
     void NewVoucher();
     void ListDish();
     ~voucher();
+};
+
+class discount
+{
+private:
+    std::vector<voucher *> vouchers;
+    std::vector<promo *> promos;
+    static discount *instance;
+
+public:
+    discount();
+    ~discount();
+    discount(const discount &other) = delete;
+    discount &operator=(const discount &other) = delete;
+    void add_voucher();
+    void add_promo();
+    bool use_voucher(const std::string &code);
+    bool use_promo(const std::string &code);
+    discount *instantiate();
 };
 
 #endif
