@@ -29,7 +29,7 @@ private:
     date Date;
     double Total = 0;
     u_int bill_no = -1;
-    vector<string> dishes_IDs;
+    vector<string> dish_IDs;
     vector<string> dish_names;
     vector<int> quantity;
     vector<double> total_per_dish;
@@ -37,11 +37,12 @@ private:
 public:
     bill(){};
     ~bill();
-    bool AddData(const string &ID, const string &name);
+    void AddData(const string &ID, const string &name);
     double Total();
     double Income();
     void GenerateBill();
     void LoadOldBill();
+    void RemoveData(const string &ID);
 };
 
 #endif

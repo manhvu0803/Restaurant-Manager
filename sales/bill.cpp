@@ -17,18 +17,37 @@ bill::~bill()
     file.close();
 }
 
-bool bill::AddData(const string &ID, const string &name)
+void bill::AddData(const string &ID, const string &name)
 {
-    int id_size = this->dishes_IDs.size();
+    int id_size = this->dish_IDs.size();
     for (int i = 0; i < id_size; ++i)
     {
-        if (dishes_IDs[i] == ID)
-            ++quantity[i];
-        else
+        if (dish_IDs[i] == ID)
         {
-            dish_names.push_back(name);
-            dishes_IDs.push_back(ID);
-            quantity.push_back(1);
+            ++quantity[i];
+            return;
+        }
+    }
+    dish_names.push_back(name);
+    dish_IDs.push_back(ID);
+    quantity.push_back(1);
+}
+
+void bill::RemoveData(const string &ID)
+{
+    int id_size = this->dish_IDs.size();
+    for (int i = 0; i < id_size; ++i)
+    {
+        if (dish_IDs[i] == ID)
+        {
+            if (quantity[i] == 1)
+            {
+                dish_IDs.erase(dish_IDs.begin() + i);
+                dish_names.erase(dish_names.begin() + i);
+            }
+            else
+                --quantity[i];
+            return;
         }
     }
 }

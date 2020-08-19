@@ -15,15 +15,10 @@ private:
 
 public:
     ~order();
-    order *instantiate()
-    {
-        if (!instance)
-            instance = new order;
-        return instance;
-    }
+    order(const order &other) = delete;
+    order &operator=(const order &other) = delete;
+    order *instantiate();
     void NewOrder();
 };
-
-order *order::instance = nullptr;
 
 #endif
