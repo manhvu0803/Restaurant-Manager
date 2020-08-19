@@ -32,7 +32,7 @@ void Storage::exp()
 void Storage::input()
 {
 	string id, unit;
-	int amount, d, m , y;
+	int amount;
 	cout << "Label: ";
 	getline(cin, id);
 	cout << "Amount: ";
@@ -40,7 +40,7 @@ void Storage::input()
 	cin.ignore();
 	cout << "Unit: ";
 	getline(cin, unit);
-	Date date = inputDate(d, m, y);
+	Date date = inputDate();
 	Ingredients ing(id, amount, unit, date);
 	str.push_back(ing);
 }
@@ -48,23 +48,24 @@ bool leap(int y)
 {
 	return(((y % 4 == 0) &&(y % 100 != 0)) || (y % 400 == 0));
 }
-Date Storage::inputDate(int& d, int& m, int& y)
+Date inputDate()
 {
+	int d, m, y;
 	cout << "Expiration date: ";
 	cin >> d >> m >> y;
 	if (d < 1 || d > 31)
-		return inputDate(d, m, y);
+		return inputDate();
 	if (m < 1 || m > 12)
-		return inputDate(d, m, y);
+		return inputDate();
 	if (m == 2)
 	{
 		if (leap(y) && d > 29)
-			return inputDate(d, m, y);
+			return inputDate();
 		else if (d > 28)
-			return inputDate(d, m, y);
+			return inputDate();
 	}
 	if (d > 30 && (m == 4 || m == 6 || m == 9 || m == 11))
-		return inputDate(d, m, y);
+		return inputDate();
 	Date date(d, m, y);
 	return date;
 }
@@ -128,7 +129,19 @@ bool Ingredients::find(const string& n)
 		return true;
 	else return false;
 }
-void Ingredients::change(const string& n)
+void Ingredients::changeID(const string& n)
 {
 	id = n;
+}
+bool Ingredients::CheckandAdd(const int& n, bool op, const int& t)
+{
+	if (amount + n <= t)
+		return false;
+	if (op)
+		amount += n;
+	return amount;
+}
+void Ingredients::changeDate()
+{
+	exd = inputDate();
 }

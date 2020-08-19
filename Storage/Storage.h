@@ -24,7 +24,9 @@ public:
 	void exp(std::ofstream& fp);
 	void print();
 	bool find(const std::string& n);
-	void change(const std::string& n);
+	void changeID(const std::string& n);
+	bool CheckandAdd(const int& n, bool op, const int& t);//bool op: 1 = add, 0 = check; n = amount to be added; t = threshold ( <= t = bad)
+	void changeDate();
 };
 class Storage
 {
@@ -34,9 +36,9 @@ public:
 	~Storage();
 	void imp();
 	void print();
-	void input();
+	void input();//manual adding
 	Ingredients* find(const std::string& f);
-	bool avail(const std::string& i);
-	Date inputDate(int& d, int& m, int& y);
 	void exp();
 };
+Date inputDate();
+bool leap(int y);
