@@ -105,6 +105,7 @@ void discount::add_promo()
     tmp->NewPromo();
     promos.push_back(tmp);
 }
+
 discount *discount::instantiate()
 {
     if (!instance)
@@ -146,6 +147,7 @@ bool Code::NewCode(const string &_code_)
 /*********************
  * VOUCHER
 *********************/
+
 voucher::voucher(const string &file_name)
 {
     stringstream path;
@@ -159,6 +161,7 @@ voucher::voucher(const string &file_name)
         throw "Invalid file format!";
     }
     getline(file, name);
+
     file >> discount_value;
     getline(file, tmp);
     getline(file, tmp);
@@ -229,6 +232,7 @@ void voucher::ListDish()
 /*********************
  * PROMO
 *********************/
+
 promo::promo(const string &file_name)
 {
     stringstream path;

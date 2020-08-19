@@ -10,6 +10,7 @@ typedef unsigned int u_int;
 
 /*************************************
  * ERROR_LOG
+
 *************************************/
 class ERROR_LOG final
 {
@@ -38,6 +39,7 @@ public:
     u_int d, m, y;
     date();
     date(const int &d, const int &m, const int &y);
+
     friend std::ostream &operator<<(std::ostream &os, const date &_date);
     friend std::istream &operator>>(std::istream &is, date &_date);
     bool operator<(const date &_date) const;
@@ -49,5 +51,6 @@ public:
 };
 
 date ConvertFromString(const std::string &_date);
+
 
 #endif
