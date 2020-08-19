@@ -7,14 +7,26 @@
 #include "dish.h"
 using namespace std;
 
-class Menu {
-	vector<Dish*> menu;
+/************************
+ * Menu
+ * Dung instantiate() de tao object
+ * Menu *obj = obj->instantiate
+ * Nho delete Menu khi het chuong trinh
+************************/
+class Menu
+{
+	static Menu *instance;
+	vector<Dish *> menu;
+	Menu();
+
 public:
+	~Menu();
+	Menu *instantiate();
 	//void input();
 	void output();
 	//void save();
 	void load();
-	void add(Dish* a);
-	vector<Dish*> getMenu();
+	void add(Dish *a);
+	vector<Dish *> getMenu();
 };
 #endif
