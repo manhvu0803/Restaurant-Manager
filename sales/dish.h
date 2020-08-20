@@ -9,23 +9,27 @@
 #include <iomanip>
 using namespace std;
 
-class Date {
+class Date
+{
 	int y;
 	int m;
 	int d;
+
 public:
-	Date() : y(1), m(1), d(1) {};
-	Date(int dd, int mm, int yy) : y(yy), m(mm), d(dd) {};
+	Date() : y(1), m(1), d(1){};
+	Date(int dd, int mm, int yy) : y(yy), m(mm), d(dd){};
 	void input();
 	//void output();
-	bool checkday(int d, int m,int y);
+	bool checkday(int d, int m, int y);
 };
-class Ingredients {
+class Ingredients
+{
 	string id;
 	string name;
 	int amount;
 	string currency;
 	Date exd;
+
 public:
 	Ingredients();
 	Ingredients(string id, string name, int amount, string currency);
@@ -35,20 +39,23 @@ public:
 	//void load(string inputpath, int &pos);
 	//void load();
 };
-class Dish {
+class Dish
+{
 	string id;
 	string name;
-	vector<Ingredients*> ings;
+	vector<Ingredients *> ings;
 	double price;
+
 public:
-	Dish() : id("None"), name("None"), price(0) {};
+	Dish() : id("None"), name("None"), price(0){};
 	Dish(string id, string name, double price);
 	//void input();
 	void outputMenu();
 	//void output();
 	//void load(string inputpath);
-	void add(Ingredients* a);
+	void add(Ingredients *a);
 	string getID();
 	string getName();
+	double getPrice();
 };
 #endif

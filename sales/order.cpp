@@ -54,9 +54,10 @@ void order::NewOrder()
             cin.ignore(1000, '\n');
         }
         if (tmp == 1)
-            new_bill->AddData(rest_menu->getMenu()[tmp - 1]->getID(), rest_menu->getMenu()[tmp - 1]->getName());
+            new_bill->AddData(rest_menu->getMenu()[tmp - 1]->getID(),
+                              rest_menu->getMenu()[tmp - 1]->getName(), rest_menu->getMenu()[tmp - 1]->getPrice());
         else if (tmp == 2)
-            new_bill->RemoveData(rest_menu->getMenu()[tmp - 1]->getID());
+            new_bill->RemoveData(rest_menu->getMenu()[tmp - 1]->getID(), rest_menu->getMenu()[tmp - 1]->getPrice());
         else
             tmp = 1;
     } while (tmp && tmp != -1);
