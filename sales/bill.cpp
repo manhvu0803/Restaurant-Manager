@@ -28,9 +28,9 @@ void bill::AddData(const string &ID, const string &name)
             return;
         }
     }
-    dish_names.push_back(name);
-    dish_IDs.push_back(ID);
-    quantity.push_back(1);
+    dish_names.emplace_back(name);
+    dish_IDs.emplace_back(ID);
+    quantity.emplace_back(1);
 }
 
 void bill::RemoveData(const string &ID)

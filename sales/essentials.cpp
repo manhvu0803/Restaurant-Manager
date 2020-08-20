@@ -71,6 +71,9 @@ date::date()
     d = now->tm_mday;
     m = now->tm_mon + 1;
     y = now->tm_year + 1900;
+    h = now->tm_hour;
+    min = now->tm_min;
+    s = now->tm_sec;
 }
 
 date::date(const int &d, const int &m, const int &y)
