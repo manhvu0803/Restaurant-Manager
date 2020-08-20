@@ -12,7 +12,7 @@ order::~order()
     bills.clear();
 }
 
-order *order::instantiate();
+order *order::instantiate()
 {
     if (!instance)
         instance = new order;

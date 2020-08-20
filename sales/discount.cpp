@@ -1,12 +1,12 @@
+#include "discount.hpp"
+#include "essentials.hpp"
+#include "menu.h"
+#include "essentials.hpp"
 #include <vector>
 #include <iostream>
 #include <string>
 #include <dirent.h>
 #include <windows.h>
-#include "discount.hpp"
-#include "essentials.hpp"
-#include "menu.h"
-#include "essentials.hpp"
 
 #define MAX_CODE_LENGTH 10
 
@@ -87,6 +87,26 @@ discount::discount()
     closedir(dir);
 }
 
+voucher *discount::use_voucher(const std::string &code)
+{
+    for (auto &i : vouchers)
+    {
+        if (i->CompareCode(code))
+            return i;
+    }
+    return nullptr;
+}
+
+promo *discount::use_promo(const std::string &code)
+{
+    for (auto &i : promos)
+    {
+        if (i->CompareCode(code))
+            return i;
+    }
+    return nullptr;
+}
+
 discount::~discount()
 {
     for (auto &i : vouchers)
@@ -143,6 +163,34 @@ bool Code::NewCode(const string &_code_)
         return false;
     this->code.push_back(_code_);
     return true;
+}
+
+void Code::ListDish()
+{
+    Menu *rest_menu = rest_menu->instantiate();
+    for (auto &i : dish)
+    {
+        for (auto &j : rest_menu->getMenu())
+        {
+            if (i == j->getID())
+                cout << j->getName();
+        }
+    }
+}
+
+bool Code::CompareCode(const string &code)
+{
+    for (auto &i : dish)
+    {
+        if (i == code)
+            return true;
+    }
+    return false;
+}
+
+int Code::getDiscountValue()
+{
+    return discount_value;
 }
 
 /*********************
@@ -238,13 +286,6 @@ void voucher::NewVoucher()
     }
     for (int i = 0; i < quantity; ++i)
         code.push_back(code_generator());
-}
-
-void voucher::ListDish()
-{
-    //List name of dishes
-    for (auto &i : dish)
-        cout << i << endl;
 }
 
 /*********************

@@ -34,6 +34,9 @@ protected:
 public:
     std::string code_generator();
     bool NewCode(const std::string &code);
+    int getDiscountValue();
+    bool CompareCode(const string &code);
+    void ListDish();
 };
 
 class promo : public Code
@@ -42,7 +45,6 @@ public:
     promo(){};
     promo(const std::string &file_name);
     void NewPromo();
-    void ListDish();
     ~promo();
 };
 
@@ -52,7 +54,6 @@ public:
     voucher(){};
     voucher(const std::string &file_name);
     void NewVoucher();
-    void ListDish();
     ~voucher();
 };
 
@@ -70,8 +71,8 @@ public:
     discount &operator=(const discount &other) = delete;
     void add_voucher();
     void add_promo();
-    bool use_voucher(const std::string &code);
-    bool use_promo(const std::string &code);
+    voucher *use_voucher(const std::string &code);
+    promo *use_promo(const std::string &code);
     discount *instantiate();
 };
 
