@@ -15,18 +15,21 @@ public:
 };
 class Ingredients
 {
-	std::string id;
+	int id;
 	int amount;
 	std::string unit;
 	Date exd;
+	std::string name;
 public:
-	Ingredients(std::string id, int amount, std::string unit, Date exd) : id(id), amount(amount), unit(unit), exd(exd) {};
+	Ingredients(int id, std::string name, int amount, std::string unit, Date exd) : id(id), name(name), amount(amount), unit(unit), exd(exd) {};
 	void exp(std::ofstream& fp);
 	void print();
-	bool find(const std::string& n);
-	void changeID(const std::string& n);
+	bool findID(const int& n);
+	bool findLabel(const std::string& n);
+	void changeID(const int& n);
 	bool CheckandAdd(const int& n, bool op, const int& t);//bool op: 1 = add, 0 = check; n = amount to be added; t = threshold ( <= t = bad)
 	void changeDate();
+	bool expired();
 };
 class Storage
 {
@@ -34,11 +37,14 @@ class Storage
 	double cost;
 public:
 	~Storage();
-	void imp();
+	void imp();//load txt file into vector
 	void print();
 	void input();//manual adding
-	Ingredients* find(const std::string& f);
-	void exp();
+	Ingredients* findID(const int& f);
+	Ingredients* findLabel(const std::string& f);
+	void exp();//load vector into txt file
+	void restock();
+	void checkexp();
 };
 Date inputDate();
 bool leap(int y);
