@@ -17,10 +17,10 @@ class Menu
 {
 	static Menu *instance;
 	vector<Dish *> menu;
-	Menu();
+	Menu(){};
 
 public:
-	~Menu();
+	~Menu(){};
 	Menu *instantiate();
 	Menu &operator=(const Menu *other) = delete;
 	Menu(const Menu &other) = delete;

@@ -1,11 +1,12 @@
+#include "discount.hpp"
+#include "essentials.hpp"
+#include "menu.h"
+#include "essentials.hpp"
 #include <vector>
 #include <iostream>
 #include <string>
 #include <dirent.h>
-#include "discount.hpp"
-#include "essentials.hpp"
-
-// #include "essentials.hpp"
+#include <windows.h>
 
 #define MAX_CODE_LENGTH 10
 
@@ -86,6 +87,26 @@ discount::discount()
     closedir(dir);
 }
 
+voucher *discount::use_voucher(const std::string &code)
+{
+    for (auto &i : vouchers)
+    {
+        if (i->CompareCode(code))
+            return i;
+    }
+    return nullptr;
+}
+
+promo *discount::use_promo(const std::string &code)
+{
+    for (auto &i : promos)
+    {
+        if (i->CompareCode(code))
+            return i;
+    }
+    return nullptr;
+}
+
 discount::~discount()
 {
     for (auto &i : vouchers)
@@ -144,6 +165,34 @@ bool Code::NewCode(const string &_code_)
     return true;
 }
 
+void Code::ListDish()
+{
+    Menu *rest_menu = rest_menu->instantiate();
+    for (auto &i : dish)
+    {
+        for (auto &j : rest_menu->getMenu())
+        {
+            if (i == j->getID())
+                cout << j->getName();
+        }
+    }
+}
+
+bool Code::CompareCode(const string &code)
+{
+    for (auto &i : dish)
+    {
+        if (i == code)
+            return true;
+    }
+    return false;
+}
+
+int Code::getDiscountValue()
+{
+    return discount_value;
+}
+
 /*********************
  * VOUCHER
 *********************/
@@ -161,7 +210,6 @@ voucher::voucher(const string &file_name)
         throw "Invalid file format!";
     }
     getline(file, name);
-
     file >> discount_value;
     getline(file, tmp);
     getline(file, tmp);
@@ -205,13 +253,31 @@ void voucher::NewVoucher()
         cin.clear();
         cin.ignore(1000, '\n');
     }
-    cout << "Expiration date: ";
-    date tmp;
+    cout << "Expiration date: \n";
+    date tmp_d;
     do
     {
         cin >> expiration_date;
-    } while (tmp <= expiration_date);
-    // List name of dishes
+    } while (tmp_d >= expiration_date);
+    int tmp;
+    do
+    {
+        system("cls");
+        Menu *rest_menu = rest_menu->instantiate();
+        cout << "Choose dish:\n";
+        rest_menu->output();
+        cout << "0. Exit\n";
+        cout << "Option: ";
+        while (!(cin >> tmp) || tmp < 0 || tmp > rest_menu->getMenu().size() + 1)
+        {
+            cout << "Invalid!\n";
+            cout << "Try again: ";
+            cin.clear();
+            cin.ignore(1000, '\n');
+        }
+        if (tmp)
+            dish.push_back(rest_menu->getMenu()[tmp - 1]->getID());
+    } while (tmp || !dish.size());
     cout << "Discount value: ";
     while (!(cin >> discount_value) || discount_value <= 0 || discount_value > 100)
     {
@@ -220,13 +286,6 @@ void voucher::NewVoucher()
     }
     for (int i = 0; i < quantity; ++i)
         code.push_back(code_generator());
-}
-
-void voucher::ListDish()
-{
-    //List name of dishes
-    for (auto &i : dish)
-        cout << i << endl;
 }
 
 /*********************
@@ -273,13 +332,31 @@ void promo::NewPromo()
         cin.clear();
         cin.ignore(1000, '\n');
     }
-    cout << "Expiration date: ";
-    date tmp;
+    cout << "Expiration date: \n";
+    date tmp_d;
     do
     {
         cin >> expiration_date;
-    } while (tmp <= expiration_date);
-    // List name of dishes
+    } while (tmp_d <= expiration_date);
+    int tmp;
+    do
+    {
+        system("cls");
+        Menu *rest_menu = rest_menu->instantiate();
+        cout << "Choose dish:\n";
+        rest_menu->output();
+        cout << "0. Exit\n";
+        cout << "Option: ";
+        while (!(cin >> tmp) || tmp < 0 || tmp > rest_menu->getMenu().size() + 1)
+        {
+            cout << "Invalid!\n";
+            cout << "Try again: ";
+            cin.clear();
+            cin.ignore(1000, '\n');
+        }
+        if (tmp)
+            dish.push_back(rest_menu->getMenu()[tmp - 1]->getID());
+    } while (tmp || !dish.size());
     cout << "Discount value: ";
     while (!(cin >> discount_value) || discount_value <= 10000)
     {
