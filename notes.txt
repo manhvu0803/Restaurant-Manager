@@ -16,6 +16,6 @@ Clog : global, ERROR_LOG
 
 Singleton : 
 discount : essentials.hpp
-ERROR_LOG : discount.hpp (substitute)
+ERROR_LOG : essentials.hpp (substitute)
 order : order.hpp
 Menu : menu.h
