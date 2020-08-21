@@ -12,7 +12,8 @@ void Ingredients::exp(ofstream& fp, bool op)
 	fp << id << "\n";
 	fp << name << endl;
 	fp << amount << "\n";
-	fp << floor << endl;
+	if (op)
+		fp << floor << endl;
 	fp << unit << endl;
 	if (op)
 		fp << exd;
