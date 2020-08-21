@@ -5,8 +5,9 @@ void Menu::load() {
 	string tmp;
 	string id1, name1, cur1;
 	double cost;
-	int amount;
+	int amount,x;
 	ifstream fin,fin1;
+
 	fin.open(inputpath);
 	if (!fin.is_open()) {
 		cout << "Can't open menu file " << endl;
@@ -50,12 +51,49 @@ void Menu::load() {
 void Menu::output() {
 	cout << "This is our menu " << endl;
 	for (int i = 0; i < menu.size(); i++) {
+		cout << setw(2) << left << "(" + to_string(i) + "): ";
 		menu[i]->outputMenu();
 	}
 }
 void Menu::add(Dish* a) {
 	menu.push_back(a);
 }
-vector<Dish*> Menu::getMenu() {
+const vector<Dish*> Menu::getMenuc() {
 	return menu;
+}
+vector<Dish*>Menu::getMenu() {
+	return menu;
+}
+void Menu::save() {
+	ofstream fout;
+	string outputpath = "./restaurant/menu/dishes.txt";
+	fout.open(outputpath);
+	if (!fout.is_open()) {
+		cout << "Can't open menu file" << endl;
+	}
+	else {
+		for (int i = 0; i < menu.size(); i++) {
+			fout << menu[i]->getID() << endl;
+		}
+		fout.close();
+	}
+	for (int i = 0; i < menu.size(); i++) {
+		outputpath = "./restaurant/menu/" + menu[i]->getID() + ".txt";
+		fout.open(outputpath);
+		if (!fout.is_open()) {
+			cout << "Can't open dish file" << endl;
+		}
+		else {
+			menu[i]->save(fout);
+		}
+
+	}
+	fout.close();
+}
+void Menu::newDish() {
+	Dish tmp;
+	int choice = 1;
+	while (choice == 1) {
+		tmp.input();
+	}
 }

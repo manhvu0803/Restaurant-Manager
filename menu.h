@@ -5,6 +5,8 @@
 #include <string>
 #include <fstream>
 #include "dish.h"
+#include "essentials.hpp"
+
 using namespace std;
 
 class Menu {
@@ -12,9 +14,14 @@ class Menu {
 public:
 	//void input();
 	void output();
-	//void save();
+	void save();
 	void load();
 	void add(Dish* a);
+	const vector<Dish*> getMenuc();
 	vector<Dish*> getMenu();
+	void newDish();
+	void removeDish();
+	void changDish();
+
 };
 #endif
