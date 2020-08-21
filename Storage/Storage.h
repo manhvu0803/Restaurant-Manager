@@ -12,6 +12,7 @@ class Ingredients
 	std::string name;
 	int floor;
 public:
+	Ingredients();
 	Ingredients(int id, std::string name, int amount, std::string unit, date exd, int floor) : id(id), name(name), amount(amount), unit(unit), exd(exd), floor(floor) {};
 	void exp(std::ofstream& fp, bool op);
 	void print();
@@ -22,6 +23,9 @@ public:
 	void changeDate(const int& d, const int& m, const int& y);
 	bool expired();
 	bool compdate(const date& x);
+	int getID();
+	std::string getName();
+	std::string getUnit();
 };
 class Storage
 {
@@ -41,4 +45,5 @@ public:
 	void checkexp();
 	void order();
 	Ingredients& operator [](int i);
+	std::vector<Ingredients> getStorage();
 };

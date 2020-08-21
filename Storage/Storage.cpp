@@ -13,7 +13,7 @@ void Ingredients::exp(ofstream& fp, bool op)
 	fp << name << endl;
 	fp << amount << "\n";
 	if (op)
-		fp << floor << endl;
+	fp << floor << endl;
 	fp << unit << endl;
 	if (op)
 		fp << exd;
@@ -250,4 +250,26 @@ void Storage::order()
 Ingredients& Storage::operator[](int i)
 {
 	return str[i];
+}
+Ingredients::Ingredients() : exd()
+{
+	id = 0;
+	amount = 0;
+	floor = 0;
+}
+int Ingredients::getID()
+{
+	return id;
+}
+string Ingredients::getName()
+{
+	return name;
+}
+string Ingredients::getUnit()
+{
+	return unit;
+}
+vector<Ingredients> Storage::getStorage()
+{
+	return str;
 }
