@@ -37,12 +37,12 @@ private:
 public:
     bill(){};
     ~bill();
-    void AddData(const string &ID, const string &name);
+    void AddData(const string &ID, const string &name, const double &price);
     double Total();
     double Income();
     void GenerateBill();
     void LoadOldBill();
-    void RemoveData(const string &ID);
+    void RemoveData(const string &ID, const double &price);
 };
 
 #endif
