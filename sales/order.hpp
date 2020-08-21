@@ -21,7 +21,7 @@ public:
     order *instantiate();
     void NewOrder();
     void UpdateDishQuant(const int &index, const int &mode);
-    void update(const int &pos);
+    void update(const int &pos, const int &mode);
     const vector<int> &getOrderedDishQuantity();
 };
 

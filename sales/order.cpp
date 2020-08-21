@@ -26,9 +26,12 @@ order::order()
     file.close();
 }
 
-void order::update(const int &pos)
+void order::update(const int &pos, const int &mode)
 {
-    quantity.emplace(quantity.begin() + pos, 0);
+    if (mode)
+        quantity.emplace(quantity.begin() + pos, 0);
+    else
+        quantity.erase(quantity.begin() + pos);
 }
 
 order::~order()
