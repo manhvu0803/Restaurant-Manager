@@ -2,27 +2,18 @@
 #include <string>
 #include <vector>
 #include <fstream>
-class Date
-{
-	int d;
-	int m;
-	int y;
-public:
-	Date(int d, int m, int y) : d(d), m(m), y(y) {};
-	bool expired();
-	std::string stringify();
-	void print();
-};
+#include "essentials.hpp"
 class Ingredients
 {
 	int id;
 	int amount;
 	std::string unit;
-	Date exd;
+	date exd;
 	std::string name;
+	int floor;
 public:
-	Ingredients(int id, std::string name, int amount, std::string unit, Date exd) : id(id), name(name), amount(amount), unit(unit), exd(exd) {};
-	void exp(std::ofstream& fp);
+	Ingredients(int id, std::string name, int amount, std::string unit, date exd, int floor) : id(id), name(name), amount(amount), unit(unit), exd(exd), floor(floor) {};
+	void exp(std::ofstream& fp, bool op);
 	void print();
 	bool findID(const int& n);
 	bool findLabel(const std::string& n);
@@ -39,12 +30,10 @@ public:
 	~Storage();
 	void imp();//load txt file into vector
 	void print();
-	void input();//manual adding
+	void input(bool op);//manual adding
 	Ingredients* findID(const int& f);
 	Ingredients* findLabel(const std::string& f);
 	void exp();//load vector into txt file
 	void restock();
 	void checkexp();
 };
-Date inputDate();
-bool leap(int y);

@@ -5,20 +5,17 @@
 #include <fstream>
 #include "Storage.h"
 #include <ctime>
+#include "essentials.hpp"
 using namespace std;
-string Date::stringify()
-{
-	ostringstream os;
-	os << d << endl << m << endl << y;
-	return os.str();
-}
-void Ingredients::exp(ofstream& fp)
+void Ingredients::exp(ofstream& fp, bool op)
 {
 	fp << id << "\n";
 	fp << name << endl;
 	fp << amount << "\n";
+	fp << floor << endl;
 	fp << unit << endl;
-	fp << exd.stringify();
+	if (op)
+		fp << exd;
 }
 void Storage::exp()
 {
@@ -26,15 +23,15 @@ void Storage::exp()
 	vector<Ingredients>::iterator it;
 	for (it = str.begin(); it != str.end(); it++)
 	{
-		(*it).exp(File);
+		(*it).exp(File, 1);
 		File << endl;
 	}
 	File.close();
 }
-void Storage::input()
+void Storage::input(bool op)
 {
 	string name, unit;
-	int amount, id;
+	int amount, id, floor;
 	cout << "ID: ";
 	cin >> id;
 	cin.ignore();
@@ -50,37 +47,23 @@ void Storage::input()
 	}
 	cout << "Amount: ";
 	cin >> amount;
+	cout << "Minimum amount: ";
+	cin >> floor;
+	while (floor < 0 || amount < 0)
+	{
+		cout << "Amount: ";
+		cin >> amount;
+		cout << "Minimum amount: ";
+		cin >> floor;
+	}
 	cin.ignore();
 	cout << "Unit: ";
 	getline(cin, unit);
-	Date date = inputDate();
-	Ingredients ing(id, name, amount, unit, date);
+	date d;
+	if (op)
+	cin >> d;
+	Ingredients ing(id, name, amount, unit, d, floor);
 	str.push_back(ing);
-}
-bool leap(int y)
-{
-	return(((y % 4 == 0) &&(y % 100 != 0)) || (y % 400 == 0));
-}
-Date inputDate()
-{
-	int d, m, y;
-	cout << "Expiration date: ";
-	cin >> d >> m >> y;
-	if (d < 1 || d > 31)
-		return inputDate();
-	if (m < 1 || m > 12)
-		return inputDate();
-	if (m == 2)
-	{
-		if (leap(y) && d > 29)
-			return inputDate();
-		else if (d > 28)
-			return inputDate();
-	}
-	if (d > 30 && (m == 4 || m == 6 || m == 9 || m == 11))
-		return inputDate();
-	Date date(d, m, y);
-	return date;
 }
 Storage::~Storage()
 {
@@ -97,31 +80,32 @@ void Storage::imp()
 			return;
 		}
 		string unit, line, name;
-		int amount, d, m, y, id;
+		int amount, d, m, y, id, floor;
 		file >> id;
 		getline(file, line);
 		getline(file, name, '\n');
 		file >> amount;
+		file >> floor;
 		getline(file, line);
 		getline(file, unit, '\n');
-		file >> d >> m >> y;
+		file >> d;
+		file.seekg(1, ios::cur);
+		file >> m;
+		file.seekg(1, ios::cur);
+		file >> y;
 		getline(file, line);
-		Date date(d, m, y);
-		Ingredients ing(id, name, amount, unit, date);
+		date date(d, m, y);
+		Ingredients ing(id, name, amount, unit, date, floor);
 		str.push_back(ing);
 	}
 	file.close();
-}
-void Date::print()
-{
-	cout << d << "/" << m << "/" << y << endl;
 }
 void Ingredients::print()
 {
 	cout << "ID: " << id << endl;
 	cout << "Label: " << name << endl;
 	cout << "Amount: " << amount << " " << unit << endl;
-	exd.print();
+	cout << "Date: " << exd;
 }
 void Storage::print()
 {
@@ -171,43 +155,12 @@ bool Ingredients::CheckandAdd(const int& n, bool op, const int& t)
 		amount += n;
 	return amount;
 }
-int datefrom(int d, int m, int y)
-{
-	int leap, day = 0, i;
-	if (m > 2)
-	{
-		day += 58;
-		leap = y / 4 - y / 100 + y / 400;
-		for (i = 3; i < m; ++i)
-		{
-			if (i == 3 || i == 5 || i == 7 || i == 8 || i == 10 || i == 12)
-				day += 31;
-			else
-				day += 30;
-		}
-	}
-	else
-	{
-		leap = (y - 1) / 4 - (y - 1) / 100 + (y - 1) / 400;
-		if (m == 2)
-			day += 31;
-	}
-	day += y * 365 + leap + d;
-	return day;
-}
 void Ingredients::changeDate()
 {
-	exd = inputDate();
-}
-bool Date::expired()
-{
-	time_t now = NULL;
-	struct tm* t = localtime(&now);
-	if (datefrom(d, m, y) >= datefrom(t->tm_mday, t->tm_mon + 1, t->tm_year + 1900))
-		return true;
-	else return false;
+	cin >> exd;
 }
 bool Ingredients::expired()
 {
-	return exd.expired();
+	date c;
+	return (exd >= c);
 }
