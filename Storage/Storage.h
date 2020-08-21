@@ -18,15 +18,17 @@ public:
 	bool findID(const int& n);
 	bool findLabel(const std::string& n);
 	void changeID(const int& n);
-	bool CheckandAdd(const int& n, bool op, const int& t);//bool op: 1 = add, 0 = check; n = amount to be added; t = threshold ( <= t = bad)
-	void changeDate();
+	bool CheckandAdd(const int& n, bool op);//bool op: 1 = add, 0 = check; n = amount to be added; t = threshold ( <= t = bad)
+	void changeDate(const int& d, const int& m, const int& y);
 	bool expired();
+	bool compdate(const date& x);
 };
 class Storage
 {
 	std::vector<Ingredients> str;
 	double cost;
 public:
+	Storage();
 	~Storage();
 	void imp();//load txt file into vector
 	void print();
@@ -35,5 +37,8 @@ public:
 	Ingredients* findLabel(const std::string& f);
 	void exp();//load vector into txt file
 	void restock();
+	void lowstock();
 	void checkexp();
+	void order();
+	Ingredients& operator [](int i);
 };

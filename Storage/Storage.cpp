@@ -32,30 +32,22 @@ void Storage::input(bool op)
 {
 	string name, unit;
 	int amount, id, floor;
-	cout << "ID: ";
-	cin >> id;
-	cin.ignore();
-	cout << "Label: ";
-	getline(cin, name);
-	while (findLabel(name) || findID(id))
+	
+	do
 	{
 		cout << "ID: ";
 		cin >> id;
 		cin.ignore();
 		cout << "Label: ";
 		getline(cin, name);
-	}
-	cout << "Amount: ";
-	cin >> amount;
-	cout << "Minimum amount: ";
-	cin >> floor;
-	while (floor < 0 || amount < 0)
+	} while (findID(id) || findLabel(name));
+	do
 	{
 		cout << "Amount: ";
 		cin >> amount;
 		cout << "Minimum amount: ";
 		cin >> floor;
-	}
+	} while (floor < 0 || amount < 0);
 	cin.ignore();
 	cout << "Unit: ";
 	getline(cin, unit);
@@ -80,7 +72,8 @@ void Storage::imp()
 			return;
 		}
 		string unit, line, name;
-		int amount, d, m, y, id, floor;
+		int amount, id, floor;
+		u_int d, m, y;
 		file >> id;
 		getline(file, line);
 		getline(file, name, '\n');
@@ -147,20 +140,113 @@ void Ingredients::changeID(const int& n)
 {
 	id = n;
 }
-bool Ingredients::CheckandAdd(const int& n, bool op, const int& t)
+bool Ingredients::CheckandAdd(const int& n, bool op)
 {
-	if (amount + n <= t)
+	if (amount + n <= 0)
 		return false;
 	if (op)
 		amount += n;
-	return amount;
+	return (amount > floor);
 }
-void Ingredients::changeDate()
+void Ingredients::changeDate(const int& d, const int& m, const int& y)
 {
-	cin >> exd;
+	date n(d, m, y);
+	exd = n;
 }
 bool Ingredients::expired()
 {
 	date c;
+	if (exd >= c)
+	{
+		amount = 0;
+		cout << id << " " << name << endl;
+	}
 	return (exd >= c);
+}
+void Storage::checkexp()
+{
+	cout << "Expired:\n";
+	for (auto x : str)
+	{
+		x.expired();
+	}
+}
+void Storage::lowstock()
+{
+	cout << "Low stock:\n";
+	for (auto x : str)
+	{
+		if (x.CheckandAdd(0, 0))
+			x.print();
+	}
+}
+void Storage::restock()
+{
+	ifstream file("restock.txt");
+	while (file.good())
+	{
+		if (file.peek() == EOF)
+		{
+			file.close();
+			return;
+		}
+		int id, fill, c;
+		u_int d, m, y;
+		string line;
+		file >> id;
+		getline(file, line);
+		file >> fill;
+		getline(file, line);
+		file >> c;
+		cost += c;
+		getline(file, line);
+		file >> d;
+		file.seekg(1, ios::cur);
+		file >> m;
+		file.seekg(1, ios::cur);
+		file >> y;
+		int dd, mm, yy;
+		dd = d;
+		mm = m;
+		yy = y;
+		getline(file, line);
+		getline(file, line);
+		Ingredients* x = findID(id);
+		x->changeDate(dd, mm, yy);
+		x->CheckandAdd(fill, 0);
+	}
+	file.close();
+}
+bool Ingredients::compdate(const date& x)
+{
+	return exd > x;
+}
+Storage::Storage()
+{
+	cost = 0;
+}
+void Storage::order()
+{
+	ofstream file("restock.txt", ios::app);
+	int id, fill, c;
+	date d;
+	do
+	{
+		cout << "ID:";
+		cin >> id;
+		cout << "Amount:";
+		cin >> fill;
+		cout << "Price: ";
+		cin >> c;
+		cin >> d;
+	} while (findID(id) == NULL || fill < 0 || c < 0 || findID(id)->compdate(d));
+	file << id << endl;
+	file << fill << endl;
+	file << c << endl;
+	file << d;
+	file.close();
+}
+Ingredients& Storage::operator[](int i)
+{
+	return str[i];
 }
