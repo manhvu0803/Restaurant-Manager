@@ -4,6 +4,7 @@
 #include "essentials.hpp"
 #include <iostream>
 #include <vector>
+#include "order.hpp"
 
 using namespace std;
 
@@ -20,10 +21,10 @@ using namespace std;
 *********************/
 
 /*********************
- * 
+ *
 *********************/
 
-class bill
+class bill :public order
 {
 private:
     date Date;
@@ -35,14 +36,14 @@ private:
     vector<double> total_per_dish;
 
 public:
-    bill(){};
+    bill() {};
     ~bill();
-    void AddData(const string &ID, const string &name, const double &price);
+    void AddData(const string& ID, const string& name, const double& price);
     double Total();
     double Income();
     void GenerateBill();
     void LoadOldBill();
-    void RemoveData(const string &ID, const double &price);
+    void RemoveData(const string& ID, const double& price);
 };
 
 #endif
