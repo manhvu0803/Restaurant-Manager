@@ -3,6 +3,7 @@
 
 #include "bill.hpp"
 #include <vector>
+#include <deque>
 
 using namespace std;
 
@@ -12,6 +13,7 @@ private:
     order();
     static order *instance;
     vector<bill *> bills;
+    deque<bill *> orders;
     vector<int> quantity;
 
 public:
@@ -23,6 +25,9 @@ public:
     void UpdateDishQuant(const int &index, const int &mode);
     void update(const int &pos, const int &mode);
     const vector<int> &getOrderedDishQuantity();
+    bool CompleteOrderInQueue();
+    void displayNewestOrder();
+    void displayOldestOrder();
 };
 
 #endif

@@ -36,14 +36,13 @@ void order::update(const int &pos, const int &mode)
 
 order::~order()
 {
-    for (auto &i : bills)
-        delete i;
-    bills.clear();
     ofstream file("DishOrdered");
     for (int i = 0; i < quantity.size() - 1; ++i)
         file << quantity[i] << endl;
     file << quantity[quantity.size() - 1];
     file.close();
+    for (auto &i : bills)
+        delete i;
 }
 
 order *order::instantiate()
@@ -105,7 +104,10 @@ void order::NewOrder()
     if (dish == -1)
         delete new_bill;
     else
+    {
         bills.emplace_back(new_bill);
+        orders.emplace_back(new_bill);
+    }
 }
 
 void order::UpdateDishQuant(const int &index, const int &mode)
@@ -119,4 +121,17 @@ void order::UpdateDishQuant(const int &index, const int &mode)
 const vector<int> &order::getOrderedDishQuantity()
 {
     return quantity;
+}
+
+bool order::CompleteOrderInQueue()
+{
+    orders.pop_front();
+}
+
+void order::displayNewestOrder()
+{
+}
+
+void order::displayOldestOrder()
+{
 }

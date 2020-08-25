@@ -43,7 +43,7 @@ discount::discount()
                 remove(path.c_str());
             }
             voucher_t = new voucher(voucher_name);
-            vouchers.push_back(voucher_t);
+            vouchers.emplace_back(voucher_t);
         }
         catch (const char *msg)
         {
@@ -76,7 +76,7 @@ discount::discount()
                 remove(path.c_str());
             }
             promo_t = new voucher(promo_name);
-            vouchers.push_back(promo_t);
+            vouchers.emplace_back(promo_t);
         }
         catch (const char *msg)
         {
@@ -111,20 +111,22 @@ discount::~discount()
 {
     for (auto &i : vouchers)
         delete i;
+    for (auto &i : promos)
+        delete i;
 }
 
 void discount::add_voucher()
 {
     voucher *tmp = new voucher;
     tmp->NewVoucher();
-    vouchers.push_back(tmp);
+    vouchers.emplace_back(tmp);
 }
 
 void discount::add_promo()
 {
     promo *tmp = new promo;
     tmp->NewPromo();
-    promos.push_back(tmp);
+    promos.emplace_back(tmp);
 }
 
 discount *discount::instantiate()
@@ -161,7 +163,7 @@ bool Code::NewCode(const string &_code_)
 {
     if (_code_.length() != 10)
         return false;
-    this->code.push_back(_code_);
+    this->code.emplace_back(_code_);
     return true;
 }
 
@@ -216,13 +218,13 @@ voucher::voucher(const string &file_name)
     getline(file, tmp);
     while (tmp.size())
     {
-        dish.push_back(tmp);
+        dish.emplace_back(tmp);
         getline(file, tmp);
     }
     while (!file.eof())
     {
         getline(file, tmp);
-        code.push_back(tmp);
+        code.emplace_back(tmp);
     }
     file.close();
 }
@@ -276,7 +278,7 @@ void voucher::NewVoucher()
             cin.ignore(1000, '\n');
         }
         if (tmp)
-            dish.push_back(rest_menu->getMenu()[tmp - 1]->getID());
+            dish.emplace_back(rest_menu->getMenu()[tmp - 1]->getID());
     } while (tmp || !dish.size());
     cout << "Discount value: ";
     while (!(cin >> discount_value) || discount_value <= 0 || discount_value > 100)
@@ -285,7 +287,7 @@ void voucher::NewVoucher()
         cin.ignore(1000, '\n');
     }
     for (int i = 0; i < quantity; ++i)
-        code.push_back(code_generator());
+        code.emplace_back(code_generator());
 }
 
 /*********************
@@ -311,13 +313,13 @@ promo::promo(const string &file_name)
     getline(file, tmp);
     while (tmp.size())
     {
-        dish.push_back(tmp);
+        dish.emplace_back(tmp);
         getline(file, tmp);
     }
     while (!file.eof())
     {
         getline(file, tmp);
-        code.push_back(tmp);
+        code.emplace_back(tmp);
     }
     file.close();
 }
@@ -355,7 +357,7 @@ void promo::NewPromo()
             cin.ignore(1000, '\n');
         }
         if (tmp)
-            dish.push_back(rest_menu->getMenu()[tmp - 1]->getID());
+            dish.emplace_back(rest_menu->getMenu()[tmp - 1]->getID());
     } while (tmp || !dish.size());
     cout << "Discount value: ";
     while (!(cin >> discount_value) || discount_value <= 10000)
@@ -364,7 +366,7 @@ void promo::NewPromo()
         cin.ignore(1000, '\n');
     }
     for (int i = 0; i < quantity; ++i)
-        code.push_back(code_generator());
+        code.emplace_back(code_generator());
 }
 
 promo::~promo()
