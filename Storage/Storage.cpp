@@ -7,6 +7,14 @@
 #include <ctime>
 #include "essentials.hpp"
 using namespace std;
+void Ingredients::changeAmt(const int& x)
+{
+	amount = x;
+}
+int Ingredients::getAmount()
+{
+	return amount;
+}
 void Ingredients::exp(ofstream& fp, bool op)
 {
 	fp << id << "\n";

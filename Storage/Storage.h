@@ -26,6 +26,8 @@ public:
 	int getID();
 	std::string getName();
 	std::string getUnit();
+	void changeAmt(const int& x);
+	int getAmount();
 };
 class Storage
 {
