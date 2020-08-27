@@ -1,0 +1,31 @@
+FD001
+Banh mi trung
+20000
+IN0001
+Muoi
+4
+gam
+IN0002
+Banh mi
+1
+o
+IN0003
+Nuoc tuong
+2
+ml
+IN0004
+Tieu
+4
+gam
+IN0005
+Hanh la
+4
+gam
+IN0006
+Trung
+1
+trai
+IN0007
+Dau an
+10
+ml

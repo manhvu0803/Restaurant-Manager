@@ -1,0 +1,15 @@
+FD002
+Bot chien
+25000
+IN0007
+Dau an
+10
+ml
+IN0006
+Trung
+2
+trai
+IN0008
+Bot chien
+200
+gam
