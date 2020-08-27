@@ -125,7 +125,10 @@ const vector<int> &order::getOrderedDishQuantity()
 
 bool order::CompleteOrderInQueue()
 {
+    if (!orders.size())
+        return false;
     orders.pop_front();
+    return true;
 }
 
 void order::displayNewestOrder()

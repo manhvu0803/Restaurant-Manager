@@ -3,7 +3,7 @@
 
 #include "bill.hpp"
 #include <vector>
-#include <deque>
+#include <list>
 
 using namespace std;
 
@@ -13,7 +13,7 @@ private:
     order();
     static order *instance;
     vector<bill *> bills;
-    deque<bill *> orders;
+    list<bill *> orders;
     vector<int> quantity;
 
 public:
