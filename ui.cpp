@@ -27,8 +27,9 @@ using namespace std;
         );
         SetConsoleCursorPosition(console, topLeft);
     }
+#else
+    void clearConsole() {}
 #endif
-
 
 // Return true if succeed, false otherwise
 template <typename T> 
@@ -52,19 +53,25 @@ void component::add(component& comp)
 
 void component::show()
 {
-    if (clearOnShow) clearConsole();
-    int choiceCnt = components.size();
-    for (int i = 0; i < choiceCnt; ++i)
-        cout << i + 1  << ": " << components[i]->description << '\n';
-
-    cout << "Your choice: ";
     int choice;
-    while (!input(cin , choice) && choice > 0 && choice <= choiceCnt) 
-        cout << "Invalid input, please choose again\n";
-    
-    components[choice - 1]->show();
+    do {
+        if (clearOnShow) clearConsole();
+        int choiceCnt = components.size();
+
+        cout << "0: Return\n";
+        for (int i = 0; i < choiceCnt; ++i)
+            cout << i + 1  << ": " << components[i]->description << '\n';
+
+        cout << "Your choice: ";
+        while (!input(cin , choice) || choice < 0 || choice > choiceCnt) 
+            cout << "Invalid input, please choose again\n";
+        
+        if (choice > 0) components[choice - 1]->show();        
+    }
+    while (choice > 0);    
 }
 
+// option
 option::option(std::function<void()> func): action(func) {}
 
 option::option(std::function<void()> func, const std::string& desc):
@@ -75,4 +82,8 @@ option::option(std::function<void()> func, const std::string& desc):
 void option::show()
 {
     action();
+    if (successMessage.length() > 0) {
+        cout << successMessage << '\n';
+        cin.get();
+    }
 }

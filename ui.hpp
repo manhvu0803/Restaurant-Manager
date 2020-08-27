@@ -2,10 +2,6 @@
 #include <vector>
 #include <functional>
 
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)    
-    void clearConsole();
-#endif
-
 class component
 {
     public:
@@ -24,11 +20,15 @@ class component
 
 class option: public component
 {
-    public:
+    public:        
+        // successMessage shows after action finish and wait for enter
+        // If it is empty, the confirm enter is skipped
+        std::string successMessage = "Press Enter to continue...";
+
         std::function<void()> action;
 
         option(std::function<void()> func);
         option(std::function<void()> func, const std::string& desc);
-
+                
         void show();
 };
