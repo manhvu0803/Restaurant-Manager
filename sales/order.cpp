@@ -1,6 +1,7 @@
 #include <iostream>
 #include <windows.h>
 #include <fstream>
+#include <iomanip>
 #include "order.hpp"
 #include "menu.h"
 #include "essentials.hpp"
@@ -133,8 +134,24 @@ bool order::CompleteOrderInQueue()
 
 void order::displayNewestOrder()
 {
+    system("cls");
+    (*orders.begin())->DisplayBill();
 }
 
 void order::displayOldestOrder()
 {
+    system("cls");
+    (*orders.end())->DisplayBill();
+}
+
+void order::ListCurrentOrders()
+{
+    system("cls");
+    cout << "Orders list";
+    int count = 1;
+    for (auto &i : orders)
+    {
+        cout << left << count << setw(3) << "." << i;
+        ++count;
+    }
 }

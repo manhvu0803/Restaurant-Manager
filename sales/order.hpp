@@ -28,6 +28,7 @@ public:
     bool CompleteOrderInQueue();
     void displayNewestOrder();
     void displayOldestOrder();
+    void ListCurrentOrders();
 };
 
 #endif
