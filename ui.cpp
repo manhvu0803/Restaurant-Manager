@@ -29,7 +29,7 @@ using namespace std;
     }
 #else
     void clearConsole() {}
-#endif
+#endif // WIN32
 
 // Return true if succeed, false otherwise
 template <typename T> 

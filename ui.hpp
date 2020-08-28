@@ -1,3 +1,6 @@
+#ifndef UI_HPP
+#define UI_HPP
+
 #include <iostream>
 #include <vector>
 #include <functional>
@@ -32,3 +35,5 @@ class option: public component
                 
         void show();
 };
+
+#endif // UI_HPP
