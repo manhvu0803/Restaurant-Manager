@@ -57,6 +57,7 @@ order *order::instance = nullptr;
 
 void order::NewOrder()
 {
+    order::instantiate();
     bill *new_bill = new bill;
     if (bills.size() >= 100)
         this->~order();

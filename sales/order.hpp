@@ -20,7 +20,7 @@ public:
     ~order();
     order(const order &other) = delete;
     order &operator=(const order &other) = delete;
-    order *instantiate();
+    static order *instantiate();
     void NewOrder();
     void UpdateDishQuant(const int &index, const int &mode);
     void update(const int &pos, const int &mode);
