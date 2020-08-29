@@ -1,6 +1,7 @@
 #include <iostream>
 #include <windows.h>
 #include <fstream>
+#include <iomanip>
 #include "order.hpp"
 #include "menu.h"
 #include "essentials.hpp"
@@ -36,14 +37,13 @@ void order::update(const int &pos, const int &mode)
 
 order::~order()
 {
-    for (auto &i : bills)
-        delete i;
-    bills.clear();
     ofstream file("DishOrdered");
     for (int i = 0; i < quantity.size() - 1; ++i)
         file << quantity[i] << endl;
     file << quantity[quantity.size() - 1];
     file.close();
+    for (auto &i : bills)
+        delete i;
 }
 
 order *order::instantiate()
@@ -57,6 +57,7 @@ order *order::instance = nullptr;
 
 void order::NewOrder()
 {
+    order::instantiate();
     bill *new_bill = new bill;
     if (bills.size() >= 100)
         this->~order();
@@ -105,7 +106,10 @@ void order::NewOrder()
     if (dish == -1)
         delete new_bill;
     else
+    {
         bills.emplace_back(new_bill);
+        orders.emplace_back(new_bill);
+    }
 }
 
 void order::UpdateDishQuant(const int &index, const int &mode)
@@ -119,4 +123,36 @@ void order::UpdateDishQuant(const int &index, const int &mode)
 const vector<int> &order::getOrderedDishQuantity()
 {
     return quantity;
+}
+
+bool order::CompleteOrderInQueue()
+{
+    if (!orders.size())
+        return false;
+    orders.pop_front();
+    return true;
+}
+
+void order::displayNewestOrder()
+{
+    system("cls");
+    (*orders.begin())->DisplayBill();
+}
+
+void order::displayOldestOrder()
+{
+    system("cls");
+    (*orders.end())->DisplayBill();
+}
+
+void order::ListCurrentOrders()
+{
+    system("cls");
+    cout << "Orders list";
+    int count = 1;
+    for (auto &i : orders)
+    {
+        cout << left << count << setw(3) << "." << i;
+        ++count;
+    }
 }

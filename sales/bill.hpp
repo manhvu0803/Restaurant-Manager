@@ -24,26 +24,28 @@ using namespace std;
  *
 *********************/
 
-class bill :public order
+class bill
 {
 private:
     date Date;
     double Total = 0;
-    u_int bill_no = -1;
+    string bill_no;
     vector<string> dish_IDs;
     vector<string> dish_names;
     vector<int> quantity;
     vector<double> total_per_dish;
 
 public:
-    bill() {};
+    bill(){};
     ~bill();
-    void AddData(const string& ID, const string& name, const double& price);
+    void AddData(const string &ID, const string &name, const double &price);
     double Total();
     double Income();
     void GenerateBill();
     void LoadOldBill();
-    void RemoveData(const string& ID, const double& price);
+    void RemoveData(const string &ID, const double &price);
+    void DisplayBill();
+    const string &getID() const;
 };
 
 #endif
