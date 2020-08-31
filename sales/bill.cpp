@@ -23,6 +23,18 @@ bill::~bill()
 
     string month = to_string(1 + current.tm_mon);
     fstream fout(path + "/" + month + "/income.txt", ios::out);
+    string month = to_string(1 + current.tm_mon);
+    string day = to_string(current.tm_mday);
+    day.append(".txt");
+    fstream fout1(path + "/" + month + "/" + day, ios::app);
+    for (int i = 0; i < dish_names.size(); i++)
+    {
+        fout1 << endl
+            << dish_names[i] << ";" << quantity[i] << ";" << total_per_dish[i] << ";";
+    }
+    fout1 << Total << endl;
+    fout1.close();
+
 
     for (int i = 0; i < 31; i++)
     {
@@ -101,17 +113,8 @@ void bill::GenerateBill()
         Total += total_per_dish[i];
     }
     cout << "Total: " << Total;
-    string month = to_string(1 + current.tm_mon);
-    string day = to_string(current.tm_mday);
-    day.append(".txt");
-    fstream fout(path + "/" + month + "/" + day, ios::app);
-    for (int i = 0; i < dish_names.size(); i++)
-    {
-        fout << endl
-             << dish_names[i] << ";" << quantity[i] << ";" << total_per_dish[i] << ";";
-    }
-    fout << Total << endl;
-    fout.close();
+    
+   
 }
 
 const string &bill::getID() const
