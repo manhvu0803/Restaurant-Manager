@@ -233,7 +233,7 @@ voucher::~voucher()
 {
     stringstream path;
     path << "../restaurant/voucher/" << expiration_date;
-    ofstream file(path.str().c_str());
+    ofstream file(path.str());
     file << "VOUCHER\n";
     file << name << "\n\n";
     for (auto &i : dish)
@@ -373,7 +373,7 @@ promo::~promo()
 {
     stringstream path;
     path << "../restaurant/promo/" << expiration_date;
-    ofstream file(path.str().c_str());
+    ofstream file(path.str());
     file << "PROMO\n";
     file << name << "\n\n";
     for (auto &i : dish)

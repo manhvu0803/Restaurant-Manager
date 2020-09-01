@@ -78,30 +78,40 @@ void order::NewOrder()
             cin.clear();
             cin.ignore(1000, '\n');
         }
-        cout << "1. Add\n";
-        cout << "2. Remove\n";
-        cout << "0. Exit\n";
-        cout << "Option: ";
-        while (!(cin >> opt) || opt < 0 || opt > 2)
+        do
         {
-            cout << "Invalid!\n";
-            cout << "Try again: ";
-            cin.clear();
-            cin.ignore(1000, '\n');
-        }
-        if (opt == 1)
-        {
-            new_bill->AddData(rest_menu->getMenu()[dish - 1]->getID(),
-                              rest_menu->getMenu()[dish - 1]->getName(), rest_menu->getMenu()[dish - 1]->getPrice());
-            UpdateDishQuant(dish - 1, opt);
-        }
-        else if (opt == 2)
-        {
-            new_bill->RemoveData(rest_menu->getMenu()[dish - 1]->getID(), rest_menu->getMenu()[dish - 1]->getPrice());
-            UpdateDishQuant(dish - 1, opt);
-        }
-        else
-            dish = 1;
+            system("cls");
+            cout << rest_menu->getMenu()[dish - 1]->getID();
+            cout << " " << rest_menu->getMenu()[dish - 1]->getName() << endl;
+            cout << "1. Add\n";
+            cout << "2. Remove\n";
+            cout << "0. Exit\n";
+            cout << "Option: ";
+            while (!(cin >> opt) || opt < 0 || opt > 2)
+            {
+                cout << "Invalid!\n";
+                cout << "Try again: ";
+                cin.clear();
+                cin.ignore(1000, '\n');
+            }
+            if (opt == 1)
+            {
+                new_bill->AddDish(rest_menu->getMenu()[dish - 1]->getID(),
+                                  rest_menu->getMenu()[dish - 1]->getName(), rest_menu->getMenu()[dish - 1]->getPrice());
+                UpdateDishQuant(dish - 1, opt);
+            }
+            else if (opt == 2)
+            {
+                if (new_bill->RemoveDish(rest_menu->getMenu()[dish - 1]->getID(), rest_menu->getMenu()[dish - 1]->getPrice()))
+                    UpdateDishQuant(dish - 1, opt);
+                else
+                {
+                    system("cls");
+                    cout << "This dish has been removed!\n";
+                    system("pause");
+                }
+            }
+        } while (opt);
     } while (dish && dish != -1);
     if (dish == -1)
         delete new_bill;

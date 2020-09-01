@@ -1,9 +1,9 @@
 #ifndef ORDER_HPP
 #define ORDER_HPP
 
-#include "bill.hpp"
 #include <vector>
 #include <list>
+#include "bill.hpp"
 
 using namespace std;
 
