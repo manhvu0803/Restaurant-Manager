@@ -24,6 +24,19 @@ using namespace std;
  *
 *********************/
 
+class bill_manager
+{
+private:
+    vector<bill *> bills;
+    vector<bill *> old_bills;
+    static bill_manager *instance;
+    bill_manager(){};
+
+public:
+    static bill_manager *instantiate();
+    bill *FindBill(const string &bill_no);
+};
+
 class bill
 {
 private:
@@ -34,18 +47,16 @@ private:
     vector<string> dish_names;
     vector<int> quantity;
     vector<double> total_per_dish;
+    static double income;
 
 public:
     bill() : Total(0){};
     ~bill();
     void AddDish(const string &ID, const string &name, const double &price);
-    // double Total();
-    double Income();
-    // void GenerateBill();
     void LoadOldBill();
     bool RemoveDish(const string &ID, const double &price);
     void DisplayBill();
-    const string &getID() const;
+    const string &getBillNo() const;
 };
 
 #endif

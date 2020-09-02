@@ -4,8 +4,57 @@
 #include <sstream>
 #include "essentials.hpp"
 #include <iomanip>
+#include <dirent.h>
 
 using namespace std;
+
+/**********************
+ * BILL MANAGER
+**********************/
+
+bill *bill_manager::FindBill(const string &bill_no)
+{
+    for (auto &i : bills)
+    {
+        if (bill_no == i->getBillNo())
+            return i;
+    }
+    ERROR_LOG *log = log->instantiate();
+    dirent *ent;
+    DIR *dir = opendir("../restaurant/voucher");
+    if (dir == NULL)
+    {
+        log->LOG("Folder voucher is missing");
+        closedir(dir);
+        return;
+    }
+    readdir(dir);
+    readdir(dir);
+    while ((ent = readdir(dir)) != NULL)
+    {
+        string voucher_name = ent->d_name;
+        date tmp;
+        voucher *voucher_t = nullptr;
+        try
+        {
+            //Remove expired voucher list
+            if (tmp >= ConvertFromString(voucher_name))
+            {
+                string path = "../restaurant/voucher/";
+                path += voucher_name;
+                remove(path.c_str());
+            }
+            voucher_t = new voucher(voucher_name);
+            vouchers.emplace_back(voucher_t);
+        }
+        catch (const char *msg)
+        {
+            log->LOG(msg);
+            delete voucher_t;
+        };
+    }
+    closedir(dir);
+}
 
 /**********************
  * BILL
@@ -150,7 +199,7 @@ void bill::DisplayBill()
          << "TOTAL: " << Total;
 }
 
-const string &bill::getID() const
+const string &bill::getBillNo() const
 {
     return bill_no;
 }
