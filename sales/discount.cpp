@@ -203,7 +203,7 @@ voucher::voucher(const string &file_name)
 {
     stringstream path;
     path << "../restaurant/voucher/" << file_name;
-    ifstream file(path.str().c_str());
+    ifstream file(path.str());
     string tmp;
     getline(file, tmp);
     if (tmp != "VOUCHER")
@@ -298,7 +298,7 @@ promo::promo(const string &file_name)
 {
     stringstream path;
     path << "../restaurant/promo/" << file_name;
-    ifstream file(path.str().c_str());
+    ifstream file(path.str());
     string tmp;
     getline(file, tmp);
     if (tmp != "PROMO")

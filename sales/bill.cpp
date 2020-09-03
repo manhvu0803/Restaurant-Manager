@@ -72,8 +72,9 @@ bill::~bill()
     ofstream file(path.str());
     file << "BILL NO: " << bill_no << endl;
     file << "DATE: " << Date << endl;
+    file << "TIME: " << Date.GetTime() << endl;
     file << "DISHES:\n";
-    file << "ID" << setw(8) << "NAME" << setw(15) << "QUANTITY" << setw(10) << "PRICE" << endl;
+    file << "NO" << setw(5) << "ID" << setw(15) << "NAME" << setw(35) << "QUANTITY" << setw(10) << "PRICE" << endl;
     for (int i = 1; i <= dish_IDs.size(); ++i)
     {
         cout << i << "." << setw(3) << dish_IDs[i];
@@ -191,7 +192,7 @@ void bill::DisplayBill()
     cout << "BILL NO: " << bill_no << endl;
     cout << "DATE: " << Date << endl;
     cout << "DISHES:\n";
-    cout << "NO" << setw(5) << "ID" << setw(15) << "NAME" << setw(30) << "QUANTITY" << setw(8) << "PRICE" << endl;
+    cout << "NO" << setw(5) << "ID" << setw(15) << "NAME" << setw(35) << "QUANTITY" << setw(10) << "PRICE" << endl;
     for (int i = 1; i <= dish_IDs.size(); ++i)
     {
         cout << i << "." << setw(5) << dish_IDs[i];
