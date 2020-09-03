@@ -11,10 +11,10 @@ ERROR_LOG::ERROR_LOG()
 {
     time_t t = time(0);
     tm *now = localtime(&t);
-    std::stringstream sstr;
+    stringstream sstr;
     sstr << "log//" << now->tm_mday << "-" << now->tm_mon + 1 << "-" << now->tm_year + 1900 << ".log";
-    log_file.open(sstr.str().c_str(), std::ios::app);
-    log_file.seekp(0, std::ios::end);
+    log_file.open(sstr.str().c_str(), ios::app);
+    log_file.seekp(0, ios::end);
     log_file << "Time: " << now->tm_hour << ":" << now->tm_min << ":" << now->tm_sec << "\n ";
 }
 
@@ -24,7 +24,7 @@ ERROR_LOG::~ERROR_LOG()
     log_file.close();
 }
 
-void ERROR_LOG::LOG(const std::string &log)
+void ERROR_LOG::LOG(const string &log)
 {
     log_file << "\n"
              << log << "\n";
@@ -64,18 +64,6 @@ bool date::operator<(const date &_date) const
     }
 }
 
-date::date()
-{
-    time_t t = time(0);
-    tm *now = localtime(&t);
-    d = now->tm_mday;
-    m = now->tm_mon + 1;
-    y = now->tm_year + 1900;
-    h = now->tm_hour;
-    min = now->tm_min;
-    s = now->tm_sec;
-}
-
 date::date(const int &d, const int &m, const int &y)
 {
     if (y < 1900 || m > 12 || m < 1 || d < 1)
@@ -92,7 +80,6 @@ date::date(const int &d, const int &m, const int &y)
 
 bool date::isValid()
 {
-    date tmp;
     if (y < 1900 || m > 12 || m < 1 || d < 1)
         return false;
     int month[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
@@ -124,12 +111,12 @@ bool date::operator>=(const date &_date) const
     return !(*this < _date);
 }
 
-date ConvertFromString(const std::string &_date)
+date ConvertFromString(const string &_date)
 {
     if (_date.size() != 10)
         throw "Invalid date string format!";
     int d, m, y;
-    std::stringstream sstr;
+    stringstream sstr;
     sstr << _date.substr(0, 2);
     sstr >> d;
     sstr.clear();
@@ -144,7 +131,7 @@ date ConvertFromString(const std::string &_date)
     return tmp;
 }
 
-std::ostream &operator<<(std::ostream &os, const date &_date)
+ostream &operator<<(ostream &os, const date &_date)
 {
     if (_date.d < 10)
         os << 0;
@@ -155,30 +142,64 @@ std::ostream &operator<<(std::ostream &os, const date &_date)
     return os;
 }
 
-std::istream &operator>>(std::istream &is, date &_date)
+istream &operator>>(istream &is, date &_date)
 {
     date tmp;
     do
     {
-        std::cout << "day: ";
-        while (!(std::cin >> tmp.d))
+        cout << "day: ";
+        while (!(cin >> tmp.d))
         {
-            std::cin.clear();
-            std::cin.ignore(1000, '\n');
+            cin.clear();
+            cin.ignore(1000, '\n');
         }
-        std::cout << "month: ";
-        while (!(std::cin >> tmp.m))
+        cout << "month: ";
+        while (!(cin >> tmp.m))
         {
-            std::cin.clear();
-            std::cin.ignore(1000, '\n');
+            cin.clear();
+            cin.ignore(1000, '\n');
         }
-        std::cout << "year: ";
-        while (!(std::cin >> tmp.y))
+        cout << "year: ";
+        while (!(cin >> tmp.y))
         {
-            std::cin.clear();
-            std::cin.ignore(1000, '\n');
+            cin.clear();
+            cin.ignore(1000, '\n');
         }
+
     } while (!tmp.isValid());
     _date = tmp;
     return is;
+}
+
+date::date()
+{
+    time_t t = time(0);
+    tm *now = localtime(&t);
+    d = now->tm_mday;
+    m = now->tm_mon + 1;
+    y = now->tm_year + 1900;
+    h = now->tm_hour;
+    min = now->tm_min;
+    s = now->tm_sec;
+}
+
+string date::GetTime() const
+{
+    stringstream date_str;
+    if (h < 10)
+        date_str << 0;
+    date_str << h << ":";
+    if (min < 10)
+        date_str << 0;
+    date_str << min << ":";
+    if (s < 10)
+        date_str << 0;
+    date_str << s;
+    return date_str.str();
+}
+
+void date::CurrentTime()
+{
+    date tmp;
+    *this = tmp;
 }

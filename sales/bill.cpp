@@ -21,39 +21,43 @@ bill *bill_manager::FindBill(const string &bill_no)
     }
     ERROR_LOG *log = log->instantiate();
     dirent *ent;
-    DIR *dir = opendir("../restaurant/voucher");
-    if (dir == NULL)
+    stringstream path;
+    for (int i = 1; i <= 12; ++i)
     {
-        log->LOG("Folder voucher is missing");
-        closedir(dir);
-        return;
-    }
-    readdir(dir);
-    readdir(dir);
-    while ((ent = readdir(dir)) != NULL)
-    {
-        string voucher_name = ent->d_name;
-        date tmp;
-        voucher *voucher_t = nullptr;
-        try
+        path << "../restaurant/bill/" << i;
+        DIR *dir = opendir(path.str().c_str());
+        if (dir == NULL)
         {
-            //Remove expired voucher list
-            if (tmp >= ConvertFromString(voucher_name))
-            {
-                string path = "../restaurant/voucher/";
-                path += voucher_name;
-                remove(path.c_str());
-            }
-            voucher_t = new voucher(voucher_name);
-            vouchers.emplace_back(voucher_t);
+            closedir(dir);
+            throw "Missing related folders";
         }
-        catch (const char *msg)
+        readdir(dir);
+        readdir(dir);
+        while ((ent = readdir(dir)) != NULL)
         {
-            log->LOG(msg);
-            delete voucher_t;
-        };
+            string voucher_name = ent->d_name;
+            date tmp;
+            bill *bill_t = nullptr;
+            try
+            {
+                //Remove expired voucher list
+                if (tmp >= ConvertFromString(voucher_name))
+                {
+                    string path = "../restaurant/voucher/";
+                    path += voucher_name;
+                    remove(path.c_str());
+                }
+                voucher_t = new voucher(voucher_name);
+                vouchers.emplace_back(voucher_t);
+            }
+            catch (const char *msg)
+            {
+                log->LOG(msg);
+                delete voucher_t;
+            };
+        }
+        closedir(dir);
     }
-    closedir(dir);
 }
 
 /**********************

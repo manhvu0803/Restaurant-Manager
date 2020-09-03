@@ -47,6 +47,8 @@ public:
     bool operator<=(const date &_date) const;
     bool operator==(const date &_date) const;
     friend date ConvertFromString(const std::string &_date);
+    void CurrentTime();
+    std::string GetTime() const;
 };
 
 date ConvertFromString(const std::string &_date);

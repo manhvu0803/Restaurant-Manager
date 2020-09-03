@@ -28,9 +28,9 @@ class bill_manager
 {
 private:
     vector<bill *> bills;
-    vector<bill *> old_bills;
     static bill_manager *instance;
     bill_manager(){};
+    double income;
 
 public:
     static bill_manager *instantiate();
@@ -41,7 +41,7 @@ class bill
 {
 private:
     date Date;
-    double Total;
+    double Total = 0;
     string bill_no;
     vector<string> dish_IDs;
     vector<string> dish_names;
@@ -50,7 +50,9 @@ private:
     static double income;
 
 public:
-    bill() : Total(0){};
+    ;
+    bill(){};
+    bill(const string &bill_path);
     ~bill();
     void AddDish(const string &ID, const string &name, const double &price);
     void LoadOldBill();
