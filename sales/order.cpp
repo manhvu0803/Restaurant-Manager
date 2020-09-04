@@ -1,6 +1,7 @@
 #include <iostream>
 #include <windows.h>
 #include <fstream>
+#include <iomanip>
 #include "order.hpp"
 #include "menu.h"
 #include "essentials.hpp"
@@ -36,14 +37,13 @@ void order::update(const int &pos, const int &mode)
 
 order::~order()
 {
-    for (auto &i : bills)
-        delete i;
-    bills.clear();
     ofstream file("DishOrdered");
     for (int i = 0; i < quantity.size() - 1; ++i)
         file << quantity[i] << endl;
     file << quantity[quantity.size() - 1];
     file.close();
+    for (auto &i : bills)
+        delete i;
 }
 
 order *order::instantiate()
@@ -57,6 +57,7 @@ order *order::instance = nullptr;
 
 void order::NewOrder()
 {
+    order::instantiate();
     bill *new_bill = new bill;
     if (bills.size() >= 100)
         this->~order();
@@ -77,35 +78,48 @@ void order::NewOrder()
             cin.clear();
             cin.ignore(1000, '\n');
         }
-        cout << "1. Add\n";
-        cout << "2. Remove\n";
-        cout << "0. Exit\n";
-        cout << "Option: ";
-        while (!(cin >> opt) || opt < 0 || opt > 2)
+        do
         {
-            cout << "Invalid!\n";
-            cout << "Try again: ";
-            cin.clear();
-            cin.ignore(1000, '\n');
-        }
-        if (opt == 1)
-        {
-            new_bill->AddData(rest_menu->getMenu()[dish - 1]->getID(),
-                              rest_menu->getMenu()[dish - 1]->getName(), rest_menu->getMenu()[dish - 1]->getPrice());
-            UpdateDishQuant(dish - 1, opt);
-        }
-        else if (opt == 2)
-        {
-            new_bill->RemoveData(rest_menu->getMenu()[dish - 1]->getID(), rest_menu->getMenu()[dish - 1]->getPrice());
-            UpdateDishQuant(dish - 1, opt);
-        }
-        else
-            dish = 1;
+            system("cls");
+            cout << rest_menu->getMenu()[dish - 1]->getID();
+            cout << " " << rest_menu->getMenu()[dish - 1]->getName() << endl;
+            cout << "1. Add\n";
+            cout << "2. Remove\n";
+            cout << "0. Exit\n";
+            cout << "Option: ";
+            while (!(cin >> opt) || opt < 0 || opt > 2)
+            {
+                cout << "Invalid!\n";
+                cout << "Try again: ";
+                cin.clear();
+                cin.ignore(1000, '\n');
+            }
+            if (opt == 1)
+            {
+                new_bill->AddDish(rest_menu->getMenu()[dish - 1]->getID(),
+                                  rest_menu->getMenu()[dish - 1]->getName(), rest_menu->getMenu()[dish - 1]->getPrice());
+                UpdateDishQuant(dish - 1, opt);
+            }
+            else if (opt == 2)
+            {
+                if (new_bill->RemoveDish(rest_menu->getMenu()[dish - 1]->getID(), rest_menu->getMenu()[dish - 1]->getPrice()))
+                    UpdateDishQuant(dish - 1, opt);
+                else
+                {
+                    system("cls");
+                    cout << "This dish has been removed!\n";
+                    system("pause");
+                }
+            }
+        } while (opt);
     } while (dish && dish != -1);
     if (dish == -1)
         delete new_bill;
     else
+    {
         bills.emplace_back(new_bill);
+        orders.emplace_back(new_bill);
+    }
 }
 
 void order::UpdateDishQuant(const int &index, const int &mode)
@@ -119,4 +133,36 @@ void order::UpdateDishQuant(const int &index, const int &mode)
 const vector<int> &order::getOrderedDishQuantity()
 {
     return quantity;
+}
+
+bool order::CompleteOrderInQueue()
+{
+    if (!orders.size())
+        return false;
+    orders.pop_front();
+    return true;
+}
+
+void order::displayNewestOrder()
+{
+    system("cls");
+    (*orders.begin())->DisplayBill();
+}
+
+void order::displayOldestOrder()
+{
+    system("cls");
+    (*orders.end())->DisplayBill();
+}
+
+void order::ListCurrentOrders()
+{
+    system("cls");
+    cout << "Orders list";
+    int count = 1;
+    for (auto &i : orders)
+    {
+        cout << left << count << setw(3) << "." << i;
+        ++count;
+    }
 }

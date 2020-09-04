@@ -4,7 +4,7 @@
 #include "essentials.hpp"
 #include <iostream>
 #include <vector>
-#include "order.hpp"
+// #include "order.hpp"
 
 using namespace std;
 
@@ -24,26 +24,41 @@ using namespace std;
  *
 *********************/
 
-class bill :public order
+class bill_manager
+{
+private:
+    vector<bill *> bills;
+    static bill_manager *instance;
+    bill_manager(){};
+    double income;
+
+public:
+    static bill_manager *instantiate();
+    bill *FindBill(const string &bill_no);
+};
+
+class bill
 {
 private:
     date Date;
     double Total = 0;
-    u_int bill_no = -1;
+    string bill_no;
     vector<string> dish_IDs;
     vector<string> dish_names;
     vector<int> quantity;
     vector<double> total_per_dish;
+    static double income;
 
 public:
-    bill() {};
+    ;
+    bill(){};
+    bill(const string &bill_path);
     ~bill();
-    void AddData(const string& ID, const string& name, const double& price);
-    double Total();
-    double Income();
-    void GenerateBill();
+    void AddDish(const string &ID, const string &name, const double &price);
     void LoadOldBill();
-    void RemoveData(const string& ID, const double& price);
+    bool RemoveDish(const string &ID, const double &price);
+    void DisplayBill();
+    const string &getBillNo() const;
 };
 
 #endif
