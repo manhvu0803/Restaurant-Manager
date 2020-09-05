@@ -1,12 +1,43 @@
-#include <string>
+#ifndef MANAGER_HPP
+#define MANAGER_HPP
 
-class manager
+#include <string>
+#include <vector>
+#include <memory>
+#include "../ui.hpp"
+
+struct dish
 {
-    private:
+    long id;
+    int quantity;
+    long price;
+    std::string name;
+};
+
+class bill
+{            
+    private:        
         static const std::string dir;
 
     public:
-        void showMonth(int m);
-        void showDate(int m, int d);
-        void showTotal();
+        const int number;
+        const int h, m, s;
+        const std::vector<dish> dishes;
+        
+        bill(int number, int h, int m, int s, std::vector<dish> dishes);
+
+        static std::unique_ptr<bill> getBill();
+
+        long total();
 };
+
+const std::string bill::dir = "restaurant/bill";    
+
+class saleMenu: public ui::component
+{
+    public:
+        static void showDateSale();
+        static void menu();
+};
+
+#endif // MANAGER_HPP
