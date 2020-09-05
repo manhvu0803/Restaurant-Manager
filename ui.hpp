@@ -4,9 +4,12 @@
 #include <iostream>
 #include <vector>
 #include <functional>
+#include <limits>
 
 namespace ui
 {
+    void clearConsole();
+
     class component
     {
         private:
@@ -39,6 +42,19 @@ namespace ui
                     
             void show();
     };
+    
+    // Return true if succeed, false otherwise
+    template <typename T> 
+    bool input(std::istream& stream, T& val, const bool clear)
+    {
+        stream >> val;
+        bool successful = !stream.fail();
+        if (clear) {
+            stream.clear();
+            stream.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
+        return successful;
+    }
 }
 
 #endif // UI_HPP

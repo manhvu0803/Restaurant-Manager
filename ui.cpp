@@ -32,19 +32,6 @@ using namespace ui;
     void clearConsole() {}
 #endif // WIN32
 
-// Return true if succeed, false otherwise
-template <typename T> 
-bool input(std::istream& stream, T& val, const bool clr = true)
-{
-    stream >> val;
-    bool successful = !stream.fail();
-    if (clr) {
-        stream.clear();
-        stream.ignore(numeric_limits<streamsize>::max(), '\n');
-    }
-    return successful;
-}
-
 component::component(const string& desc): description(desc) {}
 
 void component::add(component& comp)
