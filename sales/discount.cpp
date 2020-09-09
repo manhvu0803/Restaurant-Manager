@@ -1,12 +1,10 @@
 #include "discount.hpp"
-#include "essentials.hpp"
 #include "menu.h"
-#include "essentials.hpp"
 #include <vector>
-#include <iostream>
 #include <string>
 #include <dirent.h>
-#include <windows.h>
+#include "PCH.hpp"
+#include <cstdlib>
 
 #define MAX_CODE_LENGTH 10
 

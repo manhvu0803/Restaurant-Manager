@@ -24,7 +24,7 @@ public:
     ERROR_LOG(const ERROR_LOG &other) = delete;
     ERROR_LOG &operator=(const ERROR_LOG &other) = delete;
     void LOG(const std::string &log);
-    ERROR_LOG *instantiate();
+    static ERROR_LOG *instantiate();
 };
 
 /****************************

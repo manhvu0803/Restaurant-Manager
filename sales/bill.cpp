@@ -1,17 +1,16 @@
 #include "bill.hpp"
-#include <iostream>
 #include <fstream>
 #include <sstream>
-#include "essentials.hpp"
 #include <iomanip>
 #include <dirent.h>
+#include "PCH.hpp"
+#include <cstdlib>
 
 using namespace std;
 
 /**********************
  * BILL MANAGER
 **********************/
-
 bill *bill_manager::FindBill(const string &bill_no)
 {
     for (auto &i : bills)
@@ -63,6 +62,22 @@ bill *bill_manager::FindBill(const string &bill_no)
 /**********************
  * BILL
 **********************/
+u_int bill::count = 0;
+
+bill::bill()
+{
+    date tmp;
+    bill_no += tmp.d;
+    bill_no += tmp.m;
+    u_int count_t = count;
+    int count_l = 0;
+    while (count_t)
+    {
+        count_t /= 10;
+        ++count_l;
+    }
+    for (int i = 0; i)
+}
 
 bill::~bill()
 {

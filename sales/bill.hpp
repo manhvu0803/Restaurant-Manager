@@ -4,7 +4,6 @@
 #include "essentials.hpp"
 #include <iostream>
 #include <vector>
-// #include "order.hpp"
 
 using namespace std;
 
@@ -47,11 +46,11 @@ private:
     vector<string> dish_names;
     vector<int> quantity;
     vector<double> total_per_dish;
-    static double income;
+    static u_int count;
 
 public:
     ;
-    bill(){};
+    bill();
     bill(const string &bill_path);
     ~bill();
     void AddDish(const string &ID, const string &name, const double &price);
