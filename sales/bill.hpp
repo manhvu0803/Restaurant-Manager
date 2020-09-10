@@ -34,13 +34,14 @@ private:
 public:
     static bill_manager *instantiate();
     bill *FindBill(const string &bill_no);
+    void NewBill();
 };
 
 class bill
 {
 private:
     date Date;
-    double Total = 0;
+    double Total;
     string bill_no;
     vector<string> dish_IDs;
     vector<string> dish_names;

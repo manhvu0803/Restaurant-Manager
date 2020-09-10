@@ -66,6 +66,7 @@ u_int bill::count = 0;
 
 bill::bill()
 {
+    Total = 0;
     date tmp;
     bill_no += tmp.d;
     bill_no += tmp.m;
@@ -76,7 +77,10 @@ bill::bill()
         count_t /= 10;
         ++count_l;
     }
-    for (int i = 0; i)
+    count_l -= 6 - count_l;
+    for (int i = 0; i < count_l; ++i)
+        bill_no += "0";
+    bill_no += count;
 }
 
 bill::~bill()
