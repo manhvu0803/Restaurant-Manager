@@ -3,44 +3,12 @@
 #include "order.hpp"
 #include "menu.h"
 #include "PCH.hpp"
-using namespace std;
 
-order::order()
-{
-    ifstream file("DishOrdered");
-    if (!file.is_open())
-    {
-        ERROR_LOG *log = log->instantiate();
-        log->LOG("File DishOrdered is missing");
-        throw "File DishOrdered is missing!";
-    }
-    int tmp;
-    while (!file.eof())
-    {
-        file >> tmp;
-        quantity.emplace_back(tmp);
-    }
-    quantity.shrink_to_fit();
-    file.close();
-}
+using namespace std;
 
 void order::update(const int &pos, const int &mode)
 {
-    if (mode)
-        quantity.emplace(quantity.begin() + pos, 0);
-    else
-        quantity.erase(quantity.begin() + pos);
-}
-
-order::~order()
-{
-    ofstream file("DishOrdered");
-    for (int i = 0; i < quantity.size() - 1; ++i)
-        file << quantity[i] << endl;
-    file << quantity[quantity.size() - 1];
-    file.close();
-    for (auto &i : bills)
-        delete i;
+    bill_manager::instantiate()->updateQuantNewDish(pos, mode);
 }
 
 order *order::instantiate()
@@ -54,82 +22,7 @@ order *order::instance = nullptr;
 
 void order::NewOrder()
 {
-    order::instantiate();
-    bill *new_bill = new bill;
-    if (bills.size() >= 100)
-        this->~order();
-    int dish;
-    do
-    {
-        system("cls");
-        Menu *rest_menu = rest_menu->instantiate();
-        rest_menu->output();
-        cout << "0. Finalize order\n";
-        cout << "-1. Cancel order\n";
-        cout << "Option: ";
-        int opt;
-        while (!(cin >> dish) || dish < 1 || dish > rest_menu->getMenu().size() + 1)
-        {
-            cout << "Invalid!\n";
-            cout << "Try again: ";
-            cin.clear();
-            cin.ignore(1000, '\n');
-        }
-        do
-        {
-            system("cls");
-            cout << rest_menu->getMenu()[dish - 1]->getID();
-            cout << " " << rest_menu->getMenu()[dish - 1]->getName() << endl;
-            cout << "1. Add\n";
-            cout << "2. Remove\n";
-            cout << "0. Exit\n";
-            cout << "Option: ";
-            while (!(cin >> opt) || opt < 0 || opt > 2)
-            {
-                cout << "Invalid!\n";
-                cout << "Try again: ";
-                cin.clear();
-                cin.ignore(1000, '\n');
-            }
-            if (opt == 1)
-            {
-                new_bill->AddDish(rest_menu->getMenu()[dish - 1]->getID(),
-                                  rest_menu->getMenu()[dish - 1]->getName(), rest_menu->getMenu()[dish - 1]->getPrice());
-                UpdateDishQuant(dish - 1, opt);
-            }
-            else if (opt == 2)
-            {
-                if (new_bill->RemoveDish(rest_menu->getMenu()[dish - 1]->getID(), rest_menu->getMenu()[dish - 1]->getPrice()))
-                    UpdateDishQuant(dish - 1, opt);
-                else
-                {
-                    system("cls");
-                    cout << "This dish has been removed!\n";
-                    system("pause");
-                }
-            }
-        } while (opt);
-    } while (dish && dish != -1);
-    if (dish == -1)
-        delete new_bill;
-    else
-    {
-        bills.emplace_back(new_bill);
-        orders.emplace_back(new_bill);
-    }
-}
-
-void order::UpdateDishQuant(const int &index, const int &mode)
-{
-    if (mode == 1)
-        ++quantity[index];
-    else
-        --quantity[index];
-}
-
-const vector<int> &order::getOrderedDishQuantity()
-{
-    return quantity;
+    orders.emplace_back(bill_manager::instantiate()->NewBill());
 }
 
 bool order::CompleteOrderInQueue()
