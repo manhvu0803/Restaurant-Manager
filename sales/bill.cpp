@@ -15,6 +15,9 @@ using namespace std;
 **********************/
 bill *bill_manager::FindBill(const string &bill_no)
 {
+    for (auto &i : old_bills)
+        if (bill_no == i->getBillNo())
+            return i;
     for (auto &i : bills)
     {
         if (bill_no == i->getBillNo())
@@ -23,44 +26,22 @@ bill *bill_manager::FindBill(const string &bill_no)
     ERROR_LOG *log = log->instantiate();
     dirent *ent;
     stringstream path;
-    path << bill_no.substr(2, 2);
+    string folder_name;
     int month;
+    path << bill_no.substr(2, 2);
     path >> month;
     path << "";
-    path << "../restaurant/bill/" << month;
-    DIR *dir = opendir(path.str().c_str());
-    if (dir == NULL)
+    date tmp_d;
+    path << "../restaurant/bill/" << month << "/" << bill_no.substr(0, 2) << "-" << bill_no.substr(2, 2) << "-" << tmp_d.y;
+    path << "/" << bill_no;
+    try
     {
-        closedir(dir);
-        path << "";
-        path << "Missing " << month << "folder";
-        throw path.str().c_str();
+        old_bills.emplace_back(path.str());
+        return old_bills.back();
     }
-    readdir(dir);
-    readdir(dir);
-    while ((ent = readdir(dir)) != NULL)
+    catch (...)
     {
-        string voucher_name = ent->d_name;
-        date tmp;
-        bill *bill_t = nullptr;
-        try
-        {
-            //Remove expired voucher list
-            if (tmp >= ConvertFromString(voucher_name))
-            {
-                string path = "../restaurant/voucher/";
-                path += voucher_name;
-                remove(path.c_str());
-            }
-            voucher_t = new voucher(voucher_name);
-            vouchers.emplace_back(voucher_t);
-        }
-        catch (const char *msg)
-        {
-            log->LOG(msg);
-            delete voucher_t;
-        };
-        closedir(dir);
+        return nullptr;
     }
 }
 
@@ -200,12 +181,33 @@ bill::bill()
     bill_no += count;
 }
 
+bill::bill(const string &bill_path)
+{
+    ifstream file(bill_path);
+    if (!file.is_open())
+    {
+        string tmp;
+        tmp = "Cannot open";
+        tmp += bill_path;
+        throw tmp.c_str();
+    }
+}
+
 bill::~bill()
 {
     stringstream path;
-    path << "../restaurant/bill/" << Date.m;
-    path << Date << "-" << bill_no;
+    path << "../restaurant/bill/" << Date.m << "/" << Date << "/" << bill_no;
     ofstream file(path.str());
+    if (!file.is_open())
+    {
+        path << "";
+        path << "../restaurant/bill/" << Date.m << "/" << Date;
+        mkdir(path.str().c_str());
+        path << "../restaurant/bill/" << Date.m << "/" << Date << "/" << bill_no;
+        file.open(path.str());
+        if (!file.is_open())
+            throw "Missing folders";
+    }
     file << "BILL NO: " << bill_no << endl;
     file << "DATE: " << Date << endl;
     file << "TIME: " << Date.GetTime() << endl;
@@ -222,45 +224,6 @@ bill::~bill()
          << "TOTAL: " << Total;
     file.close();
 }
-//     // time_t present = time(0);
-//     // tm current;
-//     // localtime_s(&current, &present);
-//     double Total = 0, total;
-
-//     string month = to_string(1 + current.tm_mon);
-//     fstream fout(path + "/" + month + "/income.txt", ios::out);
-//     string month = to_string(1 + current.tm_mon);
-//     string day = to_string(current.tm_mday);
-//     day.append(".txt");
-//     fstream fout1(path + "/" + month + "/" + day, ios::app);
-//     for (int i = 0; i < dish_names.size(); i++)
-//     {
-//         fout1 << endl
-//               << dish_names[i] << ";" << quantity[i] << ";" << total_per_dish[i] << ";";
-//     }
-//     fout1 << Total << endl;
-//     fout1.close();
-
-//     for (int i = 0; i < 31; i++)
-//     {
-
-//         string day = to_string(i + 1);
-//         day.append(".txt");
-//         ifstream fin(path + "/" + month + "/" + day);
-//         if (fin.is_open())
-//         {
-//             while (!fin.eof())
-//             {
-//                 string line;
-//                 getline(fin, line);
-//                 getline(fin, line);
-//                 fin >> total;
-//                 Total += total;
-//             }
-//         }
-//         fin.close();
-//     }
-//     fout << "Income of the month: " << Total;
 
 void bill::AddDish(const string &ID, const string &name, const double &price)
 {
@@ -304,24 +267,6 @@ bool bill::RemoveDish(const string &ID, const double &price)
     }
     return false;
 }
-
-// void bill::GenerateBill()
-// {
-//     string path = "../restaurant/bill/";
-//     double Total = 0;
-//     time_t present = time(0);
-//     tm current;
-//     localtime_s(&current, &present);
-//     cout << current.tm_hour << ":" << current.tm_min << " " << current.tm_mday << "/" << 1 + current.tm_mon << "/" << 1900 + current.tm_year << endl;
-
-//     for (int i = 0; i < dish_names.size(); i++)
-//     {
-//         cout << dish_names[i] << "\t\t" << quantity[i] << "\t\t" << total_per_dish[i] << endl;
-
-//         Total += total_per_dish[i];
-//     }
-//     cout << "Total: " << Total;
-// }
 
 void bill::DisplayBill()
 {

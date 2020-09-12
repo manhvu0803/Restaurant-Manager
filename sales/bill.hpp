@@ -27,6 +27,7 @@ class bill_manager
 {
 private:
     vector<bill *> bills;
+    vector<bill *> old_bills;
     static bill_manager *instance;
     bill_manager();
     double income;
