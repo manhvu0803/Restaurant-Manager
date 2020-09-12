@@ -1,5 +1,5 @@
 #include <iostream>
-#include "sales/essentials.hpp"
+#include "essentials.hpp"
 #include <cstdlib>
 
 using namespace std;
