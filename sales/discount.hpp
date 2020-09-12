@@ -35,7 +35,7 @@ public:
     std::string code_generator();
     bool NewCode(const std::string &code);
     int getDiscountValue();
-    bool CompareCode(const string &code);
+    bool CompareCode(const std::string &code);
     void ListDish();
 };
 

@@ -1,12 +1,10 @@
 #include "discount.hpp"
-#include "essentials.hpp"
 #include "menu.h"
-#include "essentials.hpp"
 #include <vector>
-#include <iostream>
 #include <string>
 #include <dirent.h>
-#include <windows.h>
+#include "PCH.hpp"
+#include <cstdlib>
 
 #define MAX_CODE_LENGTH 10
 
@@ -203,7 +201,7 @@ voucher::voucher(const string &file_name)
 {
     stringstream path;
     path << "../restaurant/voucher/" << file_name;
-    ifstream file(path.str().c_str());
+    ifstream file(path.str());
     string tmp;
     getline(file, tmp);
     if (tmp != "VOUCHER")
@@ -233,7 +231,7 @@ voucher::~voucher()
 {
     stringstream path;
     path << "../restaurant/voucher/" << expiration_date;
-    ofstream file(path.str().c_str());
+    ofstream file(path.str());
     file << "VOUCHER\n";
     file << name << "\n\n";
     for (auto &i : dish)
@@ -298,7 +296,7 @@ promo::promo(const string &file_name)
 {
     stringstream path;
     path << "../restaurant/promo/" << file_name;
-    ifstream file(path.str().c_str());
+    ifstream file(path.str());
     string tmp;
     getline(file, tmp);
     if (tmp != "PROMO")
@@ -373,7 +371,7 @@ promo::~promo()
 {
     stringstream path;
     path << "../restaurant/promo/" << expiration_date;
-    ofstream file(path.str().c_str());
+    ofstream file(path.str());
     file << "PROMO\n";
     file << name << "\n\n";
     for (auto &i : dish)

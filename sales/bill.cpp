@@ -1,52 +1,231 @@
 #include "bill.hpp"
-#include <iostream>
 #include <fstream>
+#include <sstream>
+#include <iomanip>
+#include <dirent.h>
+#include "PCH.hpp"
+#include <cstdlib>
+#include "menu.h"
+#include "order.hpp"
 
 using namespace std;
 
 /**********************
+ * BILL MANAGER
+**********************/
+bill *bill_manager::FindBill(const string &bill_no)
+{
+    for (auto &i : old_bills)
+        if (bill_no == i->getBillNo())
+            return i;
+    for (auto &i : bills)
+    {
+        if (bill_no == i->getBillNo())
+            return i;
+    }
+    ERROR_LOG *log = log->instantiate();
+    dirent *ent;
+    stringstream path;
+    string folder_name;
+    int month;
+    path << bill_no.substr(2, 2);
+    path >> month;
+    path << "";
+    date tmp_d;
+    path << "../restaurant/bill/" << month << "/" << bill_no.substr(0, 2) << "-" << bill_no.substr(2, 2) << "-" << tmp_d.y;
+    path << "/" << bill_no;
+    try
+    {
+        old_bills.emplace_back(path.str());
+        return old_bills.back();
+    }
+    catch (...)
+    {
+        return nullptr;
+    }
+}
+
+bill *bill_manager::NewBill()
+{
+    // order *order_system = order::instantiate();
+    bill *new_bill = new bill;
+    if (bills.size() >= 100)
+        this->~bill_manager();
+    int dish;
+    do
+    {
+        system("cls");
+        Menu *rest_menu = rest_menu->instantiate();
+        rest_menu->output();
+        cout << "0. Finalize order\n";
+        cout << "-1. Cancel order\n";
+        cout << "Option: ";
+        int opt;
+        while (!(cin >> dish) || dish < 1 || dish > rest_menu->getMenu().size() + 1)
+        {
+            cout << "Invalid!\n";
+            cout << "Try again: ";
+            cin.clear();
+            cin.ignore(1000, '\n');
+        }
+        do
+        {
+            system("cls");
+            cout << rest_menu->getMenu()[dish - 1]->getID();
+            cout << " " << rest_menu->getMenu()[dish - 1]->getName() << endl;
+            cout << "1. Add\n";
+            cout << "2. Remove\n";
+            cout << "0. Exit\n";
+            cout << "Option: ";
+            while (!(cin >> opt) || opt < 0 || opt > 2)
+            {
+                cout << "Invalid!\n";
+                cout << "Try again: ";
+                cin.clear();
+                cin.ignore(1000, '\n');
+            }
+            if (opt == 1)
+            {
+                new_bill->AddDish(rest_menu->getMenu()[dish - 1]->getID(),
+                                  rest_menu->getMenu()[dish - 1]->getName(), rest_menu->getMenu()[dish - 1]->getPrice());
+                UpdateDishQuant(dish - 1, opt);
+            }
+            else if (opt == 2)
+            {
+                if (new_bill->RemoveDish(rest_menu->getMenu()[dish - 1]->getID(), rest_menu->getMenu()[dish - 1]->getPrice()))
+                    UpdateDishQuant(dish - 1, opt);
+                else
+                {
+                    system("cls");
+                    cout << "This dish has been removed!\n";
+                    system("pause");
+                }
+            }
+        } while (opt);
+    } while (dish && dish != -1);
+    if (dish == -1)
+        delete new_bill;
+    else
+    {
+        bills.emplace_back(new_bill);
+        return new_bill;
+    }
+    return nullptr;
+}
+
+bill_manager::bill_manager()
+{
+    ifstream file("../restaurant/DishOrdered");
+    if (!file.is_open())
+        throw "File DishOrdered is missing!";
+    int tmp;
+    while (!file.eof())
+    {
+        file >> tmp;
+        quantity.emplace_back(tmp);
+    }
+    quantity.shrink_to_fit();
+    file.close();
+}
+
+void bill_manager::updateQuantNewDish(const int &pos, const int &mode)
+{
+    if (mode)
+        quantity.emplace(quantity.begin() + pos, 0);
+    else
+        quantity.erase(quantity.begin() + pos);
+}
+
+bill_manager::~bill_manager()
+{
+    ofstream file("../restaurant/DishOrdered");
+    for (int i = 0; i < quantity.size() - 1; ++i)
+        file << i << endl;
+    file << quantity[quantity.size() - 1];
+    file.close();
+    for (auto &i : bills)
+        delete i;
+}
+
+void bill_manager::UpdateDishQuant(const int &index, const int &mode)
+{
+    if (mode == 1)
+        ++quantity[index];
+    else
+        --quantity[index];
+}
+
+/**********************
  * BILL
 **********************/
+u_int bill::count = 0;
+
+bill::bill()
+{
+    Total = 0;
+    date tmp;
+    stringstream name;
+    name << tmp;
+    bill_no += name.str().substr(0, 2);
+    bill_no += name.str().substr(2, 2);
+    u_int count_t = count;
+    int count_l = 0;
+    while (count_t)
+    {
+        count_t /= 10;
+        ++count_l;
+    }
+    count_l -= 6 - count_l;
+    for (int i = 0; i < count_l; ++i)
+        bill_no += "0";
+    bill_no += count;
+}
+
+bill::bill(const string &bill_path)
+{
+    ifstream file(bill_path);
+    if (!file.is_open())
+    {
+        string tmp;
+        tmp = "Cannot open";
+        tmp += bill_path;
+        throw tmp.c_str();
+    }
+}
 
 bill::~bill()
 {
-    /* stringstream path;
-     path << "bill/" << Date;
-     ofstream file(path.str().c_str());
-     // In bill
-     file.close();*/
-    string path = "../restaurant/bill/";
-    time_t present = time(0);
-    tm current;
-    localtime_s(&current, &present);
-    double Total = 0, total;
-
-    string month = to_string(1 + current.tm_mon);
-    fstream fout(path + "/" + month + "/income.txt", ios::out);
-
-    for (int i = 0; i < 31; i++)
+    stringstream path;
+    path << "../restaurant/bill/" << Date.m << "/" << Date << "/" << bill_no;
+    ofstream file(path.str());
+    if (!file.is_open())
     {
-
-        string day = to_string(i + 1);
-        day.append(".txt");
-        ifstream fin(path + "/" + month + "/" + day);
-        if (fin.is_open())
-        {
-            while (!fin.eof())
-            {
-                string line;
-                getline(fin, line);
-                getline(fin, line);
-                fin >> total;
-                Total += total;
-            }
-        }
-        fin.close();
+        path << "";
+        path << "../restaurant/bill/" << Date.m << "/" << Date;
+        mkdir(path.str().c_str());
+        path << "../restaurant/bill/" << Date.m << "/" << Date << "/" << bill_no;
+        file.open(path.str());
+        if (!file.is_open())
+            throw "Missing folders";
     }
-    fout << "Income of the month: " << Total;
+    file << "BILL NO: " << bill_no << endl;
+    file << "DATE: " << Date << endl;
+    file << "TIME: " << Date.GetTime() << endl;
+    file << "DISHES:\n";
+    file << "NO" << setw(5) << "ID" << setw(15) << "NAME" << setw(35) << "QUANTITY" << setw(10) << "PRICE" << endl;
+    for (int i = 1; i <= dish_IDs.size(); ++i)
+    {
+        cout << i << "." << setw(3) << dish_IDs[i];
+        cout << setw(12) << dish_names[i];
+        cout << setw(30) << quantity[i];
+        cout << setw(10) << total_per_dish[i] << endl;
+    }
+    file << endl
+         << "TOTAL: " << Total;
+    file.close();
 }
 
-void bill::AddData(const string &ID, const string &name, const double &price)
+void bill::AddDish(const string &ID, const string &name, const double &price)
 {
     int id_size = this->dish_IDs.size();
     for (int i = 0; i < id_size; ++i)
@@ -54,6 +233,7 @@ void bill::AddData(const string &ID, const string &name, const double &price)
         if (dish_IDs[i] == ID)
         {
             total_per_dish[i] += price;
+            Total += price;
             ++quantity[i];
             return;
         }
@@ -62,7 +242,8 @@ void bill::AddData(const string &ID, const string &name, const double &price)
     dish_IDs.emplace_back(ID);
     quantity.emplace_back(1);
 }
-void bill::RemoveData(const string &ID, const double &price)
+
+bool bill::RemoveDish(const string &ID, const double &price)
 {
     int id_size = this->dish_IDs.size();
     for (int i = 0; i < id_size; ++i)
@@ -80,41 +261,31 @@ void bill::RemoveData(const string &ID, const double &price)
                 --quantity[i];
                 total_per_dish[i] -= price;
             }
-
-            return;
+            Total -= price;
+            return true;
         }
     }
+    return false;
 }
-void bill::GenerateBill()
+
+void bill::DisplayBill()
 {
-    string path = "../restaurant/bill/";
-    double Total = 0;
-    time_t present = time(0);
-    tm current;
-    localtime_s(&current, &present);
-    cout << current.tm_hour << ":" << current.tm_min << " " << current.tm_mday << "/" << 1 + current.tm_mon << "/" << 1900 + current.tm_year << endl;
-
-    for (int i = 0; i < dish_names.size(); i++)
+    cout << "BILL NO: " << bill_no << endl;
+    cout << "DATE: " << Date << endl;
+    cout << "DISHES:\n";
+    cout << "NO" << setw(5) << "ID" << setw(15) << "NAME" << setw(35) << "QUANTITY" << setw(10) << "PRICE" << endl;
+    for (int i = 1; i <= dish_IDs.size(); ++i)
     {
-        cout << dish_names[i] << "\t\t" << quantity[i] << "\t\t" << total_per_dish[i] << endl;
-
-        Total += total_per_dish[i];
+        cout << i << "." << setw(5) << dish_IDs[i];
+        cout << setw(15) << dish_names[i];
+        cout << setw(30) << quantity[i];
+        cout << setw(8) << total_per_dish[i] << endl;
     }
-    cout << "Total: " << Total;
-    string month = to_string(1 + current.tm_mon);
-    string day = to_string(current.tm_mday);
-    day.append(".txt");
-    fstream fout(path + "/" + month + "/" + day, ios::app);
-    for (int i = 0; i < dish_names.size(); i++)
-    {
-        fout << endl
-             << dish_names[i] << ";" << quantity[i] << ";" << total_per_dish[i] << ";";
-    }
-    fout << Total << endl;
-    fout.close();
+    cout << endl
+         << "TOTAL: " << Total;
 }
 
-const string &bill::getID() const
+const string &bill::getBillNo() const
 {
     return bill_no;
 }

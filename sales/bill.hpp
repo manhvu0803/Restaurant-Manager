@@ -4,7 +4,6 @@
 #include "essentials.hpp"
 #include <iostream>
 #include <vector>
-#include "order.hpp"
 
 using namespace std;
 
@@ -24,28 +23,49 @@ using namespace std;
  *
 *********************/
 
+class bill_manager
+{
+private:
+    vector<bill *> bills;
+    vector<bill *> old_bills;
+    static bill_manager *instance;
+    bill_manager();
+    double income;
+    void UpdateDishQuant(const int &index, const int &mode);
+    vector<int> quantity;
+
+public:
+    static bill_manager *instantiate();
+    bill *FindBill(const string &bill_no);
+    bill_manager &operator=(const bill_manager &other) = delete;
+    bill_manager(const bill_manager &other) = delete;
+    bill *NewBill();
+    ~bill_manager();
+    void updateQuantNewDish(const int &pos, const int &mode);
+};
+
 class bill
 {
 private:
     date Date;
-    double Total = 0;
+    double Total;
     string bill_no;
     vector<string> dish_IDs;
     vector<string> dish_names;
     vector<int> quantity;
     vector<double> total_per_dish;
+    static u_int count;
 
 public:
-    bill(){};
+    ;
+    bill();
+    bill(const string &bill_path);
     ~bill();
-    void AddData(const string &ID, const string &name, const double &price);
-    double Total();
-    double Income();
-    void GenerateBill();
+    void AddDish(const string &ID, const string &name, const double &price);
     void LoadOldBill();
-    void RemoveData(const string &ID, const double &price);
+    bool RemoveDish(const string &ID, const double &price);
     void DisplayBill();
-    const string &getID() const;
+    const string &getBillNo() const;
 };
 
 #endif

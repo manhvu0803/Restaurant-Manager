@@ -24,7 +24,7 @@ public:
     ERROR_LOG(const ERROR_LOG &other) = delete;
     ERROR_LOG &operator=(const ERROR_LOG &other) = delete;
     void LOG(const std::string &log);
-    ERROR_LOG *instantiate();
+    static ERROR_LOG *instantiate();
 };
 
 /****************************
@@ -47,6 +47,8 @@ public:
     bool operator<=(const date &_date) const;
     bool operator==(const date &_date) const;
     friend date ConvertFromString(const std::string &_date);
+    void CurrentTime();
+    std::string GetTime() const;
 };
 
 date ConvertFromString(const std::string &_date);
