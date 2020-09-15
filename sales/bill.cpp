@@ -36,7 +36,7 @@ bill *bill_manager::FindBill(const string &bill_no)
     path << "/" << bill_no;
     try
     {
-        old_bills.emplace_back(path.str());
+        old_bills.emplace_back(new bill(path.str()));
         return old_bills.back();
     }
     catch (...)
