@@ -3,6 +3,7 @@
 #include "order.hpp"
 #include "../menu.h"
 #include "PCH.hpp"
+#include "bill.hpp"
 
 using namespace std;
 
