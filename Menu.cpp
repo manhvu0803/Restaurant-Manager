@@ -1,5 +1,16 @@
 #include "menu.h"
 
+/*Menu::~Menu() {
+	delete single;
+}*/
+Menu::Menu(){}
+Menu* Menu::instantiate() {
+	if (!single) {
+		single = new Menu;
+	}
+	return single;
+}
+Menu* Menu::single = nullptr;
 void Menu::load() {
 	string inputpath = "./restaurant/menu/dishes.txt";
 	string tmp;
