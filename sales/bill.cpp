@@ -2,7 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <iomanip>
-#include <dirent.h>
+#include "../dirent.h"
 #include "PCH.hpp"
 #include <cstdlib>
 #include "../menu.h"
@@ -202,11 +202,9 @@ bill::~bill()
     {
         path << "";
         path << "../restaurant/bill/" << Date.m << "/" << Date;
-        mkdir(path.str().c_str());
+        CreateDirectory(path.str().c_str(), NULL);
         path << "../restaurant/bill/" << Date.m << "/" << Date << "/" << bill_no;
         file.open(path.str());
-        if (!file.is_open())
-            throw "Missing folders";
     }
     file << "BILL NO: " << bill_no << endl;
     file << "DATE: " << Date << endl;
