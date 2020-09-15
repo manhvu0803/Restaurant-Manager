@@ -22,7 +22,8 @@ order *order::instance = nullptr;
 
 void order::NewOrder()
 {
-    orders.emplace_back(bill_manager::instantiate()->NewBill());
+    bill_manager *bill_m = bill_manager::instantiate();
+    orders.emplace_back(bill_m->NewBill());
 }
 
 bool order::CompleteOrderInQueue()
