@@ -14,7 +14,7 @@ namespace ui
     {
         private:
             std::vector<component*> components;
-            
+
         public:
             bool clearOnShow = true;
 
@@ -22,12 +22,12 @@ namespace ui
 
             component() = default;
             component(const std::string& desc);
-            
+
             void add(component& comp);
 
-            virtual void show();
+            virtual void show();            
     };
-
+    
     class option: public component
     {
         public:        
@@ -45,7 +45,7 @@ namespace ui
     
     // Return true if succeed, false otherwise
     template <typename T> 
-    bool input(std::istream& stream, T& val, const bool clear)
+    bool input(T& val, std::istream& stream = std::cin, const bool clear = true)
     {
         stream >> val;
         bool successful = !stream.fail();
