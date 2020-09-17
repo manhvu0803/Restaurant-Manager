@@ -55,5 +55,6 @@ public:
 };
 
 date ConvertFromString(const std::string &_date);
+void skipchars(std::ifstream &file, const int &num);
 
 #endif

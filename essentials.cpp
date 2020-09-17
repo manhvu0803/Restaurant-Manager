@@ -4,6 +4,16 @@
 using namespace std;
 
 /*************************************
+ * other useful function (public)
+*************************************/
+
+void skipchars(ifstream &file, const int &num)
+{
+    for (int i = 0; i < num; ++i)
+        file.get();
+}
+
+/*************************************
  * ERROR_LOG
 *************************************/
 

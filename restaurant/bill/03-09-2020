@@ -2,8 +2,8 @@ BILL NO: 123456
 DATE: 23-12-2020
 TIME: 18:22:34
 DISHES:
-NO   ID           NAME                           QUANTITY     PRICE
-1    0000000001   Banh mi kep thit               2            20000
-2    1231515236   Com suon bo                    4            120000
+NO   ID             QUANT   PRICE          NAME
+1    1234567890     3       60000          Banh mi bo sua
+2    1234567891     4       240000         Thit bo sot nam
 
-TOTAL 140000
+TOTAL 300000

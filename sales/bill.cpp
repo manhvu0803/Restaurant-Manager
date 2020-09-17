@@ -202,10 +202,15 @@ bill::bill(const string &bill_path)
     }
     file.seekg(9, ios::beg);
     getline(file, bill_no);
-    file.seekg(6 - CRLF, ios::cur);
+    skipchars(file, 6);
     string tmp;
     getline(file, tmp);
     Date = ConvertFromString(tmp);
+    skipchars(file, 6);
+    getline(file, tmp);
+    Date.addTime(tmp);
+    getline(file, tmp);
+    getline(file, tmp);
     file.close();
 }
 
@@ -226,13 +231,18 @@ bill::~bill()
     file << "DATE: " << Date << endl;
     file << "TIME: " << Date.GetTime() << endl;
     file << "DISHES:\n";
-    file << "NO" << setw(5) << "ID" << setw(15) << "NAME" << setw(35) << "QUANTITY" << setw(10) << "PRICE" << endl;
+    file << left << setw(5) << "NO"
+         << left << setw(15) << "ID"
+         << left << setw(8) << "QUANT"
+         << left << setw(15) << "PRICE"
+         << "NAME" << endl;
     for (int i = 1; i <= dish_IDs.size(); ++i)
     {
-        cout << i << "." << setw(3) << dish_IDs[i];
-        cout << setw(12) << dish_names[i];
-        cout << setw(30) << quantity[i];
-        cout << setw(10) << total_per_dish[i] << endl;
+        file << left << setw(5) << i
+             << left << setw(15) << dish_IDs[i]
+             << left << setw(8) << quantity[i]
+             << left << setw(15) << total_per_dish[i]
+             << dish_names[i] << endl;
     }
     file << endl
          << "TOTAL: " << Total;
@@ -287,13 +297,18 @@ void bill::DisplayBill()
     cout << "BILL NO: " << bill_no << endl;
     cout << "DATE: " << Date << endl;
     cout << "DISHES:\n";
-    cout << "NO" << setw(5) << "ID" << setw(15) << "NAME" << setw(35) << "QUANTITY" << setw(10) << "PRICE" << endl;
+    cout << left << setw(5) << "NO"
+         << left << setw(15) << "ID"
+         << left << setw(8) << "QUANT"
+         << left << setw(15) << "PRICE"
+         << "NAME" << endl;
     for (int i = 1; i <= dish_IDs.size(); ++i)
     {
-        cout << i << "." << setw(5) << dish_IDs[i];
-        cout << setw(15) << dish_names[i];
-        cout << setw(30) << quantity[i];
-        cout << setw(8) << total_per_dish[i] << endl;
+        cout << left << setw(5) << i
+             << left << setw(15) << dish_IDs[i]
+             << left << setw(8) << quantity[i]
+             << left << setw(15) << total_per_dish[i]
+             << dish_names[i] << endl;
     }
     cout << endl
          << "TOTAL: " << Total;
