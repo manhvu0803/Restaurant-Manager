@@ -211,6 +211,24 @@ bill::bill(const string &bill_path)
     Date.addTime(tmp);
     getline(file, tmp);
     getline(file, tmp);
+    while (file.peek() != '\n')
+    {
+        skipchars(file, 5);
+        file >> tmp;
+        dish_IDs.emplace_back(tmp);
+        int i_tmp;
+        file >> i_tmp;
+        quantity.emplace_back(i_tmp);
+        double d_tmp;
+        file >> d_tmp;
+        total_per_dish.emplace_back(d_tmp);
+        while (file.peek() == ' ')
+            file.get();
+        getline(file, tmp);
+        dish_names.emplace_back(tmp);
+    }
+    skipchars(file, 6);
+    file >> Total;
     file.close();
 }
 
