@@ -36,7 +36,6 @@ private:
     static u_int count;
 
 public:
-    ;
     bill();
     bill(const string &bill_path);
     ~bill();

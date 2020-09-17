@@ -45,6 +45,15 @@ bill *bill_manager::FindBill(const string &bill_no)
     }
 }
 
+bill_manager *bill_manager::instance = nullptr;
+
+bill_manager *bill_manager::instantiate()
+{
+    if (!instance)
+        instance = new bill_manager;
+    return instance;
+}
+
 bill *bill_manager::NewBill()
 {
     // order *order_system = order::instantiate();
@@ -191,6 +200,13 @@ bill::bill(const string &bill_path)
         tmp += bill_path;
         throw tmp.c_str();
     }
+    file.seekg(9, ios::beg);
+    getline(file, bill_no);
+    file.seekg(6 - CRLF, ios::cur);
+    string tmp;
+    getline(file, tmp);
+    Date = ConvertFromString(tmp);
+    file.close();
 }
 
 bill::~bill()

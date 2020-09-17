@@ -203,3 +203,20 @@ void date::CurrentTime()
     date tmp;
     *this = tmp;
 }
+
+void date::addTime(const string &Time)
+{
+    if (Time.size() != 8)
+        throw "Invalid date string format!";
+    stringstream sstr;
+    sstr << Time.substr(0, 2);
+    sstr >> h;
+    sstr.clear();
+    sstr << "";
+    sstr << Time.substr(3, 2);
+    sstr >> min;
+    sstr.clear();
+    sstr << "";
+    sstr << Time.substr(6, 4);
+    sstr >> s;
+}
