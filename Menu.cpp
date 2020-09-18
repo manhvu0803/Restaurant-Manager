@@ -130,6 +130,7 @@ void Menu::newDish() {
 	int pos;
 	order& obj = obj.instantiate();
 	int choice = 1, choice1;
+	ofstream fout;
 	while (choice == 1) {
 		tmp.input();
 		tmp.outputMenu();
@@ -138,7 +139,10 @@ void Menu::newDish() {
 		pos = this->add(&tmp);
 		obj.update(pos, 1);
 		cout << "Successfully add " << endl;
+		this->save();
 		this->output();
+		fout.open("./restaurant/menu/" + tmp.getID() + ".txt");
+		tmp.save(fout);
 		cout << "Do you want to add another dish? (0: No, 1: Yes): " << endl;
 		cin >> choice;
 	}
@@ -155,16 +159,17 @@ void Menu::removeDish() {
 			cout << "Your dish index: ";
 			cin >> choice1;
 			cin.ignore(256, '\n');
-			menu.erase(menu.begin() + choice1);
-			obj.update(choice1, 0);
-			this->save();
-			bool re = this->deleteFile("./restaurant/menu/" + menu[choice1]->getID());
+			string path = "./restaurant/menu/" + menu[choice1]->getID() + ".txt";
+			bool re = this->deleteFile(path);
 			if (re) {
 				cout << "Delete successfully" << endl;
 			}
 			else {
 				cout << "Can't delete" << endl;
 			}
+			menu.erase(menu.begin() + choice1);
+			obj.update(choice1, 0);
+			this->save();
 			cout << "Do you want to delete any other dish? (0: No, 1: Yes): ";
 			cin >> choice;
 		}
@@ -205,6 +210,21 @@ bool Menu::deleteFile(string path) {
 		return false;
 	}
 }
-/*int Menu::favor() {
-	string inputpath = "./restaurant/bill";
-}*/
+vector<int> Menu::favor() {
+	string inputpath = "./restaurant/DishOrdered";
+	ifstream fin;
+	vector<int> tmp;
+	fin.open(inputpath);
+	if (!fin.is_open()) {
+		cout << "Can't open file" << endl;
+	}
+	else {
+		for (int i = 0; i < menu.size(); i++) {
+			int tmp1 = 0;
+			fin >> tmp1;
+			tmp.push_back(tmp1);
+		}
+	}
+	fin.close();
+	return tmp;
+}

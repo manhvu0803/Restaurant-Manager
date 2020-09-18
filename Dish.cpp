@@ -38,7 +38,7 @@ void Dish::addIngsToDish(vector<Ingredients> a) {
 
 	cout << "Ingredients list :" << endl;
 	for (int i = 0; i < a.size(); i++) {
-		cout << setw(10) << left << id << ": " << setw(20) << left << name << endl;
+		cout << setw(10) << left << "  (" + to_string(i) + ") : " << setw(20) << left << a[i].getName() << endl;
 	}
 	cout << "Choose the ingredients that you need " << endl;
 	while (choice == 1) {
@@ -53,6 +53,13 @@ void Dish::addIngsToDish(vector<Ingredients> a) {
 		this->add(n);
 		cout << "You want to add another ingredients ? (0: No, 1: Yes)" << endl;
 		cin >> choice;
+		while (choice != 0 && choice != 1 || cin.fail()) {
+			cin.clear();
+			cin.ignore(256, '\n');
+			cout << "Error, try again" << endl;
+			cout << "Your choice: ";
+			cin >> choice;
+		}
 	}
 }
 void Dish::input() {
@@ -60,6 +67,7 @@ void Dish::input() {
 	string Name,Id;
 	double Price;
 	Storage tmp;
+	tmp.imp();
 	cout << "Please input dish info: " << endl;
 	cout << "Type of dish:" << endl;
 	cout << "(0)FD" << endl << "(1)DK" << endl;
@@ -79,6 +87,9 @@ void Dish::input() {
 		cin >> Price;
 	}
 	this->addIngsToDish(tmp.getStorage());
+	this->id = Id;
+	this->name = Name;
+	this->price = Price;
 	
 }
 string Dish::generateID(int choice) {
@@ -87,7 +98,7 @@ string Dish::generateID(int choice) {
 	string tmp1;
 	vector<string> tmp;
 	size_t found;
-	fin.open("./restaurant/meunu/dishes.txt");
+	fin.open("./restaurant/menu/dishes.txt");
 	if (!fin.is_open()) {
 		cout << "Can't open file menu" << endl;
 	}
@@ -167,12 +178,12 @@ void Dish::change() {
 		cout << "(0) Add ingredients" << endl << "(1) Remove ingredients" << endl << "(2) Change the amount of ingredients" << endl;
 		cout << "Your choice: ";
 		cin >> choice;
+		if(choice == 2){
 			cout << "Choose the index of the ingredient you want to change " << endl;
 			cout << "Your choice: ";
 			cin >> choice1;
 			cin.ignore(256, '\n');
 			ings[choice1]->print();
-		if(choice == 2){
 			cout << "New amount: ";
 			cin >> amnt;
 			while (cin.fail() || amnt <= 0) {
@@ -184,7 +195,7 @@ void Dish::change() {
 			}
 			ings[choice1]->changeAmt(amnt);
 		}
-		else if (choice1 == 0) {
+		else if (choice == 0) {
 			ings.push_back(this->inputIng());
 			string path = "./restaurant/menu/" + this->getID() + ".txt";
 			fout.open(path);
@@ -198,6 +209,10 @@ void Dish::change() {
 			}
 		}
 		else {
+			cout << "Choose the index of the ingredient you want to remove " << endl;
+			cout << "Your choice: ";
+			cin >> choice1;
+			cin.ignore(256, '\n');
 			ings.erase(ings.begin() + choice1);
 			string path = "./restaurant/menu/" + this->getID() + ".txt";
 			fout.open(path);

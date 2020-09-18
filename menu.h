@@ -25,7 +25,7 @@ public:
 	void removeDish();
 	void changeDish();
 	bool deleteFile(string path);
-	int favor();
+	vector<int> favor();
 	static Menu& instantiate();
 	//~Menu();
 
