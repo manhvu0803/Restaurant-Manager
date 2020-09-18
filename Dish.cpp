@@ -143,7 +143,20 @@ void Dish::change() {
 	cin >> choice;
 	cin.ignore(256, '\n');
 	if (choice == 0) {
-
+		cout << "This is the price: " << this->getPrice() << " VND" << endl;
+		cout << "Enter the new price you want: ";
+		cin >> this->price;
+		cout << "The price has been change" << endl;
+		string path = "./restaurant/menu/" + this->getID() + ".txt";
+		fout.open(path);
+		if (fout.is_open()) {
+			this->save(fout);
+			cout << "Save successfully" << endl;
+			fout.close();
+		}
+		else {
+			cout << "Cant open file dish" << endl;
+		}
 	}
 	else {
 		for (int i = 0; i < ings.size(); i++) {

@@ -6,7 +6,7 @@
 Menu::Menu(){}
 Menu* Menu::instantiate() {
 	if (!single) {
-		single = new Menu;
+		single = new Menu();
 	}
 	return single;
 }
@@ -19,7 +19,9 @@ void Menu::load() {
 	date dt;
 	int amount,x;
 	ifstream fin,fin1;
-
+	if (menu.size() != 0) {
+		menu.clear();
+	}
 	fin.open(inputpath);
 	if (!fin.is_open()) {
 		cout << "Can't open menu file " << endl;
@@ -191,6 +193,9 @@ void Menu::changeDish() {
 			cout << "Nothing to show" << endl;
 			choice = 0;
 		}
+		cout << "Do you want to change another dish ?" << endl;
+		cout << "Your choice (0: NO , 1: YES): ";
+		cin >> choice;
 	}
 }
 bool Menu::deleteFile(string path) {
