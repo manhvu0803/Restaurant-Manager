@@ -288,6 +288,24 @@ void voucher::NewVoucher()
         code.emplace_back(code_generator());
 }
 
+void voucher::Apply(const vector<string> &dish_IDs, vector<double> &totals, double &total)
+{
+    for (auto &dishID : dish)
+    {
+        for (int i = 0; i < dish_IDs.size(); ++i)
+        {
+            if (dishID == dish_IDs[i])
+            {
+                totals[i] *= (discount_value / 100);
+            }
+        }
+    }
+    double tmp = 0;
+    for (auto &i : totals)
+        tmp += i;
+    total = tmp;
+}
+
 /*********************
  * PROMO
 *********************/
@@ -381,4 +399,14 @@ promo::~promo()
         file << code[i] << "\n";
     file << code[code.size() - 1];
     file.close();
+}
+
+void promo::Apply(double &total)
+{
+    double tmp = total;
+    tmp -= discount_value;
+    if (tmp < 0)
+        total = 0;
+    else
+        total = tmp;
 }

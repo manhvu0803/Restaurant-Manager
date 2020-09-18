@@ -28,7 +28,7 @@ protected:
     int quantity = 0;
     date expiration_date;
     std::string name;
-    std::vector<std::string> dish;
+    std::vector<std::string> dish; //ID
     int discount_value;
 
 public:
@@ -45,6 +45,7 @@ public:
     promo(){};
     promo(const std::string &file_name);
     void NewPromo();
+    void Apply(double &totals);
     ~promo();
 };
 
@@ -54,9 +55,12 @@ public:
     voucher(){};
     voucher(const std::string &file_name);
     void NewVoucher();
+    void Apply(const vector<string> &dish_IDs, vector<double> &totals, double &total);
     ~voucher();
 };
 
+//use voucher and promo
+//must check if use_voucher() and use_promo() return actual object
 class discount
 {
 private:
@@ -73,7 +77,7 @@ public:
     void add_promo();
     voucher *use_voucher(const std::string &code);
     promo *use_promo(const std::string &code);
-    discount *instantiate();
+    static discount *instantiate();
 };
 
 #endif

@@ -40,7 +40,6 @@ public:
     bill(const string &bill_path);
     ~bill();
     void AddDish(const string &ID, const string &name, const double &price);
-    void LoadOldBill();
     bool RemoveDish(const string &ID, const double &price);
     void DisplayBill();
     const string &getBillNo() const;

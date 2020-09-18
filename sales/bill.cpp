@@ -2,11 +2,11 @@
 #include <fstream>
 #include <sstream>
 #include <iomanip>
-#include "../dirent.h"
 #include "PCH.hpp"
 #include <cstdlib>
 #include "../menu.h"
 #include "order.hpp"
+#include "discount.hpp"
 
 using namespace std;
 
@@ -24,7 +24,6 @@ bill *bill_manager::FindBill(const string &bill_no)
             return i;
     }
     ERROR_LOG *log = log->instantiate();
-    dirent *ent;
     stringstream path;
     string folder_name;
     int month;
@@ -335,4 +334,53 @@ void bill::DisplayBill()
 const string &bill::getBillNo() const
 {
     return bill_no;
+}
+
+void bill::applyDiscount()
+{
+    discount *disc = discount::instantiate();
+    int opt;
+MENU:
+    system("cls");
+    cout << "1. Promo\n";
+    cout << "2. Voucher\n";
+    cout << "0. Exit\n";
+    while (!(cin >> opt) || opt < 0 || opt > 2)
+    {
+        cout << "Invalid!\n";
+        cout << "Try again: ";
+        cin.clear();
+        cin.ignore(1000, '\n');
+    }
+    string tmp;
+    if (opt == 1)
+    {
+        system("cls");
+        cout << "code: ";
+        cin >> tmp;
+        promo *Promo = disc->use_promo(tmp);
+        if (!Promo)
+        {
+            system("cls");
+            cout << "Invalid code!\n\n";
+            system("pause");
+            goto MENU;
+        }
+        Promo->Apply(Total);
+    }
+    if (opt == 2)
+    {
+        system("cls");
+        cout << "code: ";
+        cin >> tmp;
+        voucher *Voucher = disc->use_voucher(tmp);
+        if (!Voucher)
+        {
+            system("cls");
+            cout << "Invalid code!\n\n";
+            system("pause");
+            goto MENU;
+        }
+        Voucher->Apply(dish_IDs, total_per_dish, Total);
+    }
 }
