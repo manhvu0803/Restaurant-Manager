@@ -18,7 +18,7 @@ string Dish::getName() {
 	return name;
 }
 void Dish::outputMenu() {
-	cout << setw(10) << left << id << ": " << setw(20) << left << name << setw(10) << left << to_string(long int(price)) + " VND" << endl;
+	cout << setw(10) << left << id << ": " << setw(20) << left << name << setw(10) << left << to_string(long(price)) + " VND" << endl;
 }
 double Dish::getPrice() {
 	return price;
@@ -26,7 +26,7 @@ double Dish::getPrice() {
 void Dish::save(ofstream& fout) {
 	fout << id << endl;
 	fout << name << endl;
-	fout << to_string(long int(price)) << endl;
+	fout << to_string(long(price)) << endl;
 	for (int i = 0; i < ings.size(); i++) {
 		ings[i]->exp(fout, false);
 	}
