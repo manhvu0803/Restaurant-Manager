@@ -23,7 +23,9 @@ namespace ui
             component() = default;
             component(const std::string& desc);
 
-            void add(component& comp);
+            virtual ~component();
+
+            void add(component* comp);
 
             virtual void show();            
     };
