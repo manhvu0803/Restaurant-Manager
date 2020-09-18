@@ -4,13 +4,11 @@
 	delete single;
 }*/
 Menu::Menu(){}
-Menu* Menu::instantiate() {
-	if (!single) {
-		single = new Menu();
-	}
-	return single;
+Menu& Menu::instantiate() {
+	static Menu instance;
+	return instance;
 }
-Menu* Menu::single = nullptr;
+//Menu* Menu::single = nullptr;
 void Menu::load() {
 	string inputpath = "./restaurant/menu/dishes.txt";
 	string tmp;
@@ -130,7 +128,7 @@ void Menu::save() {
 void Menu::newDish() {
 	Dish tmp;
 	int pos;
-	order* obj = obj->instantiate();
+	order& obj = obj.instantiate();
 	int choice = 1, choice1;
 	while (choice == 1) {
 		tmp.input();
@@ -138,7 +136,7 @@ void Menu::newDish() {
 		cout << "Do you want to add this dish to your menu? (0: No, 1: Yes) :";
 		cin >> choice;
 		pos = this->add(&tmp);
-		obj->update(pos, 1);
+		obj.update(pos, 1);
 		cout << "Successfully add " << endl;
 		this->output();
 		cout << "Do you want to add another dish? (0: No, 1: Yes): " << endl;
@@ -147,7 +145,7 @@ void Menu::newDish() {
 }
 void Menu::removeDish() {
 	int choice = 1,choice1 ;
-	order* obj = obj->instantiate();
+	order& obj = obj.instantiate();
 	while (choice == 1) {
 		if (menu.size() != 0) {
 			for (int i = 0; i < menu.size(); i++) {
@@ -158,7 +156,7 @@ void Menu::removeDish() {
 			cin >> choice1;
 			cin.ignore(256, '\n');
 			menu.erase(menu.begin() + choice1);
-			obj->update(choice1, 0);
+			obj.update(choice1, 0);
 			this->save();
 			bool re = this->deleteFile("./restaurant/menu/" + menu[choice1]->getID());
 			if (re) {
@@ -207,3 +205,6 @@ bool Menu::deleteFile(string path) {
 		return false;
 	}
 }
+/*int Menu::favor() {
+	string inputpath = "./restaurant/bill";
+}*/
