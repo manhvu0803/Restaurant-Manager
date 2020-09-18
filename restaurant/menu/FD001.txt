@@ -1,31 +1,31 @@
 FD001
 Banh mi trung
 20000
-IN0001
+1
 Muoi
 4
 gam
-IN0002
+2
 Banh mi
 1
 o
-IN0003
+3
 Nuoc tuong
 2
 ml
-IN0004
+4
 Tieu
 4
 gam
-IN0005
+5
 Hanh la
 4
 gam
-IN0006
+6
 Trung
 1
 trai
-IN0007
+7
 Dau an
 10
 ml
