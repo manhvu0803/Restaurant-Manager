@@ -5,6 +5,7 @@
 #include <dirent.h>
 #include "PCH.hpp"
 #include <cstdlib>
+#include "bill.hpp"
 
 #define MAX_CODE_LENGTH 10
 
@@ -125,6 +126,7 @@ discount::~discount()
 
 void discount::add_voucher()
 {
+    system("cls");
     voucher *tmp = new voucher;
     tmp->NewVoucher();
     vouchers.emplace_back(tmp);
@@ -132,6 +134,7 @@ void discount::add_voucher()
 
 void discount::add_promo()
 {
+    system("cls");
     promo *tmp = new promo;
     tmp->NewPromo();
     promos.emplace_back(tmp);
