@@ -2,10 +2,10 @@
 #include <fstream>
 #include <sstream>
 #include <iomanip>
-#include <dirent.h>
+#include "../dirent.h"
 #include "PCH.hpp"
 #include <cstdlib>
-#include "menu.h"
+#include "../menu.h"
 #include "order.hpp"
 
 using namespace std;
@@ -36,13 +36,22 @@ bill *bill_manager::FindBill(const string &bill_no)
     path << "/" << bill_no;
     try
     {
-        old_bills.emplace_back(path.str());
+        old_bills.emplace_back(new bill(path.str()));
         return old_bills.back();
     }
     catch (...)
     {
         return nullptr;
     }
+}
+
+bill_manager *bill_manager::instance = nullptr;
+
+bill_manager *bill_manager::instantiate()
+{
+    if (!instance)
+        instance = new bill_manager;
+    return instance;
 }
 
 bill *bill_manager::NewBill()
@@ -191,6 +200,36 @@ bill::bill(const string &bill_path)
         tmp += bill_path;
         throw tmp.c_str();
     }
+    file.seekg(9, ios::beg);
+    getline(file, bill_no);
+    skipchars(file, 6);
+    string tmp;
+    getline(file, tmp);
+    Date = ConvertFromString(tmp);
+    skipchars(file, 6);
+    getline(file, tmp);
+    Date.addTime(tmp);
+    getline(file, tmp);
+    getline(file, tmp);
+    while (file.peek() != '\n')
+    {
+        skipchars(file, 5);
+        file >> tmp;
+        dish_IDs.emplace_back(tmp);
+        int i_tmp;
+        file >> i_tmp;
+        quantity.emplace_back(i_tmp);
+        double d_tmp;
+        file >> d_tmp;
+        total_per_dish.emplace_back(d_tmp);
+        while (file.peek() == ' ')
+            file.get();
+        getline(file, tmp);
+        dish_names.emplace_back(tmp);
+    }
+    skipchars(file, 6);
+    file >> Total;
+    file.close();
 }
 
 bill::~bill()
@@ -202,23 +241,26 @@ bill::~bill()
     {
         path << "";
         path << "../restaurant/bill/" << Date.m << "/" << Date;
-        mkdir(path.str().c_str());
+        CreateDirectory(path.str().c_str(), NULL);
         path << "../restaurant/bill/" << Date.m << "/" << Date << "/" << bill_no;
         file.open(path.str());
-        if (!file.is_open())
-            throw "Missing folders";
     }
     file << "BILL NO: " << bill_no << endl;
     file << "DATE: " << Date << endl;
     file << "TIME: " << Date.GetTime() << endl;
     file << "DISHES:\n";
-    file << "NO" << setw(5) << "ID" << setw(15) << "NAME" << setw(35) << "QUANTITY" << setw(10) << "PRICE" << endl;
+    file << left << setw(5) << "NO"
+         << left << setw(15) << "ID"
+         << left << setw(8) << "QUANT"
+         << left << setw(15) << "PRICE"
+         << "NAME" << endl;
     for (int i = 1; i <= dish_IDs.size(); ++i)
     {
-        cout << i << "." << setw(3) << dish_IDs[i];
-        cout << setw(12) << dish_names[i];
-        cout << setw(30) << quantity[i];
-        cout << setw(10) << total_per_dish[i] << endl;
+        file << left << setw(5) << i
+             << left << setw(15) << dish_IDs[i]
+             << left << setw(8) << quantity[i]
+             << left << setw(15) << total_per_dish[i]
+             << dish_names[i] << endl;
     }
     file << endl
          << "TOTAL: " << Total;
@@ -273,13 +315,18 @@ void bill::DisplayBill()
     cout << "BILL NO: " << bill_no << endl;
     cout << "DATE: " << Date << endl;
     cout << "DISHES:\n";
-    cout << "NO" << setw(5) << "ID" << setw(15) << "NAME" << setw(35) << "QUANTITY" << setw(10) << "PRICE" << endl;
+    cout << left << setw(5) << "NO"
+         << left << setw(15) << "ID"
+         << left << setw(8) << "QUANT"
+         << left << setw(15) << "PRICE"
+         << "NAME" << endl;
     for (int i = 1; i <= dish_IDs.size(); ++i)
     {
-        cout << i << "." << setw(5) << dish_IDs[i];
-        cout << setw(15) << dish_names[i];
-        cout << setw(30) << quantity[i];
-        cout << setw(8) << total_per_dish[i] << endl;
+        cout << left << setw(5) << i
+             << left << setw(15) << dish_IDs[i]
+             << left << setw(8) << quantity[i]
+             << left << setw(15) << total_per_dish[i]
+             << dish_names[i] << endl;
     }
     cout << endl
          << "TOTAL: " << Total;

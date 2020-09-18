@@ -1,7 +1,7 @@
 #ifndef BILL_CPP
 #define BILL_CPP
 
-#include "essentials.hpp"
+#include "../essentials.hpp"
 #include <iostream>
 #include <vector>
 
@@ -23,6 +23,29 @@ using namespace std;
  *
 *********************/
 
+class bill
+{
+private:
+    date Date;
+    double Total;
+    string bill_no;
+    vector<string> dish_IDs;
+    vector<string> dish_names;
+    vector<int> quantity;
+    vector<double> total_per_dish;
+    static u_int count;
+
+public:
+    bill();
+    bill(const string &bill_path);
+    ~bill();
+    void AddDish(const string &ID, const string &name, const double &price);
+    void LoadOldBill();
+    bool RemoveDish(const string &ID, const double &price);
+    void DisplayBill();
+    const string &getBillNo() const;
+};
+
 class bill_manager
 {
 private:
@@ -42,30 +65,6 @@ public:
     bill *NewBill();
     ~bill_manager();
     void updateQuantNewDish(const int &pos, const int &mode);
-};
-
-class bill
-{
-private:
-    date Date;
-    double Total;
-    string bill_no;
-    vector<string> dish_IDs;
-    vector<string> dish_names;
-    vector<int> quantity;
-    vector<double> total_per_dish;
-    static u_int count;
-
-public:
-    ;
-    bill();
-    bill(const string &bill_path);
-    ~bill();
-    void AddDish(const string &ID, const string &name, const double &price);
-    void LoadOldBill();
-    bool RemoveDish(const string &ID, const double &price);
-    void DisplayBill();
-    const string &getBillNo() const;
 };
 
 #endif

@@ -6,6 +6,8 @@
 #include <sstream>
 #include <fstream>
 
+#define CRLF 8
+
 typedef unsigned int u_int;
 
 /*************************************
@@ -41,6 +43,7 @@ public:
     date(const int &d, const int &m, const int &y);
     friend std::ostream &operator<<(std::ostream &os, const date &_date);
     friend std::istream &operator>>(std::istream &is, date &_date);
+    void addTime(const std::string &Time);
     bool operator<(const date &_date) const;
     bool operator>(const date &_date) const;
     bool operator>=(const date &_date) const;
@@ -52,5 +55,6 @@ public:
 };
 
 date ConvertFromString(const std::string &_date);
+void skipchars(std::ifstream &file, const int &num);
 
 #endif

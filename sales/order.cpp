@@ -1,8 +1,9 @@
 #include <fstream>
 #include <iomanip>
 #include "order.hpp"
-#include "menu.h"
+#include "../menu.h"
 #include "PCH.hpp"
+#include "bill.hpp"
 
 using namespace std;
 
@@ -22,7 +23,8 @@ order *order::instance = nullptr;
 
 void order::NewOrder()
 {
-    orders.emplace_back(bill_manager::instantiate()->NewBill());
+    bill_manager *bill_m = bill_manager::instantiate();
+    orders.emplace_back(bill_m->NewBill());
 }
 
 bool order::CompleteOrderInQueue()
