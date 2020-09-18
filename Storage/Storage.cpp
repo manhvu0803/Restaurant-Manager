@@ -21,7 +21,7 @@ void Ingredients::exp(ofstream& fp, bool op)
 	fp << name << endl;
 	fp << amount << "\n";
 	if (op)
-		fp << floor << endl;
+	fp << floor << endl;
 	fp << unit << endl;
 	if (op)
 		fp << exd;
@@ -41,6 +41,7 @@ void Storage::input(bool op)
 {
 	string name, unit;
 	int amount, id, floor;
+	
 	do
 	{
 		cout << "ID: ";
@@ -61,7 +62,7 @@ void Storage::input(bool op)
 	getline(cin, unit);
 	date d;
 	if (op)
-		cin >> d;
+	cin >> d;
 	Ingredients ing(id, name, amount, unit, d, floor);
 	str.push_back(ing);
 }
@@ -81,7 +82,7 @@ void Storage::imp()
 		}
 		string unit, line, name;
 		int amount, id, floor;
-		u_int x, y, z;
+		u_int d, m, y;
 		file >> id;
 		getline(file, line);
 		getline(file, name, '\n');
@@ -89,14 +90,14 @@ void Storage::imp()
 		file >> floor;
 		getline(file, line);
 		getline(file, unit, '\n');
-		file >> x;
+		file >> d;
+		file.seekg(1, ios::cur);
+		file >> m;
 		file.seekg(1, ios::cur);
 		file >> y;
-		file.seekg(1, ios::cur);
-		file >> z;
 		getline(file, line);
-		date t(x, y - 1, z);
-		Ingredients ing(id, name, amount, unit, t, floor);
+		date date(d, m, y);
+		Ingredients ing(id, name, amount, unit, date, floor);
 		str.push_back(ing);
 	}
 	file.close();
