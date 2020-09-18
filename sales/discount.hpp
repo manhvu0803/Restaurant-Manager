@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <iostream>
-#include "essentials.hpp"
+#include "../essentials.hpp"
 
 /**********************
  * Discount
@@ -34,8 +34,9 @@ protected:
 public:
     std::string code_generator();
     bool NewCode(const std::string &code);
-    int getDiscountValue();
+    void Info();
     bool CompareCode(const std::string &code);
+    const date &getExpDate();
     void ListDish();
 };
 

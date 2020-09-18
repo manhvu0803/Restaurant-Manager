@@ -87,20 +87,30 @@ discount::discount()
 
 voucher *discount::use_voucher(const std::string &code)
 {
+    date tmp;
     for (auto &i : vouchers)
     {
         if (i->CompareCode(code))
-            return i;
+        {
+            if (tmp <= i->getExpDate())
+                return i;
+            return nullptr;
+        }
     }
     return nullptr;
 }
 
 promo *discount::use_promo(const std::string &code)
 {
+    date tmp;
     for (auto &i : promos)
     {
         if (i->CompareCode(code))
-            return i;
+        {
+            if (tmp <= i->getExpDate())
+                return i;
+            return nullptr;
+        }
     }
     return nullptr;
 }
@@ -167,6 +177,7 @@ bool Code::NewCode(const string &_code_)
 
 void Code::ListDish()
 {
+    system("cls");
     Menu *rest_menu = rest_menu->instantiate();
     for (auto &i : dish)
     {
@@ -188,9 +199,10 @@ bool Code::CompareCode(const string &code)
     return false;
 }
 
-int Code::getDiscountValue()
+void Code::Info()
 {
-    return discount_value;
+    cout << name << endl;
+    cout <<
 }
 
 /*********************
