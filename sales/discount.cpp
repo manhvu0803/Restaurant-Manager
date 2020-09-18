@@ -2,7 +2,7 @@
 #include "../menu.h"
 #include <vector>
 #include <string>
-#include <dirent.h>
+#include "../dirent.h"
 #include "PCH.hpp"
 #include <cstdlib>
 #include "bill.hpp"
@@ -18,7 +18,7 @@ discount::discount()
 {
     ERROR_LOG &log = log.instantiate();
     dirent *ent;
-    DIR *dir = opendir("..\\restaurant\\voucher\\");
+    DIR *dir = opendir(".\\restaurant\\voucher\\");
     if (dir == NULL)
     {
         log.LOG("Folder voucher is missing");
@@ -37,9 +37,10 @@ discount::discount()
             //Remove expired voucher list
             if (tmp >= ConvertFromString(voucher_name))
             {
-                string path = "../restaurant/voucher/";
+                string path = "./restaurant/voucher/";
                 path += voucher_name;
                 remove(path.c_str());
+                continue;
             }
             voucher_t = new voucher(voucher_name);
             vouchers.emplace_back(voucher_t);
@@ -51,7 +52,7 @@ discount::discount()
         };
     }
     closedir(dir);
-    dir = opendir("..\\restaurant\\promo\\");
+    dir = opendir(".\\restaurant\\promo\\");
     if (dir == NULL)
     {
         log.LOG("Folder promo is missing");
@@ -64,18 +65,19 @@ discount::discount()
     {
         string promo_name = ent->d_name;
         date tmp;
-        voucher *promo_t = nullptr;
+        promo *promo_t = nullptr;
         try
         {
             //Remove expired voucher list
             if (tmp >= ConvertFromString(promo_name))
             {
-                string path = "../restaurant/promo/";
+                string path = "./restaurant/promo/";
                 path += promo_name;
                 remove(path.c_str());
+                continue;
             }
-            promo_t = new voucher(promo_name);
-            vouchers.emplace_back(promo_t);
+            promo_t = new promo(promo_name);
+            promos.emplace_back(promo_t);
         }
         catch (const char *msg)
         {
@@ -191,10 +193,14 @@ void Code::ListDish()
 
 bool Code::CompareCode(const string &code)
 {
-    for (auto &i : dish)
+    for (int i = 0; i < this->code.size(); ++i)
     {
-        if (i == code)
+        if (this->code[i] == code)
+        {
+            this->code.erase(this->code.begin() + i);
+            --quantity;
             return true;
+        }
     }
     return false;
 }
@@ -217,10 +223,13 @@ const date &Code::getExpDate()
 
 voucher::voucher(const string &file_name)
 {
+    expiration_date = ConvertFromString(file_name);
     stringstream path;
-    path << "../restaurant/voucher/" << file_name;
-    ifstream file(path.str());
+    path << "./restaurant/voucher/" << file_name;
     string tmp;
+    ifstream file(path.str());
+    if (!file.is_open())
+        throw "Cannot open file";
     getline(file, tmp);
     if (tmp != "VOUCHER")
     {
@@ -241,6 +250,7 @@ voucher::voucher(const string &file_name)
     {
         getline(file, tmp);
         code.emplace_back(tmp);
+        ++quantity;
     }
     file.close();
 }
@@ -248,7 +258,7 @@ voucher::voucher(const string &file_name)
 voucher::~voucher()
 {
     stringstream path;
-    path << "../restaurant/voucher/" << expiration_date;
+    path << "./restaurant/voucher/" << expiration_date;
     ofstream file(path.str());
     file << "VOUCHER\n";
     file << name << "\n\n";
@@ -330,10 +340,13 @@ void voucher::Apply(const vector<string> &dish_IDs, vector<double> &totals, doub
 
 promo::promo(const string &file_name)
 {
+    expiration_date = ConvertFromString(file_name);
     stringstream path;
-    path << "../restaurant/promo/" << file_name;
-    ifstream file(path.str());
     string tmp;
+    path << "./restaurant/promo/" << file_name;
+    ifstream file(path.str());
+    if (!file.is_open())
+        throw "Cannot open file";
     getline(file, tmp);
     if (tmp != "PROMO")
     {
@@ -354,6 +367,7 @@ promo::promo(const string &file_name)
     {
         getline(file, tmp);
         code.emplace_back(tmp);
+        ++quantity;
     }
     file.close();
 }
@@ -406,7 +420,7 @@ void promo::NewPromo()
 promo::~promo()
 {
     stringstream path;
-    path << "../restaurant/promo/" << expiration_date;
+    path << "./restaurant/promo/" << expiration_date;
     ofstream file(path.str());
     file << "PROMO\n";
     file << name << "\n\n";
