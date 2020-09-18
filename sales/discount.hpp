@@ -20,22 +20,23 @@
  * co han su dung cho tung code
  * tao bang random va luu vao file(moi khi chuong trinh chay thi load lai)
 **********************/
+using namespace std;
 
 class Code
 {
 protected:
-    std::vector<std::string> code;
+    vector<string> code;
     int quantity = 0;
     date expiration_date;
-    std::string name;
-    std::vector<std::string> dish; //ID
-    int discount_value;
+    string name;
+    vector<string> dish; //ID
+    int discount_value = 0;
 
 public:
-    std::string code_generator();
-    bool NewCode(const std::string &code);
+    string code_generator();
+    bool NewCode(const string &code);
     void Info();
-    bool CompareCode(const std::string &code);
+    bool CompareCode(const string &code);
     const date &getExpDate();
     void ListDish();
 };
@@ -44,7 +45,7 @@ class promo : public Code
 {
 public:
     promo(){};
-    promo(const std::string &file_name);
+    promo(const string &file_name);
     void NewPromo();
     void Apply(double &totals);
     ~promo();
@@ -54,7 +55,7 @@ class voucher : public Code
 {
 public:
     voucher(){};
-    voucher(const std::string &file_name);
+    voucher(const string &file_name);
     void NewVoucher();
     void Apply(const vector<string> &dish_IDs, vector<double> &totals, double &total);
     ~voucher();
@@ -65,8 +66,8 @@ public:
 class discount
 {
 private:
-    std::vector<voucher *> vouchers;
-    std::vector<promo *> promos;
+    vector<voucher *> vouchers;
+    vector<promo *> promos;
     static discount *instance;
 
 public:
@@ -76,8 +77,8 @@ public:
     discount &operator=(const discount &other) = delete;
     void add_voucher();
     void add_promo();
-    voucher *use_voucher(const std::string &code);
-    promo *use_promo(const std::string &code);
+    voucher *use_voucher(const string &code);
+    promo *use_promo(const string &code);
     static discount *instantiate();
 };
 
