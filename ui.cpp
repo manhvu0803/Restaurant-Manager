@@ -35,9 +35,15 @@ namespace ui
 
     component::component(const string& desc): description(desc) {}
 
-    void component::add(component& comp)
+    component::~component()
     {
-        components.push_back(&comp);
+        for (int i = components.size() - 1; i >= 0; --i)
+            delete components[i];
+    }
+
+    void component::add(component* comp)
+    {
+        components.push_back(comp);
     }
 
     void component::show()
