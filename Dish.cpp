@@ -171,7 +171,7 @@ void Dish::change() {
 			cout << "Your choice: ";
 			cin >> choice1;
 			cin.ignore(256, '\n');
-			ings[choice1]->print(false);
+			ings[choice1]->print();
 		if(choice == 2){
 			cout << "New amount: ";
 			cin >> amnt;
@@ -182,7 +182,7 @@ void Dish::change() {
 				cout << "New amount: ";
 				cin >> amnt;
 			}
-			ings[choice1]->changeAmount(amnt);
+			ings[choice1]->changeAmt(amnt);
 		}
 		else if (choice1 == 0) {
 			ings.push_back(this->inputIng());
