@@ -137,7 +137,7 @@ void bill_manager::updateQuantNewDish(const int &pos, const int &mode)
     if (mode)
     {
         if (pos >= quantity.size() - 1)
-            quantity.emplace_back(quantity.begin() + pos, 0);
+            quantity.emplace_back(0);
         quantity.emplace(quantity.begin() + pos, 0);
     }
     else
