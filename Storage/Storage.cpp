@@ -28,7 +28,7 @@ void Ingredients::exp(ofstream& fp, bool op)
 }
 void Storage::exp()
 {
-	ofstream File("storage.txt", ios::trunc);
+	ofstream File("./restaurant/storage/storage.txt", ios::trunc);
 	vector<Ingredients>::iterator it;
 	for (it = str.begin(); it != str.end(); it++)
 	{
@@ -71,7 +71,7 @@ Storage::~Storage()
 }
 void Storage::imp()
 {
-	ifstream file("storage.txt");
+	ifstream file("./restaurant/storage/storage.txt");
 	while (file.good())
 	{
 		if (file.peek() == EOF)
@@ -190,7 +190,7 @@ void Storage::lowstock()
 }
 void Storage::restock()
 {
-	ifstream file("restock.txt");
+	ifstream file("./restaurant/storage/restock.txt");
 	while (file.good())
 	{
 		if (file.peek() == EOF)
@@ -235,7 +235,7 @@ Storage::Storage()
 }
 void Storage::order()
 {
-	ofstream file("restock.txt", ios::app);
+	ofstream file("./restaurant/storage/restock.txt", ios::app);
 	int id, fill, c;
 	date d;
 	do
