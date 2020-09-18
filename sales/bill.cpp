@@ -367,7 +367,11 @@ MENU:
             system("pause");
             goto MENU;
         }
+        system("cls");
+        Promo->Info();
         Promo->Apply(Total);
+        cout << "Applied successfully!\n";
+        system("pause");
     }
     if (opt == 2)
     {

@@ -201,8 +201,9 @@ bool Code::CompareCode(const string &code)
 
 void Code::Info()
 {
-    cout << name << endl;
-    cout <<
+    cout << "Name: " << name << endl;
+    cout << "Discount value: " << discount_value << endl;
+    cout << "Expiration: " << expiration_date << endl;
 }
 
 /*********************
