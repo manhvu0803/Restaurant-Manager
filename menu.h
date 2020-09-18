@@ -10,18 +10,24 @@
 using namespace std;
 
 class Menu {
+	Menu();
+	static Menu* single;
 	vector<Dish*> menu;
 public:
 	//void input();
 	void output();
 	void save();
 	void load();
-	void add(Dish* a);
+	int add(Dish* a);
 	const vector<Dish*> getMenuc();
 	vector<Dish*> getMenu();
 	void newDish();
 	void removeDish();
-	void changDish();
+	void changeDish();
+	bool deleteFile(string path);
+	//void favor();
+	static Menu* instantiate();
+	//~Menu();
 
 };
 #endif
