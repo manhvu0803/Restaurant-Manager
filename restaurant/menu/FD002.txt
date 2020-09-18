@@ -1,15 +1,15 @@
 FD002
 Bot chien
 25000
-7
+IN0007
 Dau an
 10
 ml
-6
+IN0006
 Trung
 2
 trai
-8
+IN0008
 Bot chien
 200
 gam
