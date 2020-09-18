@@ -9,22 +9,20 @@ using namespace std;
 
 void order::update(const int &pos, const int &mode)
 {
-    bill_manager::instantiate()->updateQuantNewDish(pos, mode);
+    bill_manager &tmp = bill_manager::instantiate();
+    tmp.updateQuantNewDish(pos, mode);
 }
 
-order *order::instantiate()
+order &order::instantiate()
 {
-    if (!instance)
-        instance = new order;
+    static order instance;
     return instance;
 }
 
-order *order::instance = nullptr;
-
 void order::NewOrder()
 {
-    bill_manager *bill_m = bill_manager::instantiate();
-    orders.emplace_back(bill_m->NewBill());
+    bill_manager &bill_m = bill_manager::instantiate();
+    orders.emplace_back(bill_m.NewBill());
 }
 
 bool order::CompleteOrderInQueue()

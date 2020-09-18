@@ -40,12 +40,9 @@ void ERROR_LOG::LOG(const string &log)
              << log << "\n";
 }
 
-ERROR_LOG *ERROR_LOG::instance = nullptr;
-
-ERROR_LOG *ERROR_LOG::instantiate()
+ERROR_LOG &ERROR_LOG::instantiate()
 {
-    if (!instance)
-        instance = new ERROR_LOG;
+    static ERROR_LOG instance;
     return instance;
 }
 

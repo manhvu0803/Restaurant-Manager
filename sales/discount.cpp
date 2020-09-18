@@ -1,5 +1,5 @@
 #include "discount.hpp"
-#include "menu.h"
+#include "../menu.h"
 #include <vector>
 #include <string>
 #include <dirent.h>
@@ -15,12 +15,12 @@ using namespace std;
 *********************/
 discount::discount()
 {
-    ERROR_LOG *log = log->instantiate();
+    ERROR_LOG &log = log.instantiate();
     dirent *ent;
     DIR *dir = opendir("../restaurant/voucher");
     if (dir == NULL)
     {
-        log->LOG("Folder voucher is missing");
+        log.LOG("Folder voucher is missing");
         closedir(dir);
         return;
     }
@@ -45,7 +45,7 @@ discount::discount()
         }
         catch (const char *msg)
         {
-            log->LOG(msg);
+            log.LOG(msg);
             delete voucher_t;
         };
     }
@@ -53,7 +53,7 @@ discount::discount()
     dir = opendir("../restaurant/promo");
     if (dir == NULL)
     {
-        log->LOG("Folder promo is missing");
+        log.LOG("Folder promo is missing");
         closedir(dir);
         return;
     }
@@ -78,7 +78,7 @@ discount::discount()
         }
         catch (const char *msg)
         {
-            log->LOG(msg);
+            log.LOG(msg);
             delete promo_t;
         };
     }
@@ -137,14 +137,11 @@ void discount::add_promo()
     promos.emplace_back(tmp);
 }
 
-discount *discount::instantiate()
+discount &discount::instantiate()
 {
-    if (!instance)
-        instance = new discount;
+    static discount instance;
     return instance;
 }
-
-discount *discount::instance = nullptr;
 
 /*********************
  * CODE
@@ -178,10 +175,10 @@ bool Code::NewCode(const string &_code_)
 void Code::ListDish()
 {
     system("cls");
-    Menu *rest_menu = rest_menu->instantiate();
+    Menu &rest_menu = rest_menu.instantiate();
     for (auto &i : dish)
     {
-        for (auto &j : rest_menu->getMenu())
+        for (auto &j : rest_menu.getMenu())
         {
             if (i == j->getID())
                 cout << j->getName();
@@ -204,6 +201,11 @@ void Code::Info()
     cout << "Name: " << name << endl;
     cout << "Discount value: " << discount_value << endl;
     cout << "Expiration: " << expiration_date << endl;
+}
+
+const date &Code::getExpDate()
+{
+    return expiration_date;
 }
 
 /*********************
@@ -276,12 +278,12 @@ void voucher::NewVoucher()
     do
     {
         system("cls");
-        Menu *rest_menu = rest_menu->instantiate();
+        Menu &rest_menu = rest_menu.instantiate();
         cout << "Choose dish:\n";
-        rest_menu->output();
+        rest_menu.output();
         cout << "0. Exit\n";
         cout << "Option: ";
-        while (!(cin >> tmp) || tmp < 0 || tmp > rest_menu->getMenu().size() + 1)
+        while (!(cin >> tmp) || tmp < 0 || tmp > rest_menu.getMenu().size() + 1)
         {
             cout << "Invalid!\n";
             cout << "Try again: ";
@@ -289,7 +291,7 @@ void voucher::NewVoucher()
             cin.ignore(1000, '\n');
         }
         if (tmp)
-            dish.emplace_back(rest_menu->getMenu()[tmp - 1]->getID());
+            dish.emplace_back(rest_menu.getMenu()[tmp - 1]->getID());
     } while (tmp || !dish.size());
     cout << "Discount value: ";
     while (!(cin >> discount_value) || discount_value <= 0 || discount_value > 100)
@@ -373,12 +375,12 @@ void promo::NewPromo()
     do
     {
         system("cls");
-        Menu *rest_menu = rest_menu->instantiate();
+        Menu &rest_menu = rest_menu.instantiate();
         cout << "Choose dish:\n";
-        rest_menu->output();
+        rest_menu.output();
         cout << "0. Exit\n";
         cout << "Option: ";
-        while (!(cin >> tmp) || tmp < 0 || tmp > rest_menu->getMenu().size() + 1)
+        while (!(cin >> tmp) || tmp < 0 || tmp > rest_menu.getMenu().size() + 1)
         {
             cout << "Invalid!\n";
             cout << "Try again: ";
@@ -386,7 +388,7 @@ void promo::NewPromo()
             cin.ignore(1000, '\n');
         }
         if (tmp)
-            dish.emplace_back(rest_menu->getMenu()[tmp - 1]->getID());
+            dish.emplace_back(rest_menu.getMenu()[tmp - 1]->getID());
     } while (tmp || !dish.size());
     cout << "Discount value: ";
     while (!(cin >> discount_value) || discount_value <= 10000)

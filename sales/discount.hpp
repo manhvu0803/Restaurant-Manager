@@ -68,7 +68,6 @@ class discount
 private:
     vector<voucher *> vouchers;
     vector<promo *> promos;
-    static discount *instance;
 
 public:
     discount();
@@ -79,7 +78,7 @@ public:
     void add_promo();
     voucher *use_voucher(const string &code);
     promo *use_promo(const string &code);
-    static discount *instantiate();
+    static discount &instantiate();
 };
 
 #endif

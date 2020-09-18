@@ -23,7 +23,6 @@ bill *bill_manager::FindBill(const string &bill_no)
         if (bill_no == i->getBillNo())
             return i;
     }
-    ERROR_LOG *log = log->instantiate();
     stringstream path;
     string folder_name;
     int month;
@@ -44,18 +43,14 @@ bill *bill_manager::FindBill(const string &bill_no)
     }
 }
 
-bill_manager *bill_manager::instance = nullptr;
-
-bill_manager *bill_manager::instantiate()
+bill_manager &bill_manager::instantiate()
 {
-    if (!instance)
-        instance = new bill_manager;
+    static bill_manager instance;
     return instance;
 }
 
 bill *bill_manager::NewBill()
 {
-    // order *order_system = order::instantiate();
     bill *new_bill = new bill;
     if (bills.size() >= 100)
         this->~bill_manager();
@@ -63,13 +58,13 @@ bill *bill_manager::NewBill()
     do
     {
         system("cls");
-        Menu *rest_menu = rest_menu->instantiate();
+        Menu &rest_menu = Menu::instantiate();
         rest_menu->output();
         cout << "0. Finalize order\n";
         cout << "-1. Cancel order\n";
         cout << "Option: ";
         int opt;
-        while (!(cin >> dish) || dish < 1 || dish > rest_menu->getMenu().size() + 1)
+        while (!(cin >> dish) || dish < 1 || dish > rest_menu.getMenu().size() + 1)
         {
             cout << "Invalid!\n";
             cout << "Try again: ";
@@ -79,8 +74,8 @@ bill *bill_manager::NewBill()
         do
         {
             system("cls");
-            cout << rest_menu->getMenu()[dish - 1]->getID();
-            cout << " " << rest_menu->getMenu()[dish - 1]->getName() << endl;
+            cout << rest_menu.getMenu()[dish - 1]->getID();
+            cout << " " << rest_menu.getMenu()[dish - 1]->getName() << endl;
             cout << "1. Add\n";
             cout << "2. Remove\n";
             cout << "0. Exit\n";
@@ -94,13 +89,13 @@ bill *bill_manager::NewBill()
             }
             if (opt == 1)
             {
-                new_bill->AddDish(rest_menu->getMenu()[dish - 1]->getID(),
-                                  rest_menu->getMenu()[dish - 1]->getName(), rest_menu->getMenu()[dish - 1]->getPrice());
+                new_bill->AddDish(rest_menu.getMenu()[dish - 1]->getID(),
+                                  rest_menu.getMenu()[dish - 1]->getName(), rest_menu.getMenu()[dish - 1]->getPrice());
                 UpdateDishQuant(dish - 1, opt);
             }
             else if (opt == 2)
             {
-                if (new_bill->RemoveDish(rest_menu->getMenu()[dish - 1]->getID(), rest_menu->getMenu()[dish - 1]->getPrice()))
+                if (new_bill.RemoveDish(rest_menu.getMenu()[dish - 1]->getID(), rest_menu.getMenu()[dish - 1]->getPrice()))
                     UpdateDishQuant(dish - 1, opt);
                 else
                 {
@@ -339,7 +334,7 @@ const string &bill::getBillNo() const
 
 void bill::applyDiscount()
 {
-    discount *disc = discount::instantiate();
+    discount &disc = discount::instantiate();
     int opt;
 MENU:
     system("cls");
@@ -359,7 +354,7 @@ MENU:
         system("cls");
         cout << "code: ";
         cin >> tmp;
-        promo *Promo = disc->use_promo(tmp);
+        promo *Promo = disc.use_promo(tmp);
         if (!Promo)
         {
             system("cls");
@@ -378,7 +373,7 @@ MENU:
         system("cls");
         cout << "code: ";
         cin >> tmp;
-        voucher *Voucher = disc->use_voucher(tmp);
+        voucher *Voucher = disc.use_voucher(tmp);
         if (!Voucher)
         {
             system("cls");
