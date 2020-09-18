@@ -3,43 +3,52 @@
 /*Menu::~Menu() {
 	delete single;
 }*/
-Menu::Menu(){}
-Menu& Menu::instantiate() {
+Menu::Menu() {}
+Menu &Menu::instantiate()
+{
 	static Menu instance;
 	return instance;
 }
 //Menu* Menu::single = nullptr;
-void Menu::load() {
+void Menu::load()
+{
 	string inputpath = "./restaurant/menu/dishes.txt";
 	string tmp;
 	string id1, name1, cur1;
 	double cost;
 	date dt;
-	int amount,x;
-	ifstream fin,fin1;
-	if (menu.size() != 0) {
+	int amount, x;
+	ifstream fin, fin1;
+	if (menu.size() != 0)
+	{
 		menu.clear();
 	}
 	fin.open(inputpath);
-	if (!fin.is_open()) {
+	if (!fin.is_open())
+	{
 		cout << "Can't open menu file " << endl;
 	}
-	else {
-		while (getline(fin, tmp)) {
+	else
+	{
+		while (getline(fin, tmp))
+		{
 			inputpath = "./restaurant/menu/" + tmp + ".txt";
 			fin1.open(inputpath);
-			if (!fin1.is_open()) {
+			if (!fin1.is_open())
+			{
 				cout << "Can't open dish file " << endl;
 			}
-			else {
+			else
+			{
 				getline(fin1, tmp);
 				id1 = tmp;
 				getline(fin1, tmp);
 				name1 = tmp;
 				getline(fin1, tmp);
 				cost = stod(tmp);
-				Dish* tmp1 = new Dish(id1, name1, cost);
-				while (getline(fin1, tmp)) {
+				Dish *tmp1 = new Dish(id1, name1, cost);
+				while (getline(fin1, tmp))
+				{
 					x = stoi(tmp);
 					getline(fin1, tmp);
 					name1 = tmp;
@@ -47,90 +56,107 @@ void Menu::load() {
 					amount = stoi(tmp);
 					getline(fin1, tmp);
 					cur1 = tmp;
-					Ingredients* tmp2 = new Ingredients(x, name1, amount, cur1, dt,-1);
+					Ingredients *tmp2 = new Ingredients(x, name1, amount, cur1, dt, -1);
 					tmp1->add(tmp2);
 				}
 				menu.push_back(tmp1);
 				fin1.close();
 			}
-			
 		}
 		fin.close();
 	}
-
-
 }
-void Menu::output() {
+void Menu::output()
+{
 	cout << "This is our menu " << endl;
-	for (int i = 0; i < menu.size(); i++) {
+	for (int i = 0; i < menu.size(); i++)
+	{
 		cout << setw(2) << left << "(" + to_string(i) + "): ";
 		menu[i]->outputMenu();
 	}
 }
-int Menu::add(Dish* a) {
+int Menu::add(Dish *a)
+{
 	int flag = -2;
 	size_t found = a->getID().find("DK");
-	if (found != string::npos) {
+	if (found != string::npos)
+	{
 		menu.push_back(a);
 		return menu.size() - 1;
 	}
-	else {
+	else
+	{
 		size_t found1;
-		for (int i = 0; i < menu.size(); i++) {
+		for (int i = 0; i < menu.size(); i++)
+		{
 			found1 = menu[i]->getID().find("DK");
-			if (found1 != string::npos) {
+			if (found1 != string::npos)
+			{
 				flag = i;
 				break;
 			}
 		}
-		if (flag == -2) {
+		if (flag == -2)
+		{
 			menu.push_back(a);
 			return menu.size() - 1;
 		}
-		else {
+		else
+		{
 			menu.insert(menu.begin() + flag, a);
 			return flag;
 		}
 	}
 }
-const vector<Dish*> Menu::getMenuc() {
+const vector<Dish *> Menu::getMenuc()
+{
 	return menu;
 }
-vector<Dish*>Menu::getMenu() {
+vector<Dish *> Menu::getMenu()
+{
 	return menu;
 }
-void Menu::save() {
+void Menu::save()
+{
 	ofstream fout;
 	string outputpath = "./restaurant/menu/dishes.txt";
 	fout.open(outputpath);
-	if (!fout.is_open()) {
+	if (!fout.is_open())
+	{
 		cout << "Can't open menu file" << endl;
 	}
-	else {
-		for (int i = 0; i < menu.size(); i++) {
+	else
+	{
+		for (int i = 0; i < menu.size(); i++)
+		{
 			fout << menu[i]->getID() << endl;
 		}
 		fout.close();
 	}
-	for (int i = 0; i < menu.size(); i++) {
+	for (int i = 0; i < menu.size(); i++)
+	{
 		outputpath = "./restaurant/menu/" + menu[i]->getID() + ".txt";
 		fout.open(outputpath);
-		if (!fout.is_open()) {
+		if (!fout.is_open())
+		{
 			cout << "Can't open dish file" << endl;
 		}
-		else {
+		else
+		{
 			menu[i]->save(fout);
 		}
-
 	}
 	fout.close();
 }
-void Menu::newDish() {
+void Menu::newDish()
+{
 	Dish tmp;
 	int pos;
-	order& obj = obj.instantiate();
+	order &obj = obj.instantiate();
 	int choice = 1, choice1;
-	while (choice == 1) {
+	ofstream fout;
+	while (choice == 1)
+	{
 		tmp.input();
 		tmp.outputMenu();
 		cout << "Do you want to add this dish to your menu? (0: No, 1: Yes) :";
@@ -138,47 +164,62 @@ void Menu::newDish() {
 		pos = this->add(&tmp);
 		obj.update(pos, 1);
 		cout << "Successfully add " << endl;
+		this->save();
 		this->output();
+		fout.open("./restaurant/menu/" + tmp.getID() + ".txt");
+		tmp.save(fout);
 		cout << "Do you want to add another dish? (0: No, 1: Yes): " << endl;
 		cin >> choice;
 	}
 }
-void Menu::removeDish() {
-	int choice = 1,choice1 ;
-	order& obj = obj.instantiate();
-	while (choice == 1) {
-		if (menu.size() != 0) {
-			for (int i = 0; i < menu.size(); i++) {
+void Menu::removeDish()
+{
+	int choice = 1, choice1;
+	order &obj = obj.instantiate();
+	while (choice == 1)
+	{
+		if (menu.size() != 0)
+		{
+			for (int i = 0; i < menu.size(); i++)
+			{
 				cout << setw(3) << left << "(" + to_string(i) + ")" << setw(6) << left << menu[i]->getID() << setw(20) << left << menu[i]->getName() << endl;
 			}
 			cout << "Choose the dish you want to remove " << endl;
 			cout << "Your dish index: ";
 			cin >> choice1;
 			cin.ignore(256, '\n');
+			string path = "./restaurant/menu/" + menu[choice1]->getID() + ".txt";
+			bool re = this->deleteFile(path);
+			if (re)
+			{
+				cout << "Delete successfully" << endl;
+			}
+			else
+			{
+				cout << "Can't delete" << endl;
+			}
 			menu.erase(menu.begin() + choice1);
 			obj.update(choice1, 0);
 			this->save();
-			bool re = this->deleteFile("./restaurant/menu/" + menu[choice1]->getID());
-			if (re) {
-				cout << "Delete successfully" << endl;
-			}
-			else {
-				cout << "Can't delete" << endl;
-			}
 			cout << "Do you want to delete any other dish? (0: No, 1: Yes): ";
 			cin >> choice;
 		}
-		else {
+		else
+		{
 			cout << "Nothing to show" << endl;
 			choice = 0;
 		}
 	}
 }
-void Menu::changeDish() {
+void Menu::changeDish()
+{
 	int choice = 1, choice1;
-	while (choice == 1) {
-		if (menu.size() != 0) {
-			for (int i = 0; i < menu.size(); i++) {
+	while (choice == 1)
+	{
+		if (menu.size() != 0)
+		{
+			for (int i = 0; i < menu.size(); i++)
+			{
 				cout << setw(3) << left << "(" + to_string(i) + ")" << setw(6) << left << menu[i]->getID() << setw(20) << left << menu[i]->getName() << endl;
 			}
 			cout << "Choose the dish you want to change " << endl;
@@ -187,7 +228,8 @@ void Menu::changeDish() {
 			cin.ignore(256, '\n');
 			menu[choice1]->change();
 		}
-		else {
+		else
+		{
 			cout << "Nothing to show" << endl;
 			choice = 0;
 		}
@@ -196,25 +238,37 @@ void Menu::changeDish() {
 		cin >> choice;
 	}
 }
-bool Menu::deleteFile(string path) {
+bool Menu::deleteFile(string path)
+{
 	int ret = remove(path.c_str());
-	if (ret == 0) {
+	if (ret == 0)
+	{
 		return true;
 	}
-	else {
+	else
+	{
 		return false;
 	}
 }
-int Menu::favor() {
-	string inputpath = "./restaurant/DishOrdered.txt";
+vector<int> Menu::favor()
+{
+	string inputpath = "./restaurant/DishOrdered";
 	ifstream fin;
+	vector<int> tmp;
 	fin.open(inputpath);
-	if (!fin.is_open()) {
+	if (!fin.is_open())
+	{
 		cout << "Can't open file" << endl;
 	}
-	else {
-		cout << "Can open" << endl;
+	else
+	{
+		for (int i = 0; i < menu.size(); i++)
+		{
+			int tmp1 = 0;
+			fin >> tmp1;
+			tmp.push_back(tmp1);
+		}
 	}
 	fin.close();
-	return 1;
+	return tmp;
 }
