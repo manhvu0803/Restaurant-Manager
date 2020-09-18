@@ -115,6 +115,7 @@ bill *bill_manager::NewBill()
         delete new_bill;
     else
     {
+        new_bill->applyDiscount();
         bills.emplace_back(new_bill);
         return new_bill;
     }
