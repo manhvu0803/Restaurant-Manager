@@ -59,7 +59,7 @@ bill *bill_manager::NewBill()
     {
         system("cls");
         Menu &rest_menu = Menu::instantiate();
-        rest_menu->output();
+        rest_menu.output();
         cout << "0. Finalize order\n";
         cout << "-1. Cancel order\n";
         cout << "Option: ";
@@ -95,7 +95,7 @@ bill *bill_manager::NewBill()
             }
             else if (opt == 2)
             {
-                if (new_bill.RemoveDish(rest_menu.getMenu()[dish - 1]->getID(), rest_menu.getMenu()[dish - 1]->getPrice()))
+                if (new_bill->RemoveDish(rest_menu.getMenu()[dish - 1]->getID(), rest_menu.getMenu()[dish - 1]->getPrice()))
                     UpdateDishQuant(dish - 1, opt);
                 else
                 {
