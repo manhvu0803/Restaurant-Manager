@@ -1,5 +1,7 @@
 #include "manager.hpp"
 #include <fstream>
+#include <stdexcept>
+#include <unordered_map>
 #include <iomanip>
 
 using namespace std;
@@ -43,13 +45,12 @@ unique_ptr<bill> bill::getBill(int y, int m, int d)
     int dishNum;
     while (file >> dishNum) {
         dish d;
-        file >> d.id;
-        while (ch < '0' || ch > '9') {
-            if (ch != ' ' || (ch == ' ' && d.name[d.name.length() - 1] != ' ')) 
-                d.name += ch;
-            file.get(ch);
-        }
-        file >> d.quantity >> d.price;
+        file >> d.id >> d.quantity >> d.price;
+        char c = ' ';
+        while (c == ' ') 
+            c = file.get();            
+        getline(file, d.name);
+        d.name = c + d.name;
         dishes.push_back(d);
     }
 
@@ -66,42 +67,144 @@ long bill::total() const
 
 ostream& operator<<(ostream& stream, const bill& b)
 {
-    stream << "Bill number: " << b.number;
+    stream << "Bill number: " << b.number << '\n';
     stream << "Time: " << b.h << ':' << b.m << ':' << b.s << '\n';
-    for (int i = b.dishes.size(); i >= 0; --i) 
-        stream << b.dishes[i].name << setw(10) << b.dishes[i].quantity << setw(5) << b.dishes[i].quantity << '\n';
-    stream << "Total: " << b.total() << '\n';
+    stream << left << setw(20) << "Dish" << setw(10) << "Quantity" << "Price\n";
+    for (auto i: b.dishes) 
+        stream << setw(20) << i.name << setw(10) << i.quantity << setw(10) << i.price << '\n';
+    stream << "Total: " << b.total() << '\n' << right;
     return stream;
 }
+
+int getYear()
+{
+    int y;
+    cout << "Year: ";
+    if (!ui::input(y) || y < 0) throw invalid_argument("Wrong year format");
+    return y;
+}
+
+int getMonth()
+{
+    int m;
+    cout << "Month: ";
+    if (!ui::input(m) || m < 0 || m > 12) throw invalid_argument("Wrong month format\n");        
+    return m;
+}
+
+int getDate()
+{
+    int d;
+    cout << "Day of month: ";
+    if (!ui::input(d) || d < 0 || d > 31) throw invalid_argument("Wrong date format");        
+    return d;
+}
+
 
 // saleMenu
 void saleMenu::showDateSale()
 {
+    cout << "Sale of a day\n";
     int d, m, y;
-    cout << "Year: ";
-    if (!ui::input(y) || y < 0) {
-        cout << "Wrong year format\n";
-        return;
+    try {
+        y = getYear();
+        m = getMonth();
+        d = getDate();
     }
-    cout << "Month: ";
-    if (!ui::input(m) || m < 0 || m > 12) {
-        cout << "Wrong month format\n";
+    catch (const exception& e) {
+        cerr << e.what() << '\n';
         return;
-    }
-    cout << "Day of month: ";
-    if (!ui::input(d) || d < 0 || d > 31) {
-        cout << "Wrong date format";
-        return;
-    }   
+    }    
+        
     unique_ptr<bill> b = bill::getBill(y, m, d); 
     if (b) cout << *b;
     else cout << "Bill not found\n";
+}
+
+void showSale(int y, int m = 0)
+{    
+    char choice;
+    unordered_map<string, dish> dMap;
+    long long total = 0;
+    int lim = 12;
+    string filename;
+    if (m == 0) {
+        m = 1;
+        filename = "./" + to_string(m) + "-" + to_string(y) + ".csv";
+    }
+    else {
+        lim = m;
+        filename = "./" + to_string(y) + ".csv";
+    }        
+    for (m = m; m <= lim; ++m)
+        for (int i = 1; i <= 31; ++i) {          
+            unique_ptr<bill> b = bill::getBill(y, m, i); 
+            if (b) {
+                for (auto d: b->dishes) {
+                    auto ite = dMap.find(d.name);
+                    if (ite == dMap.end()) dMap.emplace(d.name, d);
+                    else ite->second.quantity += d.quantity;
+                }
+                total += b->total();
+            };
+        }
+
+    cout << left << setw(20) << "Dish" << setw(10) << "Quantity" << "Price\n";
+    for (auto i: dMap)         
+        cout << setw(20) << i.second.name << setw(10) << i.second.quantity << setw(10) << i.second.price << '\n';
+    cout << "Total: " << total << right << '\n';
+
+    cout << "Do you want to export to csv file? (Y/N): \n";
+    ui::input(choice);
+    if (choice == 'Y' || choice == 'y') {
+        ofstream file(filename);
+        if (!file.is_open()) cout << "Can't create file\n";
+        file << "Dish,Quantity,Price\n";
+        for (auto i: dMap)         
+            file << i.second.name << ',' << i.second.quantity << ',' << i.second.price << '\n';
+        file << "Total," << total;
+    }
+}
+
+void saleMenu::showMonthSale()
+{
+    cout << "Sale of a month\n";
+    int m, y;
+    try {
+        y = getYear();
+        m = getMonth();
+    }
+    catch (const exception& e) {
+        cerr << e.what() << '\n';
+        return;
+    }
+
+    showSale(y, m);
+}
+
+void saleMenu::showYearSale()
+{
+    cout << "Sale of a year\n";
+    int y;
+    try {
+        y = getYear();
+    }
+    catch (const exception& e) {
+        cerr << e.what() << '\n';
+        return;
+    }
+
+    showSale(y);
 }
 
 void saleMenu::menu()
 {
     ui::component mainMenu;
     ui::option dateOpt(showDateSale, "Show sale of a day");
+    ui::option monthOpt(showMonthSale, "Show sale of a month");
+    ui::option yearOpt(showYearSale, "Show sale of a year");
     mainMenu.add(dateOpt);
+    mainMenu.add(monthOpt);
+    mainMenu.add(yearOpt);
     mainMenu.show();
 }

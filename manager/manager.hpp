@@ -38,6 +38,8 @@ class saleMenu: public ui::component
 {
     public:
         static void showDateSale();
+        static void showMonthSale();
+        static void showYearSale();
         static void menu();
 };
 
