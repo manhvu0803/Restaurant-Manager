@@ -35,12 +35,14 @@ class bill
 };
 
 class saleMenu: public ui::component
-{
-    public:
+{    
+    private:
         static void showDateSale();
         static void showMonthSale();
         static void showYearSale();
-        static void menu();
+        
+    public:
+        saleMenu();
 };
 
 #endif // MANAGER_HPP

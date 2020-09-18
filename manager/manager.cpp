@@ -197,14 +197,9 @@ void saleMenu::showYearSale()
     showSale(y);
 }
 
-void saleMenu::menu()
-{
-    ui::component mainMenu;
-    ui::option dateOpt(showDateSale, "Show sale of a day");
-    ui::option monthOpt(showMonthSale, "Show sale of a month");
-    ui::option yearOpt(showYearSale, "Show sale of a year");
-    mainMenu.add(dateOpt);
-    mainMenu.add(monthOpt);
-    mainMenu.add(yearOpt);
-    mainMenu.show();
+saleMenu::saleMenu(): component("Sale manager")
+{        
+    component::add(new ui::option(showDateSale, "Show sale of a day"));
+    component::add(new ui::option(showMonthSale, "Show sale of a month"));
+    component::add(new ui::option(showYearSale, "Show sale of a year"));    
 }
