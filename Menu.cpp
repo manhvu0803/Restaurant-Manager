@@ -205,6 +205,16 @@ bool Menu::deleteFile(string path) {
 		return false;
 	}
 }
-/*int Menu::favor() {
-	string inputpath = "./restaurant/bill";
-}*/
+int Menu::favor() {
+	string inputpath = "./restaurant/DishOrdered.txt";
+	ifstream fin;
+	fin.open(inputpath);
+	if (!fin.is_open()) {
+		cout << "Can't open file" << endl;
+	}
+	else {
+		cout << "Can open" << endl;
+	}
+	fin.close();
+	return 1;
+}
