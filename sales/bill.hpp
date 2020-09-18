@@ -43,6 +43,7 @@ public:
     bool RemoveDish(const string &ID, const double &price);
     void DisplayBill();
     const string &getBillNo() const;
+    void applyDiscount();
 };
 
 class bill_manager
