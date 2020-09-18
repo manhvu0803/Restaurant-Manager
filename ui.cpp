@@ -61,15 +61,22 @@ namespace ui
     }
 
     // option
-    option::option(std::function<void()> func): action(func) {}
+    option::option(function<void()> func): action(func) {}
 
-    option::option(std::function<void()> func, const std::string& desc):
+    option::option(function<void()> func, const string& desc):
         action(func),
         component(desc)
     {}
 
+    option::option(function<void()> func, const string& desc, const string& mess):
+        action(func),
+        component(desc),   
+        successMessage(mess)
+    {}
+
     void option::show()
     {
+        if (clearOnShow) clearConsole();
         action();
         if (successMessage.length() > 0) {
             cout << successMessage << '\n';

@@ -39,6 +39,7 @@ namespace ui
 
             option(std::function<void()> func);
             option(std::function<void()> func, const std::string& desc);
+            option(std::function<void()> func, const std::string& desc, const std::string& mess);
                     
             void show();
     };
