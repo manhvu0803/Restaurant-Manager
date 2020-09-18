@@ -18,7 +18,7 @@ discount::discount()
 {
     ERROR_LOG &log = log.instantiate();
     dirent *ent;
-    DIR *dir = opendir("../restaurant/voucher");
+    DIR *dir = opendir("..\\restaurant\\voucher\\");
     if (dir == NULL)
     {
         log.LOG("Folder voucher is missing");
@@ -51,7 +51,7 @@ discount::discount()
         };
     }
     closedir(dir);
-    dir = opendir("../restaurant/promo");
+    dir = opendir("..\\restaurant\\promo\\");
     if (dir == NULL)
     {
         log.LOG("Folder promo is missing");
@@ -373,7 +373,7 @@ void promo::NewPromo()
     do
     {
         cin >> expiration_date;
-    } while (tmp_d <= expiration_date);
+    } while (tmp_d >= expiration_date);
     int tmp;
     do
     {
