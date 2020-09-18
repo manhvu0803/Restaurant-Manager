@@ -1,12 +1,10 @@
-21
-Rau cai xanh
-1000
-250
-gam
+IN0201
+Nuoc ngot Pepsi 250ml
+10
+lon
 10/12/2020
-22
-Ca rot
-1000
-250
-gam
+IN0202
+Nuoc ngot CocaCola 250ml
+10
+lon
 10/12/2020

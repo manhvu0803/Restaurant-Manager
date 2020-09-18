@@ -1,12 +1,40 @@
-11
-Nuoc ngot Pepsi 250ml
-10
-2
-lon
+IN0001
+Muoi
+1000
+gam
 10/12/2020
-12
-Nuoc ngot CocaCola 250ml
+IN0002
+Banh mi
 10
-2
-lon
+o
+10/12/2020
+IN0003
+Nuoc tuong
+2000
+ml
+10/12/2020
+IN0004
+Tieu
+1000
+gam
+10/12/2020
+IN0005
+Hanh la
+500
+gam
+10/12/2020
+IN0006
+Trung
+20
+trai
+10/12/2020
+IN0007
+Dau an
+2000
+ml
+10/12/2020
+IN008
+Bot chien
+1000
+g
 10/12/2020
