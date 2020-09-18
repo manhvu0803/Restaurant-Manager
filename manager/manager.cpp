@@ -45,12 +45,10 @@ unique_ptr<bill> bill::getBill(int y, int m, int d)
     int dishNum;
     while (file >> dishNum) {
         dish d;
-        file >> d.id >> d.quantity >> d.price;
-        char c = ' ';
-        while (c == ' ') 
-            c = file.get();            
+        file >> d.id >> d.quantity >> d.price;        
+        while (file.peek() == ' ') 
+            file.get();
         getline(file, d.name);
-        d.name = c + d.name;
         dishes.push_back(d);
     }
 
