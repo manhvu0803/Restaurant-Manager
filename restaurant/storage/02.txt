@@ -1,10 +1,12 @@
-IN0201
+11
 Nuoc ngot Pepsi 250ml
 10
+5
 lon
 10/12/2020
-IN0202
+12
 Nuoc ngot CocaCola 250ml
 10
+5
 lon
 10/12/2020
