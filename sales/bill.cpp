@@ -65,51 +65,54 @@ bill *bill_manager::NewBill()
         cout << "-1. Cancel order\n";
         cout << "Option: ";
         int opt;
-        while (!(cin >> dish) || dish < 1 || dish > rest_menu.getMenu().size() + 1)
+        while (!(cin >> dish) || dish < -1 || dish > rest_menu.getMenu().size() + 1)
         {
             cout << "Invalid!\n";
             cout << "Try again: ";
             cin.clear();
             cin.ignore(1000, '\n');
         }
-        do
+        if (dish > 0)
         {
-            system("cls");
-            cout << rest_menu.getMenu()[dish - 1]->getID();
-            cout << " " << rest_menu.getMenu()[dish - 1]->getName() << endl;
-            cout << "1. Add\n";
-            cout << "2. Remove\n";
-            cout << "0. Exit\n";
-            cout << "Option: ";
-            while (!(cin >> opt) || opt < 0 || opt > 2)
+            do
             {
-                cout << "Invalid!\n";
-                cout << "Try again: ";
-                cin.clear();
-                cin.ignore(1000, '\n');
-            }
-            if (opt == 1)
-            {
-                new_bill->AddDish(rest_menu.getMenu()[dish - 1]->getID(),
-                                  rest_menu.getMenu()[dish - 1]->getName(), rest_menu.getMenu()[dish - 1]->getPrice());
-                UpdateDishQuant(dish - 1, opt);
-                income += rest_menu.getMenu()[dish - 1]->getPrice();
-            }
-            else if (opt == 2)
-            {
-                if (new_bill->RemoveDish(rest_menu.getMenu()[dish - 1]->getID(), rest_menu.getMenu()[dish - 1]->getPrice()))
+                system("cls");
+                cout << rest_menu.getMenu()[dish - 1]->getID();
+                cout << " " << rest_menu.getMenu()[dish - 1]->getName() << endl;
+                cout << "1. Add\n";
+                cout << "2. Remove\n";
+                cout << "0. Exit\n";
+                cout << "Option: ";
+                while (!(cin >> opt) || opt < 0 || opt > 2)
                 {
+                    cout << "Invalid!\n";
+                    cout << "Try again: ";
+                    cin.clear();
+                    cin.ignore(1000, '\n');
+                }
+                if (opt == 1)
+                {
+                    new_bill->AddDish(rest_menu.getMenu()[dish - 1]->getID(),
+                                      rest_menu.getMenu()[dish - 1]->getName(), rest_menu.getMenu()[dish - 1]->getPrice());
                     UpdateDishQuant(dish - 1, opt);
-                    income -= rest_menu.getMenu()[dish - 1]->getPrice();
+                    income += rest_menu.getMenu()[dish - 1]->getPrice();
                 }
-                else
+                else if (opt == 2)
                 {
-                    system("cls");
-                    cout << "This dish has been removed!\n";
-                    system("pause");
+                    if (new_bill->RemoveDish(rest_menu.getMenu()[dish - 1]->getID(), rest_menu.getMenu()[dish - 1]->getPrice()))
+                    {
+                        UpdateDishQuant(dish - 1, opt);
+                        income -= rest_menu.getMenu()[dish - 1]->getPrice();
+                    }
+                    else
+                    {
+                        system("cls");
+                        cout << "This dish has been removed!\n";
+                        system("pause");
+                    }
                 }
-            }
-        } while (opt);
+            } while (opt);
+        }
     } while (dish && dish != -1);
     if (dish == -1)
         delete new_bill;
@@ -157,7 +160,7 @@ bill_manager::~bill_manager()
 {
     ofstream file("./restaurant/DishOrdered");
     for (int i = 0; i < quantity.size() - 1; ++i)
-        file << i << endl;
+        file << quantity[i] << endl;
     file << quantity[quantity.size() - 1];
     file.close();
     for (auto &i : bills)
@@ -245,14 +248,14 @@ bill::bill(const string &bill_path)
 bill::~bill()
 {
     stringstream path;
-    path << "../restaurant/bill/" << Date.m << "/" << Date << "/" << bill_no;
+    path << "./restaurant/bill/" << Date.m << "/" << Date << "/" << bill_no;
     ofstream file(path.str());
     if (!file.is_open())
     {
         path << "";
-        path << "../restaurant/bill/" << Date.m << "/" << Date;
+        path << "./restaurant/bill/" << Date.m << "/" << Date;
         CreateDirectory(path.str().c_str(), NULL);
-        path << "../restaurant/bill/" << Date.m << "/" << Date << "/" << bill_no;
+        path << "./restaurant/bill/" << Date.m << "/" << Date << "/" << bill_no;
         file.open(path.str());
     }
     file << "BILL NO: " << bill_no << endl;
