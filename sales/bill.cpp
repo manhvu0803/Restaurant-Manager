@@ -18,8 +18,8 @@ using namespace std;
 bill *bill_manager::FindBill(const string &bill_no)
 {
     for (auto &i : old_bills)
-        if (bill_no == i->getBillNo())
-            return i;
+        if (bill_no == i.getBillNo())
+            return &i;
     stringstream path;
     string folder_name;
     int month;
@@ -31,8 +31,8 @@ bill *bill_manager::FindBill(const string &bill_no)
     path << "/" << bill_no;
     try
     {
-        old_bills.emplace_back(new bill(path.str()));
-        return old_bills.back();
+        old_bills.emplace_back(bill(path.str()));
+        return &old_bills.back();
     }
     catch (...)
     {
@@ -162,8 +162,6 @@ bill_manager::~bill_manager()
     file << quantity[quantity.size() - 1];
     file.close();
     for (auto &i : bills)
-        delete i;
-    for (auto &i : old_bills)
         delete i;
 }
 

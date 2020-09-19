@@ -14,7 +14,7 @@ void order::update(const int &pos, const int &mode)
 }
 
 order &order::instantiate()
-{    
+{
     static order instance;
     return instance;
 }
@@ -36,9 +36,9 @@ bool order::CompleteOrderInQueue()
 void order::displayNewestOrder()
 {
     system("cls");
-    if (orders.empty())
+    if (!orders.size())
     {
-        cout << "Empty!";
+        cout << "Empty!\n";
         system("pause");
         return;
     }
@@ -48,9 +48,9 @@ void order::displayNewestOrder()
 void order::displayOldestOrder()
 {
     system("cls");
-    if (orders.empty())
+    if (!orders.size())
     {
-        cout << "Empty!";
+        cout << "Empty!\n";
         system("pause");
         return;
     }
@@ -62,9 +62,14 @@ void order::ListCurrentOrders()
     system("cls");
     cout << "Orders list";
     int count = 1;
+    if (!orders.size())
+    {
+        cout << "Empty!\n";
+        return
+    }
     for (auto &i : orders)
     {
-        cout << left << count << setw(3) << "." << i;
+        cout << left << setw(5) << count << i;
         ++count;
     }
 }
