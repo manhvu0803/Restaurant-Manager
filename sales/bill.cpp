@@ -6,6 +6,7 @@
 #include "PCH.hpp"
 #include <cstdlib>
 #include "../menu.h"
+#include <tchar.h>
 #include "order.hpp"
 
 using namespace std;
@@ -64,7 +65,7 @@ bill *bill_manager::NewBill()
     do
     {
         system("cls");
-        Menu *rest_menu = rest_menu->instantiate();
+        Menu *rest_menu = &Menu::instantiate();
         rest_menu->output();
         cout << "0. Finalize order\n";
         cout << "-1. Cancel order\n";
@@ -241,7 +242,7 @@ bill::~bill()
     {
         path << "";
         path << "../restaurant/bill/" << Date.m << "/" << Date;
-        CreateDirectory(path.str().c_str(), NULL);
+        CreateDirectory(_T(path.str().c_str()), NULL);
         path << "../restaurant/bill/" << Date.m << "/" << Date << "/" << bill_no;
         file.open(path.str());
     }

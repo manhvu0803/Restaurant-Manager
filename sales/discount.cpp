@@ -1,5 +1,5 @@
 #include "discount.hpp"
-#include "menu.h"
+#include "../menu.h"
 #include <vector>
 #include <string>
 #include <dirent.h>
@@ -167,7 +167,7 @@ bool Code::NewCode(const string &_code_)
 
 void Code::ListDish()
 {
-    Menu *rest_menu = rest_menu->instantiate();
+    Menu *rest_menu = &Menu::instantiate();
     for (auto &i : dish)
     {
         for (auto &j : rest_menu->getMenu())
@@ -263,7 +263,7 @@ void voucher::NewVoucher()
     do
     {
         system("cls");
-        Menu *rest_menu = rest_menu->instantiate();
+        Menu *rest_menu = &Menu::instantiate();
         cout << "Choose dish:\n";
         rest_menu->output();
         cout << "0. Exit\n";
@@ -342,7 +342,7 @@ void promo::NewPromo()
     do
     {
         system("cls");
-        Menu *rest_menu = rest_menu->instantiate();
+        Menu *rest_menu = &Menu::instantiate();
         cout << "Choose dish:\n";
         rest_menu->output();
         cout << "0. Exit\n";

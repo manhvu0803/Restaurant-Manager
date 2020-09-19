@@ -6,6 +6,7 @@
 #include <fstream>
 #include "dish.h"
 #include "essentials.hpp"
+#include "ui.hpp"
 
 using namespace std;
 
@@ -34,4 +35,5 @@ public:
 	void iOutput();// ham Vu xai
 
 };
+
 #endif

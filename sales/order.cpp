@@ -12,10 +12,9 @@ void order::update(const int &pos, const int &mode)
     bill_manager::instantiate()->updateQuantNewDish(pos, mode);
 }
 
-order *order::instantiate()
-{
-    if (!instance)
-        instance = new order;
+order &order::instantiate()
+{    
+    static order instance;
     return instance;
 }
 
