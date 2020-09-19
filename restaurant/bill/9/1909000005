@@ -1,0 +1,9 @@
+BILL NO: 1909000005
+DATE: 19-09-2020
+TIME: 11:58:52
+DISHES:
+NO   ID             QUANT   PRICE          NAME
+1    FD001          5       70000.00       Banh mi trung
+2    FD002          5       87500.00       Bot chien
+
+TOTAL: 157500.00

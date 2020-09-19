@@ -54,7 +54,7 @@ void order::displayOldestOrder()
         system("pause");
         return;
     }
-    (*orders.end())->DisplayBill();
+    (*orders.rbegin())->DisplayBill();
 }
 
 void order::ListCurrentOrders()
