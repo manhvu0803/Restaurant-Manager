@@ -27,7 +27,7 @@ void order::NewOrder()
 
 bool order::CompleteOrderInQueue()
 {
-    if (!orders.size())
+    if (!orders.empty())
         return false;
     orders.pop_front();
     return true;
@@ -36,12 +36,24 @@ bool order::CompleteOrderInQueue()
 void order::displayNewestOrder()
 {
     system("cls");
+    if (orders.empty())
+    {
+        cout << "Empty!";
+        system("pause");
+        return;
+    }
     (*orders.begin())->DisplayBill();
 }
 
 void order::displayOldestOrder()
 {
     system("cls");
+    if (orders.empty())
+    {
+        cout << "Empty!";
+        system("pause");
+        return;
+    }
     (*orders.end())->DisplayBill();
 }
 

@@ -19,19 +19,14 @@ bill *bill_manager::FindBill(const string &bill_no)
     for (auto &i : old_bills)
         if (bill_no == i->getBillNo())
             return i;
-    for (auto &i : bills)
-    {
-        if (bill_no == i->getBillNo())
-            return i;
-    }
     stringstream path;
     string folder_name;
     int month;
     path << bill_no.substr(2, 2);
     path >> month;
-    path << "";
-    date tmp_d;
-    path << "../restaurant/bill/" << month;
+    path.clear();
+    path.str("");
+    path << "./restaurant/bill/" << to_string(month);
     path << "/" << bill_no;
     try
     {
@@ -55,6 +50,7 @@ bill *bill_manager::NewBill()
     bill *new_bill = new bill;
     if (bills.size() >= 100)
         this->~bill_manager();
+    int flag2 = 0;
     int dish;
     do
     {
@@ -62,10 +58,9 @@ bill *bill_manager::NewBill()
         Menu &rest_menu = Menu::instantiate();
         rest_menu.output();
         cout << "0. Finalize order\n";
-        cout << "-1. Cancel order\n";
         cout << "Option: ";
         int opt;
-        while (!(cin >> dish) || dish < -1 || dish > rest_menu.getMenu().size() + 1)
+        while (!(cin >> dish) || dish < 0 || dish > rest_menu.getMenu().size() + 1)
         {
             cout << "Invalid!\n";
             cout << "Try again: ";
@@ -74,6 +69,7 @@ bill *bill_manager::NewBill()
         }
         if (dish > 0)
         {
+            flag2 = 1;
             do
             {
                 system("cls");
@@ -114,7 +110,7 @@ bill *bill_manager::NewBill()
             } while (opt);
         }
     } while (dish && dish != -1);
-    if (dish == -1)
+    if (!flag2)
         delete new_bill;
     else
     {
@@ -165,6 +161,8 @@ bill_manager::~bill_manager()
     file << quantity[quantity.size() - 1];
     file.close();
     for (auto &i : bills)
+        delete i;
+    for (auto &i : old_bills)
         delete i;
 }
 
@@ -241,20 +239,30 @@ bill::bill(const string &bill_path)
         getline(file, tmp);
         dish_names.emplace_back(tmp);
     }
-    skipchars(file, 6);
+    skipchars(file, 7);
     file >> Total;
     file.close();
 }
 
 bill::~bill()
 {
-    stringstream path;
-    string tmp;
-    path << "./restaurant/bill/" << Date.m << "/" << bill_no;
-    path >> tmp;
-    ofstream file(path.str());
-    if (!file.is_open())
+    if (!dish_IDs.size())
         return;
+    stringstream path;
+    path << "./restaurant/bill/" << Date.m << "/" << bill_no;
+    ifstream file_t(path.str());
+    while (file_t.is_open())
+    {
+        file_t.close();
+        bill tmp;
+        this->bill_no = tmp.bill_no;
+        path.clear();
+        path.str("");
+        path << "./restaurant/bill/" << Date.m << "/" << bill_no;
+        file_t.open(path.str());
+    }
+    file_t.close();
+    ofstream file(path.str());
     file << "BILL NO: " << bill_no << endl;
     file << "DATE: " << Date << endl;
     file << "TIME: " << Date.GetTime() << endl;
@@ -267,10 +275,10 @@ bill::~bill()
     for (int i = 1; i <= dish_IDs.size(); ++i)
     {
         file << left << setw(5) << i
-             << left << setw(15) << dish_IDs[i]
-             << left << setw(8) << quantity[i]
-             << left << setw(15) << total_per_dish[i]
-             << dish_names[i] << endl;
+             << left << setw(15) << dish_IDs[i - 1]
+             << left << setw(8) << quantity[i - 1]
+             << left << setw(15) << fixed << setprecision(2) << total_per_dish[i - 1]
+             << dish_names[i - 1] << endl;
     }
     file << endl
          << "TOTAL: " << Total;
@@ -333,13 +341,14 @@ void bill::DisplayBill()
     for (int i = 1; i <= dish_IDs.size(); ++i)
     {
         cout << left << setw(5) << i
-             << left << setw(15) << dish_IDs[i]
-             << left << setw(8) << quantity[i]
-             << left << setw(15) << total_per_dish[i]
-             << dish_names[i] << endl;
+             << left << setw(15) << dish_IDs[i - 1]
+             << left << setw(8) << quantity[i - 1]
+             << left << setw(15) << fixed << setprecision(2) << total_per_dish[i - 1]
+             << dish_names[i - 1] << endl;
     }
     cout << endl
-         << "TOTAL: " << Total;
+         << "TOTAL: " << fixed << setprecision(2) << Total << endl;
+    system("pause");
 }
 
 const string &bill::getBillNo() const
@@ -375,6 +384,7 @@ MENU:
         {
             system("cls");
             cout << "Invalid code!\n\n";
+            cin.ignore(1000, '\n');
             system("pause");
             goto MENU;
         }
@@ -393,10 +403,15 @@ MENU:
         if (!Voucher)
         {
             system("cls");
+
             cout << "Invalid code!\n\n";
+            cin.ignore(1000, '\n');
             system("pause");
             goto MENU;
         }
+        Voucher->Info();
         Voucher->Apply(dish_IDs, total_per_dish, Total);
+        cout << "Applied successfully!\n";
+        system("pause");
     }
 }

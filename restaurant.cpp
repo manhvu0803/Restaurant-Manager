@@ -5,6 +5,7 @@
 #include "sales/order.hpp"
 #include "sales/discount.hpp"
 #include "menu.h"
+#include <windows.h>
 
 using namespace std;
 
@@ -13,16 +14,21 @@ int main()
     Menu &menu = Menu::instantiate();
     menu.load();
     ERROR_LOG &log = log.instantiate();
-    srand(0);
+    srand(time(0));
     discount &disc = discount::instantiate();
     bill_manager &billMan = bill_manager::instantiate();
     try
     {
-        billMan.NewBill();
+        bill *tmp = billMan.FindBill("1909000003");
+        if (!tmp)
+            cout << "NO\n";
+        else
+            tmp->DisplayBill();
     }
     catch (const char *msg)
     {
         log.LOG(msg);
     }
     // menu.newDish();
+    system("pause");
 }

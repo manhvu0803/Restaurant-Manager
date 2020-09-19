@@ -219,11 +219,11 @@ void date::addTime(const string &Time)
     sstr << Time.substr(0, 2);
     sstr >> h;
     sstr.clear();
-    sstr << "";
+    sstr.str("");
     sstr << Time.substr(3, 2);
     sstr >> min;
     sstr.clear();
-    sstr << "";
+    sstr.str("");
     sstr << Time.substr(6, 4);
     sstr >> s;
 }
