@@ -189,36 +189,40 @@ void Menu::removeDish() {
 			for (int i = 0; i < menu.size(); i++) {
 				cout << setw(3) << left << "(" + to_string(i) + ")" << setw(6) << left << menu[i]->getID() << setw(20) << left << menu[i]->getName() << endl;
 			}
-			cout << "Choose the dish you want to remove " << endl;
+			cout << "Choose the dish you want to remove (if don't press " << menu.size() << ")" << endl;
 			cout << "Your dish index: ";
 			cin >> choice1;
-			while (cin.fail() || choice < 0 || choice > menu.size() - 1) {
+			while (cin.fail() || choice1 < 0 || choice1 > menu.size()) {
 				cin.clear();
 				cin.ignore(256, '\n');
 				cout << "Error, try again" << endl;
 				cout << "Your choice: ";
-				cin >> choice;
+				cin >> choice1;
 			}
-			cin.ignore(256, '\n');
-			string path = "./restaurant/menu/" + menu[choice1]->getID() + ".txt";
-			bool re = this->deleteFile(path);
-			if (re) {
-				cout << "Delete successfully" << endl;
+			if (choice1 != menu.size()) {
+				string path = "./restaurant/menu/" + menu[choice1]->getID() + ".txt";
+				bool re = this->deleteFile(path);
+				if (re) {
+					cout << "Delete successfully" << endl;
+				}
+				else {
+					cout << "Can't delete" << endl;
+				}
+				menu.erase(menu.begin() + choice1);
+				obj.update(choice1, 0);
+				this->save();
+				cout << "Do you want to delete any other dish? (0: No, 1: Yes): ";
+				cin >> choice;
+				while (cin.fail() || choice != 0 && choice != 1) {
+					cin.clear();
+					cin.ignore(256, '\n');
+					cout << "Error, try again" << endl;
+					cout << "Your choice: ";
+					cin >> choice;
+				}
 			}
 			else {
-				cout << "Can't delete" << endl;
-			}
-			menu.erase(menu.begin() + choice1);
-			obj.update(choice1, 0);
-			this->save();
-			cout << "Do you want to delete any other dish? (0: No, 1: Yes): ";
-			cin >> choice;
-			while (cin.fail() || choice != 0 && choice != 1) {
-				cin.clear();
-				cin.ignore(256, '\n');
-				cout << "Error, try again" << endl;
-				cout << "Your choice: ";
-				cin >> choice;
+				choice = 0;
 			}
 		}
 		else {
@@ -234,32 +238,38 @@ void Menu::changeDish() {
 			for (int i = 0; i < menu.size(); i++) {
 				cout << setw(3) << left << "(" + to_string(i) + ")" << setw(6) << left << menu[i]->getID() << setw(20) << left << menu[i]->getName() << endl;
 			}
-			cout << "Choose the dish you want to change " << endl;
+			cout << "Choose the dish you want to change (if don't press -1)" << endl;
 			cout << "Your dish index: ";
 			cin >> choice1;
-			while (cin.fail()||choice <0 || choice > menu.size() - 1) {
+			while (cin.fail() ||choice < -1 || choice > menu.size() - 1) {
 				cin.clear();
 				cin.ignore(256, '\n');
 				cout << "Error, try again" << endl;
 				cout << "Your dish index: ";
 				cin >> choice1;
 			}
-			cin.ignore(256, '\n');
-			menu[choice1]->change();
+			if (choice1 != -1) {
+				menu[choice1]->change();
+			}
 		}
 		else {
 			cout << "Nothing to show" << endl;
 			choice = 0;
 		}
-		cout << "Do you want to change another dish ?" << endl;
-		cout << "Your choice (0: NO , 1: YES): ";
-		cin >> choice;
-		while (cin.fail() || choice != 0 && choice != 1) {
-			cin.clear();
-			cin.ignore(256, '\n');
-			cout << "Error, try again" << endl;
-			cout << "Your choice: ";
+		if (choice1 != -1) {
+			cout << "Do you want to change another dish ?" << endl;
+			cout << "Your choice (0: NO , 1: YES): ";
 			cin >> choice;
+			while (cin.fail() || choice != 0 && choice != 1) {
+				cin.clear();
+				cin.ignore(256, '\n');
+				cout << "Error, try again" << endl;
+				cout << "Your choice: ";
+				cin >> choice;
+			}
+		}
+		else {
+			choice = 0;
 		}
 	}
 }
