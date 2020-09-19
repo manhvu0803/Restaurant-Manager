@@ -9,7 +9,8 @@ using namespace std;
 
 void order::update(const int &pos, const int &mode)
 {
-    bill_manager::instantiate()->updateQuantNewDish(pos, mode);
+    bill_manager &tmp = bill_manager::instantiate();
+    tmp.updateQuantNewDish(pos, mode);
 }
 
 order &order::instantiate()
@@ -18,17 +19,15 @@ order &order::instantiate()
     return instance;
 }
 
-order *order::instance = nullptr;
-
 void order::NewOrder()
 {
-    bill_manager *bill_m = bill_manager::instantiate();
-    orders.emplace_back(bill_m->NewBill());
+    bill_manager &bill_m = bill_manager::instantiate();
+    orders.emplace_back(bill_m.NewBill());
 }
 
 bool order::CompleteOrderInQueue()
 {
-    if (!orders.size())
+    if (!orders.empty())
         return false;
     orders.pop_front();
     return true;
@@ -37,12 +36,24 @@ bool order::CompleteOrderInQueue()
 void order::displayNewestOrder()
 {
     system("cls");
+    if (orders.empty())
+    {
+        cout << "Empty!";
+        system("pause");
+        return;
+    }
     (*orders.begin())->DisplayBill();
 }
 
 void order::displayOldestOrder()
 {
     system("cls");
+    if (orders.empty())
+    {
+        cout << "Empty!";
+        system("pause");
+        return;
+    }
     (*orders.end())->DisplayBill();
 }
 

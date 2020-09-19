@@ -11,7 +11,6 @@ class order
 {
 private:
     order(){};
-    static order *instance;
     list<bill *> orders;
 
 public:

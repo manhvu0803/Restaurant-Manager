@@ -40,10 +40,10 @@ public:
     bill(const string &bill_path);
     ~bill();
     void AddDish(const string &ID, const string &name, const double &price);
-    void LoadOldBill();
     bool RemoveDish(const string &ID, const double &price);
     void DisplayBill();
     const string &getBillNo() const;
+    void applyDiscount();
 };
 
 class bill_manager
@@ -51,14 +51,13 @@ class bill_manager
 private:
     vector<bill *> bills;
     vector<bill *> old_bills;
-    static bill_manager *instance;
     bill_manager();
     double income;
     void UpdateDishQuant(const int &index, const int &mode);
     vector<int> quantity;
 
 public:
-    static bill_manager *instantiate();
+    static bill_manager &instantiate();
     bill *FindBill(const string &bill_no);
     bill_manager &operator=(const bill_manager &other) = delete;
     bill_manager(const bill_manager &other) = delete;

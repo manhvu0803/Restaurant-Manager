@@ -22,7 +22,7 @@ ERROR_LOG::ERROR_LOG()
     time_t t = time(0);
     tm *now = localtime(&t);
     stringstream sstr;
-    sstr << "log//" << now->tm_mday << "-" << now->tm_mon + 1 << "-" << now->tm_year + 1900 << ".log";
+    sstr << "./log/" << now->tm_mday << "-" << now->tm_mon + 1 << "-" << now->tm_year + 1900 << ".log";
     log_file.open(sstr.str().c_str(), ios::app);
     log_file.seekp(0, ios::end);
     log_file << "Time: " << now->tm_hour << ":" << now->tm_min << ":" << now->tm_sec << "\n ";
@@ -40,12 +40,9 @@ void ERROR_LOG::LOG(const string &log)
              << log << "\n";
 }
 
-ERROR_LOG *ERROR_LOG::instance = nullptr;
-
-ERROR_LOG *ERROR_LOG::instantiate()
+ERROR_LOG &ERROR_LOG::instantiate()
 {
-    if (!instance)
-        instance = new ERROR_LOG;
+    static ERROR_LOG instance;
     return instance;
 }
 
@@ -222,11 +219,11 @@ void date::addTime(const string &Time)
     sstr << Time.substr(0, 2);
     sstr >> h;
     sstr.clear();
-    sstr << "";
+    sstr.str("");
     sstr << Time.substr(3, 2);
     sstr >> min;
     sstr.clear();
-    sstr << "";
+    sstr.str("");
     sstr << Time.substr(6, 4);
     sstr >> s;
 }
