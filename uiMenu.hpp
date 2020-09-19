@@ -4,6 +4,7 @@
 #include "ui.hpp"
 #include "Storage/Storage.h"
 #include "menu.h"
+#include "sales/bill.hpp"
 
 using namespace std;
 
@@ -27,6 +28,18 @@ class menuComponent: public ui::component
 
 	public:
 		menuComponent();
+};
+
+class billMenu: public ui::component
+{
+	private:
+		bill_manager& billManager;
+		order& orderManager;
+
+		void findBill();
+	
+	public:
+		billMenu();
 };
 
 #endif // STORAGEMENU_HPP

@@ -8,5 +8,6 @@ int main()
     menu.add(new manager::saleMenu());
     menu.add(new storageMenu());
     menu.add(new menuComponent());
+    menu.add(new billMenu());
     menu.show();
 }
