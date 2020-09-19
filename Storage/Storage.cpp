@@ -5,9 +5,9 @@
 #include <fstream>
 #include "Storage.h"
 #include <ctime>
-#include "essentials.hpp"
+#include "../essentials.hpp"
 using namespace std;
-void Ingredients::changeAmt(const int& x)
+void Ingredients::changeAmt(const int &x)
 {
 	amount = x;
 }
@@ -15,13 +15,13 @@ int Ingredients::getAmount()
 {
 	return amount;
 }
-void Ingredients::exp(ofstream& fp, bool op)
+void Ingredients::exp(ofstream &fp, bool op)
 {
 	fp << id << "\n";
 	fp << name << endl;
 	fp << amount << "\n";
 	if (op)
-	fp << floor << endl;
+		fp << floor << endl;
 	fp << unit << endl;
 	if (op)
 		fp << exd;
@@ -41,7 +41,7 @@ void Storage::input(bool op)
 {
 	string name, unit;
 	int amount, id, floor;
-	
+
 	do
 	{
 		cout << "ID: ";
@@ -62,7 +62,7 @@ void Storage::input(bool op)
 	getline(cin, unit);
 	date d;
 	if (op)
-	cin >> d;
+		cin >> d;
 	Ingredients ing(id, name, amount, unit, d, floor);
 	str.push_back(ing);
 }
@@ -117,7 +117,7 @@ void Storage::print()
 		cout << endl;
 	}
 }
-Ingredients* Storage::findID(const int& f)
+Ingredients *Storage::findID(const int &f)
 {
 	vector<Ingredients>::iterator it;
 	for (it = str.begin(); it != str.end(); it++)
@@ -125,13 +125,14 @@ Ingredients* Storage::findID(const int& f)
 			return &(*it);
 	return NULL;
 }
-bool Ingredients::findID(const int& n)
+bool Ingredients::findID(const int &n)
 {
 	if (id == n)
 		return true;
-	else return false;
+	else
+		return false;
 }
-Ingredients* Storage::findLabel(const string& f)
+Ingredients *Storage::findLabel(const string &f)
 {
 	vector<Ingredients>::iterator it;
 	for (it = str.begin(); it != str.end(); it++)
@@ -139,17 +140,18 @@ Ingredients* Storage::findLabel(const string& f)
 			return &(*it);
 	return NULL;
 }
-bool Ingredients::findLabel(const string& n)
+bool Ingredients::findLabel(const string &n)
 {
 	if (name.find(n) != string::npos)
 		return true;
-	else return false;
+	else
+		return false;
 }
-void Ingredients::changeID(const int& n)
+void Ingredients::changeID(const int &n)
 {
 	id = n;
 }
-bool Ingredients::CheckandAdd(const int& n, bool op)
+bool Ingredients::CheckandAdd(const int &n, bool op)
 {
 	if (amount + n <= 0)
 		return false;
@@ -157,7 +159,7 @@ bool Ingredients::CheckandAdd(const int& n, bool op)
 		amount += n;
 	return (amount > floor);
 }
-void Ingredients::changeDate(const int& d, const int& m, const int& y)
+void Ingredients::changeDate(const int &d, const int &m, const int &y)
 {
 	date n(d, m, y);
 	exd = n;
@@ -220,13 +222,13 @@ void Storage::restock()
 		yy = y;
 		getline(file, line);
 		getline(file, line);
-		Ingredients* x = findID(id);
+		Ingredients *x = findID(id);
 		x->changeDate(dd, mm, yy);
 		x->CheckandAdd(fill, 0);
 	}
 	file.close();
 }
-bool Ingredients::compdate(const date& x)
+bool Ingredients::compdate(const date &x)
 {
 	return exd > x;
 }
@@ -255,7 +257,7 @@ void Storage::order()
 	file << d;
 	file.close();
 }
-Ingredients& Storage::operator[](int i)
+Ingredients &Storage::operator[](int i)
 {
 	return str[i];
 }

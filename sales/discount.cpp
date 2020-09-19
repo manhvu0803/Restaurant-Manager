@@ -346,7 +346,7 @@ void voucher::Apply(const vector<string> &dish_IDs, vector<double> &totals, doub
         {
             if (dishID == dish_IDs[i])
             {
-                totals[i] *= (discount_value / 100);
+                totals[i] *= ((double)discount_value / 100);
             }
         }
     }
