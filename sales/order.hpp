@@ -11,13 +11,12 @@ class order
 {
 private:
     order(){};
-    static order *instance;
     list<bill *> orders;
 
 public:
     order(const order &other) = delete;
     order &operator=(const order &other) = delete;
-    static order *instantiate();
+    static order &instantiate();
     void NewOrder();
     void update(const int &pos, const int &mode);
     bool CompleteOrderInQueue();

@@ -17,16 +17,15 @@ typedef unsigned int u_int;
 class ERROR_LOG final
 {
 private:
-    static ERROR_LOG *instance;
     std::ofstream log_file;
+    ERROR_LOG();
 
 public:
-    ERROR_LOG();
     ~ERROR_LOG();
     ERROR_LOG(const ERROR_LOG &other) = delete;
     ERROR_LOG &operator=(const ERROR_LOG &other) = delete;
     void LOG(const std::string &log);
-    static ERROR_LOG *instantiate();
+    static ERROR_LOG &instantiate();
 };
 
 /****************************
