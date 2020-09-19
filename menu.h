@@ -11,7 +11,7 @@ using namespace std;
 
 class Menu {
 	Menu();
-	static Menu* single;
+	//static Menu* single;
 	vector<Dish*> menu;
 public:
 	//void input();
@@ -25,9 +25,13 @@ public:
 	void removeDish();
 	void changeDish();
 	bool deleteFile(string path);
-	//void favor();
-	static Menu* instantiate();
+	vector<pair<int,int>> favor();
+	static Menu& instantiate();
 	//~Menu();
+	void iNewDish();// ham Vu xai
+	void iRemoveDish(); // ham Vu xai
+	void iChangeDish(); // ham Vu xai
+	void iOutput();// ham Vu xai
 
 };
 #endif

@@ -17,8 +17,13 @@ string Dish::getID() {
 string Dish::getName() {
 	return name;
 }
-void Dish::outputMenu() {
-	cout << setw(10) << left << id << ": " << setw(20) << left << name << setw(10) << left << to_string(long int(price)) + " VND" << endl;
+void Dish::outputMenu(bool a) {
+		if (a) {
+			cout << setw(10) << left << id << ": " << setw(20) << left << name << setw(10) << left << to_string(long(price)) + " VND" << left << setw(10) << "BestSale" << endl;
+		}
+		else {
+			cout << setw(10) << left << id << ": " << setw(20) << left << name << setw(10) << left << to_string(long(price)) + " VND" << endl;
+		}
 }
 double Dish::getPrice() {
 	return price;
@@ -26,7 +31,7 @@ double Dish::getPrice() {
 void Dish::save(ofstream& fout) {
 	fout << id << endl;
 	fout << name << endl;
-	fout << to_string(long int(price)) << endl;
+	fout << to_string(long(price)) << endl;
 	for (int i = 0; i < ings.size(); i++) {
 		ings[i]->exp(fout, false);
 	}
@@ -38,12 +43,19 @@ void Dish::addIngsToDish(vector<Ingredients> a) {
 
 	cout << "Ingredients list :" << endl;
 	for (int i = 0; i < a.size(); i++) {
-		cout << setw(10) << left << id << ": " << setw(20) << left << name << endl;
+		cout << setw(10) << left << "  (" + to_string(i) + ") : " << setw(20) << left << a[i].getName() << endl;
 	}
 	cout << "Choose the ingredients that you need " << endl;
 	while (choice == 1) {
 		cout << "The index of ingredient: ";
 		cin >> choice;
+		while (cin.fail() || choice < 0 || choice > a.size() - 1) {
+			cin.clear();
+			cin.ignore(256, '\n');
+			cout << "Error, try again" << endl;
+			cout << "Your choice: ";
+			cin >> choice;
+		}
 		cout << "The amount you need (" << a[choice].getUnit() << "): ";
 		cin >> Amount;
 		int Id = a[choice].getID();
@@ -53,6 +65,13 @@ void Dish::addIngsToDish(vector<Ingredients> a) {
 		this->add(n);
 		cout << "You want to add another ingredients ? (0: No, 1: Yes)" << endl;
 		cin >> choice;
+		while (choice != 0 && choice != 1 || cin.fail()) {
+			cin.clear();
+			cin.ignore(256, '\n');
+			cout << "Error, try again" << endl;
+			cout << "Your choice: ";
+			cin >> choice;
+		}
 	}
 }
 void Dish::input() {
@@ -60,11 +79,19 @@ void Dish::input() {
 	string Name,Id;
 	double Price;
 	Storage tmp;
+	tmp.imp();
 	cout << "Please input dish info: " << endl;
 	cout << "Type of dish:" << endl;
 	cout << "(0)FD" << endl << "(1)DK" << endl;
 	cout << "Your choice: ";
 	cin >> choice;
+	while (cin.fail() || choice != 0 && choice != 1) {
+		cin.clear();
+		cin.ignore(256, '\n');
+		cout << "Error, try again" << endl;
+		cout << "Your choice: ";
+		cin >> choice;
+	}
 	cin.ignore(256, '\n');
 	cout << "Name of the dish: ";
 	getline(cin, Name);
@@ -79,6 +106,9 @@ void Dish::input() {
 		cin >> Price;
 	}
 	this->addIngsToDish(tmp.getStorage());
+	this->id = Id;
+	this->name = Name;
+	this->price = Price;
 	
 }
 string Dish::generateID(int choice) {
@@ -87,7 +117,7 @@ string Dish::generateID(int choice) {
 	string tmp1;
 	vector<string> tmp;
 	size_t found;
-	fin.open("./restaurant/meunu/dishes.txt");
+	fin.open("./restaurant/menu/dishes.txt");
 	if (!fin.is_open()) {
 		cout << "Can't open file menu" << endl;
 	}
@@ -141,9 +171,35 @@ void Dish::change() {
 	cout << "(0) Price" << endl << "(1) Ingredients" << endl;
 	cout << "Your choice: ";
 	cin >> choice;
-	cin.ignore(256, '\n');
+	while (cin.fail() || choice != 0 && choice != 1) {
+		cin.clear();
+		cin.ignore(256, '\n');
+		cout << "Error, try again" << endl;
+		cout << "Your choice: ";
+		cin >> choice;
+	}
 	if (choice == 0) {
-
+		cout << "This is the price: " << this->getPrice() << " VND" << endl;
+		cout << "Enter the new price you want: ";
+		cin >> this->price;
+		while (cin.fail() || this->price < 0) {
+			cin.clear();
+			cin.ignore(256, '\n');
+			cout << "Error, try again" << endl;
+			cout << "New price: ";
+			cin >> this->price;
+		}
+		cout << "The price has been change" << endl;
+		string path = "./restaurant/menu/" + this->getID() + ".txt";
+		fout.open(path);
+		if (fout.is_open()) {
+			this->save(fout);
+			cout << "Save successfully" << endl;
+			fout.close();
+		}
+		else {
+			cout << "Cant open file dish" << endl;
+		}
 	}
 	else {
 		for (int i = 0; i < ings.size(); i++) {
@@ -154,13 +210,20 @@ void Dish::change() {
 		cout << "(0) Add ingredients" << endl << "(1) Remove ingredients" << endl << "(2) Change the amount of ingredients" << endl;
 		cout << "Your choice: ";
 		cin >> choice;
+		while (cin.fail() || choice != 1 && choice != 0 && choice != 2) {
+			cin.clear();
+			cin.ignore(256, '\n');
+			cout << "Error, try again" << endl;
+			cout << "Your choice: ";
+			cin >> choice1;
+		}
+		if(choice == 2){
 			cout << "Choose the index of the ingredient you want to change " << endl;
 			cout << "Your choice: ";
 			cin >> choice1;
 			cin.ignore(256, '\n');
-			ings[choice1]->print(false);
-		if(choice == 2){
-			cout << "New amount: ";
+			ings[choice1]->print();
+			cout << "\nNew amount: ";
 			cin >> amnt;
 			while (cin.fail() || amnt <= 0) {
 				cin.clear();
@@ -169,9 +232,9 @@ void Dish::change() {
 				cout << "New amount: ";
 				cin >> amnt;
 			}
-			ings[choice1]->changeAmount(amnt);
+			ings[choice1]->changeAmt(amnt);
 		}
-		else if (choice1 == 0) {
+		else if (choice == 0) {
 			ings.push_back(this->inputIng());
 			string path = "./restaurant/menu/" + this->getID() + ".txt";
 			fout.open(path);
@@ -185,6 +248,10 @@ void Dish::change() {
 			}
 		}
 		else {
+			cout << "Choose the index of the ingredient you want to remove " << endl;
+			cout << "Your choice: ";
+			cin >> choice1;
+			cin.ignore(256, '\n');
 			ings.erase(ings.begin() + choice1);
 			string path = "./restaurant/menu/" + this->getID() + ".txt";
 			fout.open(path);
@@ -202,14 +269,35 @@ void Dish::change() {
 }
 Ingredients* Dish::inputIng() {
 	Storage tmp;
-	Ingredients* tmp1;
+	Ingredients* tmp1,*tmp3;
 	date tmp2;
-	int choice,amnt;
+	int choice,amnt,flag = 1;
 	tmp.imp();
 	cout << "The ingredients our storage has: " << endl;
 	tmp.print();
-	cout << "Enter the index of the ingredient you want to choose: ";
-	cin >> choice;
+	while (flag == 1) {
+		cout << "Enter the ID of the ingredient you want to choose: ";
+		cin >> choice;
+		while (cin.fail() || choice < 0) {
+			cin.clear();
+			cin.ignore(256, '\n');
+			cout << "Error, try again" << endl;
+			cout << "ID: ";
+			cin >> choice;
+		}
+		tmp3 = tmp.findID(choice);
+		if (tmp3 == NULL) {
+			cout << "No ingredients with such ID" << endl;
+		}
+		else {
+			flag = 0;
+		}
+	}
+	for (int i = 0; i < tmp.getStorage().size(); i++) {
+		if (tmp.getStorage()[i].getID() == choice) {
+			choice = i;
+		}
+	}
 	cout << "The amount you want: ";
 	cin >> amnt;
 	tmp1 = new Ingredients(tmp[choice].getID(), tmp[choice].getName(), amnt, tmp[choice].getUnit(), tmp2, 0);
