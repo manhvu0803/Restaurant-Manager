@@ -31,7 +31,7 @@ bill *bill_manager::FindBill(const string &bill_no)
     path >> month;
     path << "";
     date tmp_d;
-    path << "../restaurant/bill/" << month << "/" << bill_no.substr(0, 2) << "-" << bill_no.substr(2, 2) << "-" << tmp_d.y;
+    path << "../restaurant/bill/" << month;
     path << "/" << bill_no;
     try
     {
@@ -146,7 +146,8 @@ void bill_manager::updateQuantNewDish(const int &pos, const int &mode)
     {
         if (pos >= quantity.size() - 1)
             quantity.emplace_back(0);
-        quantity.emplace(quantity.begin() + pos, 0);
+        else
+            quantity.emplace(quantity.begin() + pos, 0);
     }
     else
     {
@@ -248,16 +249,12 @@ bill::bill(const string &bill_path)
 bill::~bill()
 {
     stringstream path;
-    path << "./restaurant/bill/" << Date.m << "/" << Date << "/" << bill_no;
+    string tmp;
+    path << "./restaurant/bill/" << Date.m << "/" << bill_no;
+    path >> tmp;
     ofstream file(path.str());
     if (!file.is_open())
-    {
-        path << "";
-        path << "./restaurant/bill/" << Date.m << "/" << Date;
-        CreateDirectory(path.str().c_str(), NULL);
-        path << "./restaurant/bill/" << Date.m << "/" << Date << "/" << bill_no;
-        file.open(path.str());
-    }
+        return;
     file << "BILL NO: " << bill_no << endl;
     file << "DATE: " << Date << endl;
     file << "TIME: " << Date.GetTime() << endl;
@@ -356,6 +353,7 @@ void bill::applyDiscount()
     int opt;
 MENU:
     system("cls");
+    cout << "Use discount:\n";
     cout << "1. Promo\n";
     cout << "2. Voucher\n";
     cout << "0. Exit\n";
