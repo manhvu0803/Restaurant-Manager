@@ -32,6 +32,7 @@ void storageMenu::exportStorage()
 
 storageMenu::storageMenu(): component("Storage manager")
 {
+    stor.imp();
     component::add(new ui::option(bind(&findID, this), "Find ingredients by ID"));
     component::add(new ui::option(bind(&findLabel, this), "Find ingredients by label"));
     component::add(new ui::option(bind(&exportStorage, this), "Export storage to text file"));

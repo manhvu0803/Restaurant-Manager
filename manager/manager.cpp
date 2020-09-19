@@ -20,6 +20,18 @@ namespace manager
         date += to_string(y);
         return date;
     }
+    
+    string toString2(int m, int d, int num)
+    {
+        string date;
+        if (d < 10) date += '0';
+        date += to_string(d);
+        if (m < 10) date += '0';
+        date += to_string(m);
+        string sNum = to_string(num);
+        while (sNum.length() < 6) sNum = '0' + sNum;
+        return date + sNum;
+    }
 
     bill::bill(int number, int h, int m, int s, vector<dish>& dishes):
         number(number),
@@ -27,12 +39,15 @@ namespace manager
         dishes(dishes)
     {};
 
-    unique_ptr<bill> bill::getBill(int y, int m, int d)
+    unique_ptr<bill> bill::getBill(int m, int d, int num)
     {    
         int number, hour, min, sec;
         char ch;
-        ifstream file(dir + to_string(m) + "/" + toString(y, m, d));
-        if (!file.is_open()) return unique_ptr<bill>();
+        ifstream file(dir + to_string(m) + "/" + toString(2020, m, d));
+        if (!file.is_open()) {
+            file.open(dir + to_string(m) + "/" + toString2(m, d, num));
+            if (!file.is_open()) return unique_ptr<bill>();
+        }
         file.ignore(9);
         file >> number;
         file.ignore(256, '\n');
@@ -104,52 +119,37 @@ namespace manager
 
 
     // saleMenu
-    void saleMenu::showDateSale()
-    {
-        cout << "Sale of a day\n";
-        int d, m, y;
-        try {
-            y = getYear();
-            m = getMonth();
-            d = getDate();
-        }
-        catch (const exception& e) {
-            cerr << e.what() << '\n';
-            return;
-        }    
-            
-        unique_ptr<bill> b = bill::getBill(y, m, d); 
-        if (b) cout << *b;
-        else cout << "Bill not found\n";
-    }
-
-    void showSale(int y, int m = 0)
+    void showSale(int day = 0, int m = 0)
     {    
         char choice;
         unordered_map<string, dish> dMap;
         long long total = 0;
         int lim = 12;
+        int lim2 = 31;
         string filename;
+        if (day == 0) day = 1;
+        else lim2 = day;
         if (m == 0) {
             m = 1;
-            filename = "./" + to_string(m) + "-" + to_string(y) + ".csv";
+            filename = "./" + to_string(day) + "-" + to_string(m) + ".csv";
         }
         else {
             lim = m;
-            filename = "./" + to_string(y) + ".csv";
-        }        
+            filename = "./" + to_string(m) + ".csv";
+        }
         for (m = m; m <= lim; ++m)
-            for (int i = 1; i <= 31; ++i) {          
-                unique_ptr<bill> b = bill::getBill(y, m, i); 
-                if (b) {
-                    for (auto d: b->dishes) {
-                        auto ite = dMap.find(d.name);
-                        if (ite == dMap.end()) dMap.emplace(d.name, d);
-                        else ite->second.quantity += d.quantity;
-                    }
-                    total += b->total();
-                };
-            }
+            for (int day = day; day <= lim2; ++day) 
+                for (int j = 1; j < 10; ++j) {          
+                    unique_ptr<bill> b = bill::getBill(m, day, j); 
+                    if (b) {
+                        for (auto d: b->dishes) {
+                            auto ite = dMap.find(d.name);
+                            if (ite == dMap.end()) dMap.emplace(d.name, d);
+                            else ite->second.quantity += d.quantity;
+                        }
+                        total += b->total();
+                    };
+                }
 
         cout << left << setw(20) << "Dish" << setw(10) << "Quantity" << "Price\n";
         for (auto i: dMap)         
@@ -168,12 +168,27 @@ namespace manager
         }
     }
 
+    void saleMenu::showDateSale()
+    {
+        cout << "Sale of a day\n";
+        int d, m;
+        try {
+            m = getMonth();
+            d = getDate();
+        }
+        catch (const exception& e) {
+            cerr << e.what() << '\n';
+            return;
+        }
+        
+        showSale(d, m);
+    }
+
     void saleMenu::showMonthSale()
     {
         cout << "Sale of a month\n";
         int m, y;
         try {
-            y = getYear();
             m = getMonth();
         }
         catch (const exception& e) {
@@ -181,22 +196,13 @@ namespace manager
             return;
         }
 
-        showSale(y, m);
+        showSale(0, m);
     }
 
     void saleMenu::showYearSale()
     {
         cout << "Sale of a year\n";
-        int y;
-        try {
-            y = getYear();
-        }
-        catch (const exception& e) {
-            cerr << e.what() << '\n';
-            return;
-        }
-
-        showSale(y);
+        showSale();
     }
 
     saleMenu::saleMenu(): component("Sale manager")
