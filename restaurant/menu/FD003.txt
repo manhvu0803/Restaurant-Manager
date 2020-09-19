@@ -1,0 +1,19 @@
+FD003
+Trung chien
+10000
+1
+Muoi
+3
+gam
+6
+Trung
+1
+trai
+4
+Tieu
+3
+gam
+7
+Dau an
+20
+ml
