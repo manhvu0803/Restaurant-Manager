@@ -69,7 +69,7 @@ void order::ListCurrentOrders()
     }
     for (auto &i : orders)
     {
-        cout << left << setw(5) << count << i->getBillNo();
+        cout << left << setw(5) << count << i->getBillNo() << '\n';
         ++count;
     }
 }

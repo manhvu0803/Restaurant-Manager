@@ -350,9 +350,9 @@ void bill::DisplayBill()
     system("pause");
 }
 
-const string &bill::getBillNo() const
+const string& bill::getBillNo() const
 {
-    return bill_no + '\n';
+    return bill_no;
 }
 
 void bill::applyDiscount()
