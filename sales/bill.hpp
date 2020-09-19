@@ -50,7 +50,7 @@ class bill_manager
 {
 private:
     vector<bill *> bills;
-    vector<bill *> old_bills;
+    vector<bill> old_bills;
     bill_manager();
     double income;
     void UpdateDishQuant(const int &index, const int &mode);
