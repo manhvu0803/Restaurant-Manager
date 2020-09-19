@@ -60,7 +60,7 @@ void order::displayOldestOrder()
 void order::ListCurrentOrders()
 {
     system("cls");
-    cout << "Orders list\n";
+    cout << "Orders list";
     int count = 1;
     if (!orders.size())
     {
@@ -69,7 +69,7 @@ void order::ListCurrentOrders()
     }
     for (auto &i : orders)
     {
-        cout << left << setw(5) << count << i->getBillNo();
+        cout << left << setw(5) << count << i;
         ++count;
     }
 }
