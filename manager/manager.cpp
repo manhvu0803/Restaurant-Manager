@@ -126,8 +126,9 @@ namespace manager
         long long total = 0;
         int lim = 12;
         int lim2 = 31;
+        int start = day;
         string filename;
-        if (day == 0) day = 1;
+        if (day == 0) start = 1;
         else lim2 = day;
         if (m == 0) {
             m = 1;
@@ -138,7 +139,7 @@ namespace manager
             filename = "./" + to_string(m) + ".csv";
         }
         for (m = m; m <= lim; ++m)
-            for (day = day; day <= lim2; ++day) 
+            for (day = start; day <= lim2; ++day) 
                 for (int j = 1; j < 10; ++j) {          
                     unique_ptr<bill> b = bill::getBill(m, day, j); 
                     if (b) {
