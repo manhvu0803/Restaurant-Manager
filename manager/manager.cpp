@@ -138,7 +138,7 @@ namespace manager
             filename = "./" + to_string(m) + ".csv";
         }
         for (m = m; m <= lim; ++m)
-            for (int day = day; day <= lim2; ++day) 
+            for (day = day; day <= lim2; ++day) 
                 for (int j = 1; j < 10; ++j) {          
                     unique_ptr<bill> b = bill::getBill(m, day, j); 
                     if (b) {

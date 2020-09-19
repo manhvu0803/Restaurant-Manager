@@ -11,9 +11,9 @@ namespace manager
 {
     struct dish
     {
-        long id;
+        std::string id;
         int quantity;
-        long price;
+        float price;
         std::string name;
     };
 
