@@ -27,7 +27,7 @@ void Ingredients::exp(ofstream& fp, bool op)
 }
 void Storage::exp()
 {
-	ofstream File("../restaurant/storage/storage.txt", ios::trunc);
+	ofstream File("./restaurant/storage/storage.txt", ios::trunc);
 	vector<Ingredients>::iterator it;
 	for (it = str.begin(); it != str.end(); it++)
 	{
@@ -70,7 +70,7 @@ Storage::~Storage()
 }
 void Storage::imp()
 {
-	ifstream file("../restaurant/storage/storage.txt");
+	ifstream file("./restaurant/storage/storage.txt");
 	while (file.good())
 	{
 		if (file.peek() == EOF)
@@ -89,9 +89,9 @@ void Storage::imp()
 		getline(file, line);
 		getline(file, unit, '\n');
 		file >> x;
-		file.seekg(1, ios::cur);
+		skipchars(file, 1);
 		file >> y;
-		file.seekg(1, ios::cur);
+		skipchars(file, 1);
 		file >> z;
 		getline(file, line);
 		date t(x, y - 1, z);
@@ -163,12 +163,12 @@ void Ingredients::changeDate(const int& d, const int& m, const int& y)
 bool Ingredients::expired()
 {
 	date c;
-	if (exd >= c)
+	if (exd <= c)
 	{
 		amount = 0;
 		cout << id << " " << name << endl;
 	}
-	return (exd >= c);
+	return (exd <= c);
 }
 void Storage::checkexp()
 {
