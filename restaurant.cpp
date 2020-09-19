@@ -24,4 +24,5 @@ int main()
     {
         log.LOG(msg);
     }
+    menu.newDish();
 }

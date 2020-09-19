@@ -7,6 +7,7 @@
 #include "../menu.h"
 #include "order.hpp"
 #include "discount.hpp"
+#include <string>
 
 using namespace std;
 
@@ -146,8 +147,8 @@ void bill_manager::updateQuantNewDish(const int &pos, const int &mode)
     }
     else
     {
-        if (pos >= quantity.size() - 1)
-            return;
+        if (pos > quantity.size() - 1)
+            throw "Out of range!";
         quantity.erase(quantity.begin() + pos);
     }
 }
@@ -183,9 +184,9 @@ bill::bill()
     string s_tmp;
     stringstream name;
     name << tmp;
-    name << s_tmp;
+    ++count;
     bill_no += name.str().substr(0, 2);
-    bill_no += name.str().substr(2, 2);
+    bill_no += name.str().substr(3, 2);
     u_int count_t = count;
     int count_l = 0;
     while (count_t)
@@ -193,10 +194,10 @@ bill::bill()
         count_t /= 10;
         ++count_l;
     }
-    count_l -= 6 - count_l;
+    count_l = 6 - count_l;
     for (int i = 0; i < count_l; ++i)
         bill_no += "0";
-    bill_no += count;
+    bill_no += to_string(count);
 }
 
 bill::bill(const string &bill_path)
@@ -289,9 +290,11 @@ void bill::AddDish(const string &ID, const string &name, const double &price)
             return;
         }
     }
+    Total += price;
     dish_names.emplace_back(name);
     dish_IDs.emplace_back(ID);
     quantity.emplace_back(1);
+    total_per_dish.emplace_back(price);
 }
 
 bool bill::RemoveDish(const string &ID, const double &price)
@@ -306,12 +309,10 @@ bool bill::RemoveDish(const string &ID, const double &price)
                 dish_IDs.erase(dish_IDs.begin() + i);
                 dish_names.erase(dish_names.begin() + i);
                 total_per_dish.erase(total_per_dish.begin() + i);
+                quantity.erase(quantity.begin() + i);
             }
             else
-            {
-                --quantity[i];
                 total_per_dish[i] -= price;
-            }
             Total -= price;
             return true;
         }
