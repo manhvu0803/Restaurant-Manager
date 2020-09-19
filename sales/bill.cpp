@@ -92,11 +92,15 @@ bill *bill_manager::NewBill()
                 new_bill->AddDish(rest_menu.getMenu()[dish - 1]->getID(),
                                   rest_menu.getMenu()[dish - 1]->getName(), rest_menu.getMenu()[dish - 1]->getPrice());
                 UpdateDishQuant(dish - 1, opt);
+                income += rest_menu.getMenu()[dish - 1]->getPrice();
             }
             else if (opt == 2)
             {
                 if (new_bill->RemoveDish(rest_menu.getMenu()[dish - 1]->getID(), rest_menu.getMenu()[dish - 1]->getPrice()))
+                {
                     UpdateDishQuant(dish - 1, opt);
+                    income -= rest_menu.getMenu()[dish - 1]->getPrice();
+                }
                 else
                 {
                     system("cls");
@@ -119,7 +123,7 @@ bill *bill_manager::NewBill()
 
 bill_manager::bill_manager()
 {
-    ifstream file("../restaurant/DishOrdered");
+    ifstream file("./restaurant/DishOrdered");
     if (!file.is_open())
         throw "File DishOrdered is missing!";
     int tmp;
@@ -150,7 +154,7 @@ void bill_manager::updateQuantNewDish(const int &pos, const int &mode)
 
 bill_manager::~bill_manager()
 {
-    ofstream file("../restaurant/DishOrdered");
+    ofstream file("./restaurant/DishOrdered");
     for (int i = 0; i < quantity.size() - 1; ++i)
         file << i << endl;
     file << quantity[quantity.size() - 1];
@@ -176,8 +180,10 @@ bill::bill()
 {
     Total = 0;
     date tmp;
+    string s_tmp;
     stringstream name;
     name << tmp;
+    name << s_tmp;
     bill_no += name.str().substr(0, 2);
     bill_no += name.str().substr(2, 2);
     u_int count_t = count;

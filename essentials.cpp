@@ -22,7 +22,7 @@ ERROR_LOG::ERROR_LOG()
     time_t t = time(0);
     tm *now = localtime(&t);
     stringstream sstr;
-    sstr << "log//" << now->tm_mday << "-" << now->tm_mon + 1 << "-" << now->tm_year + 1900 << ".log";
+    sstr << "./log/" << now->tm_mday << "-" << now->tm_mon + 1 << "-" << now->tm_year + 1900 << ".log";
     log_file.open(sstr.str().c_str(), ios::app);
     log_file.seekp(0, ios::end);
     log_file << "Time: " << now->tm_hour << ":" << now->tm_min << ":" << now->tm_sec << "\n ";

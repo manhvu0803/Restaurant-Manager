@@ -68,9 +68,9 @@ class discount
 private:
     vector<voucher *> vouchers;
     vector<promo *> promos;
+    discount();
 
 public:
-    discount();
     ~discount();
     discount(const discount &other) = delete;
     discount &operator=(const discount &other) = delete;

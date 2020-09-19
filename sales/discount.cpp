@@ -6,6 +6,8 @@
 #include "PCH.hpp"
 #include <cstdlib>
 #include "bill.hpp"
+#include <string>
+#include <sstream>
 
 #define MAX_CODE_LENGTH 10
 
@@ -155,7 +157,6 @@ discount &discount::instantiate()
 string Code::code_generator()
 {
     vector<int> tmp(MAX_CODE_LENGTH);
-    srand(0);
     for (int i = 0; i <= MAX_CODE_LENGTH; ++i)
         tmp[rand() % MAX_CODE_LENGTH] = rand() % 26 + 65;
     string _code_ = "1234567890";
@@ -237,8 +238,8 @@ voucher::voucher(const string &file_name)
         throw "Invalid file format!";
     }
     getline(file, name);
-    file >> discount_value;
     getline(file, tmp);
+    this->discount_value = stoi(tmp);
     getline(file, tmp);
     getline(file, tmp);
     while (tmp.size())
@@ -261,7 +262,8 @@ voucher::~voucher()
     path << "./restaurant/voucher/" << expiration_date;
     ofstream file(path.str());
     file << "VOUCHER\n";
-    file << name << "\n\n";
+    file << name << "\n";
+    file << discount_value << "\n\n";
     for (auto &i : dish)
         file << i << "\n";
     file << "\n";
@@ -275,7 +277,7 @@ void voucher::NewVoucher()
 {
     if (name.size())
         throw "Cannot use an existed voucher object to create a new voucher!";
-    cout << "Number of vouchers :";
+    cout << "Number of vouchers: ";
     while (!(cin >> quantity) || quantity <= 0)
     {
         cin.clear();
@@ -304,14 +306,34 @@ void voucher::NewVoucher()
             cin.ignore(1000, '\n');
         }
         if (tmp)
-            dish.emplace_back(rest_menu.getMenu()[tmp - 1]->getID());
+        {
+            int flag = 0;
+            for (auto &i : dish)
+            {
+                if (i == rest_menu.getMenu()[tmp - 1]->getID())
+                {
+                    cout << "Added!\n";
+                    system("pause");
+                    flag = 1;
+                    break;
+                }
+            }
+            if (!flag)
+                dish.emplace_back(rest_menu.getMenu()[tmp - 1]->getID());
+        }
     } while (tmp || !dish.size());
     cout << "Discount value: ";
     while (!(cin >> discount_value) || discount_value <= 0 || discount_value > 100)
     {
+        cout << "Invalid!\n";
+        cout << "Again: ";
         cin.clear();
         cin.ignore(1000, '\n');
     }
+    cout << "Voucher name: ";
+    cin.clear();
+    cin.ignore(1000, '\n');
+    getline(cin, name);
     for (int i = 0; i < quantity; ++i)
         code.emplace_back(code_generator());
 }
@@ -354,8 +376,8 @@ promo::promo(const string &file_name)
         throw "Invalid file format!";
     }
     getline(file, name);
-    file >> discount_value;
     getline(file, tmp);
+    this->discount_value = stoi(tmp);
     getline(file, tmp);
     getline(file, tmp);
     while (tmp.size())
@@ -376,7 +398,7 @@ void promo::NewPromo()
 {
     if (name.size())
         throw "Cannot use an existed promo object to create a new promo!";
-    cout << "Number of promos :";
+    cout << "Number of promos: ";
     while (!(cin >> quantity) || quantity <= 0)
     {
         cin.clear();
@@ -405,14 +427,34 @@ void promo::NewPromo()
             cin.ignore(1000, '\n');
         }
         if (tmp)
-            dish.emplace_back(rest_menu.getMenu()[tmp - 1]->getID());
+        {
+            int flag = 0;
+            for (auto &i : dish)
+            {
+                if (i == rest_menu.getMenu()[tmp - 1]->getID())
+                {
+                    cout << "Added!\n";
+                    system("pause");
+                    flag = 1;
+                    break;
+                }
+            }
+            if (!flag)
+                dish.emplace_back(rest_menu.getMenu()[tmp - 1]->getID());
+        }
     } while (tmp || !dish.size());
     cout << "Discount value: ";
     while (!(cin >> discount_value) || discount_value <= 10000)
     {
+        cout << "Invalid!\n";
+        cout << "Again: ";
         cin.clear();
         cin.ignore(1000, '\n');
     }
+    cout << "Promo name: ";
+    cin.clear();
+    cin.ignore(1000, '\n');
+    getline(cin, name);
     for (int i = 0; i < quantity; ++i)
         code.emplace_back(code_generator());
 }
@@ -423,7 +465,8 @@ promo::~promo()
     path << "./restaurant/promo/" << expiration_date;
     ofstream file(path.str());
     file << "PROMO\n";
-    file << name << "\n\n";
+    file << name << "\n";
+    file << discount_value << "\n\n";
     for (auto &i : dish)
         file << i << "\n";
     file << "\n";
